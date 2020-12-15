@@ -63,6 +63,8 @@ services:
 
   adminer:
     image: adminer
+    environment:
+      ADMINER_DESIGN: galkaev
     depends_on:
       - db
     ports:
