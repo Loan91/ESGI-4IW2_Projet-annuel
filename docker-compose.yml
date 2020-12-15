@@ -61,6 +61,13 @@ services:
     ports:
       - "8082:80"
 
+  adminer:
+    image: adminer
+    depends_on:
+      - db
+    ports:
+      - "8083:8080"
+
 volumes:
   db-data: {}
   app-sf-cache: {}
