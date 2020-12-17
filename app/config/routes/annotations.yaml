@@ -1,5 +1,16 @@
-controllers:
-    resource: ../../src/Controller/
+controllers_front:
+    resource: ../../src/Controller/Front
+    type: annotation
+    name_prefix: front_
+
+controllers_back:
+    resource: ../../src/Controller/Back
+    type: annotation
+    prefix: /admin
+    name_prefix: back_
+
+controllers_security:
+    resource: ../../src/Controller/Security
     type: annotation
 
 kernel:
