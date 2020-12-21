@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}{{ encore_entry_link_tags('tailwind') }}{% endblock %}
+
+{% block title %}Créer un compte{% endblock %}
+
+{% block body %}
+    <main class="max-w-7xl mx-auto py-12 min-h-screen">
+        <h1 class="text-4xl text-center text-gray-900 mb-16">Inscrivez-vous</h1>
+        <div class="flex justify-center max-w-md mx-auto">
+            {{ form_start(registrationForm) }}
+            {{ form_widget(registrationForm) }}
+            <div class="mt-4">
+                <input type="submit" value="S'inscrire" formnovalidate class="inline-flex w-full items-center justify-center px-4 py-2 border border-transparent text-md font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            </div>
+            {{ form_end(registrationForm) }}
+        </div>
+
+    </main>
+
+{% endblock %}
