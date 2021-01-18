@@ -5,17 +5,68 @@
 {% block title %}Créer un compte{% endblock %}
 
 {% block body %}
-    <main class="max-w-7xl mx-auto py-12 min-h-screen">
-        <h1 class="text-4xl text-center text-gray-900 mb-16">Inscrivez-vous</h1>
+
+    <div class="mt-10 sm:mt-0">
         <div class="flex justify-center max-w-md mx-auto">
             {{ form_start(registrationForm) }}
-            {{ form_widget(registrationForm) }}
-            <div class="mt-4">
-                <input type="submit" value="S'inscrire" formnovalidate class="inline-flex w-full items-center justify-center px-4 py-2 border border-transparent text-md font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <div class="mt-5 md:mt-0 md:col-span-2">
+                <h1 class="text-4xl text-center text-gray-900 mb-16">Inscrivez-vous</h1>
+                <form action="#" method="POST">
+                    <div class="shadow overflow-hidden sm:rounded-md">
+                        <div class="px-4 py-5 bg-white sm:p-6">
+                            <div class="grid grid-cols-6 gap-6">
+                                <div class="col-span-6 sm:col-span-4">
+                                    <label for="name" class="block text-sm font-medium text-gray-700">Nom</label>
+                                    {{ form_widget(registrationForm.name,
+                                        {
+                                            'attr' :
+                                            {
+                                                'placeholder' : 'Nom',
+                                                'class' : 'mt-1 pl-1 border-2 border-black rounded',
+                                                'type' : 'text',
+                                                'id' : 'name'
+                                            }
+                                        }
+                                    )}}
+                                </div>
+
+                                <div class="col-span-6 sm:col-span-4">
+                                    <label class="block text-sm font-medium text-gray-700">Email</label>
+                                    {{ form_widget(registrationForm.email,
+                                        {
+                                            'attr' :
+                                            {
+                                                'placeholder' : 'Email',
+                                                'class' : 'mt-1 pl-1 border-2 border-black rounded',
+                                                'type' : 'email',
+                                                'id' : 'email'
+                                            }
+                                        }) }}
+                                </div>
+                                <div class="col-span-6 sm:col-span-4">
+                                    <label class="block text-sm font-medium text-gray-700">Mot de passe</label>
+                                    {{ form_widget(registrationForm.password,
+                                        {
+                                            'attr' :
+                                            {
+                                                'placeholder' : 'Mot de passe',
+                                                'class' : 'mt-1 pl-1 border-2 border-black rounded',
+                                                'type' : 'password',
+                                                'id' : 'password'
+                                            }
+                                        }) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Valider
+                            </button>
+                            {{ form_end(registrationForm) }}
+                        </div>
+                    </div>
+                </form>
             </div>
-            {{ form_end(registrationForm) }}
         </div>
-
-    </main>
-
+    </div>
 {% endblock %}
