@@ -27,6 +27,8 @@ yarn-error.log
 !/app/bin/console
 !/app/bin/symfony_requirements
 /app/vendor/
+/vendor/
+/node_modules/
 
 # Assets and user uploads
 /app/app/web/bundles/
