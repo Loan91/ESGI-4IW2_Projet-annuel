@@ -2,24 +2,27 @@
 
 namespace App\Controller\Security;
 
+use App\Form\UserRegistrationFormType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
-    /**
-     * @Route("/login", name="app_login")
-     */
+  /**
+   * @Route("/login", name="app_login")
+   * @param AuthenticationUtils $authenticationUtils
+   * @return Response
+   */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser() && in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
-
             return $this->redirectToRoute('back_default_index');
-
         } elseif ($this->getUser()) {
-
             return $this->redirectToRoute('front_default_index');
         }
 
@@ -29,6 +32,37 @@ class SecurityController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+    }
+
+    /**
+     * @Route("/register", name="app_register", methods={"GET", "POST"})
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param $em
+     * @return Response
+     */
+    public function register(Request $request,EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $form = $this->createForm(UserRegistrationFormType::class);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+
+            $password = $form->get('password')->getData();
+            $user->setPassword($passwordEncoder->encodePassword($user, $password));
+            $user->setRoles(["ROLE_USER"]);
+
+            $em->persist($user);
+            $em->flush();
+
+            return $this->redirectToRoute('front_default_index');
+        }
+
+        return $this->render('security/register.html.twig', [
+            'registrationForm' => $form->createView()
+        ]);
     }
 
     /**
