@@ -1,76 +1,34 @@
 version: '3.6'
-x-cache-from:
-  - &app-cache-from
-    cache_from:
-      - ${NGINX_IMAGE:-iw/nginx}
-      - ${PHP_IMAGE:-iw/php}
-  - &node-cache-from
-    cache_from:
-      - ${NODE_IMAGE:-iw/node}
-
 services:
-
-  db:
-    image: postgres:9.6-alpine
-    environment:
-      - POSTGRES_DB=db
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=pwd
-    volumes:
-      - db-data:/var/lib/postgresql/data:rw
-    ports:
-      - '5432:5432'
-
-  php:
-    image: ${PHP_IMAGE:-iw/php}
-    build:
-      context: ./app
-      target: app_php
-      <<: *app-cache-from
-    volumes:
-      - ./app:/srv/app:rw
-      - ./app/docker/php/conf.d/api-platform.dev.ini/:/usr/local/etc/php/conf.d/api-platform.ini
-      #- app-front:/srv/app/public/build
-      - app-sf-cache:/srv/app/var
-
-  node:
-    image: ${NODE_IMAGE:-iw/node}
-    build:
-      context: ./app
-      dockerfile: Dockerfile.node
-      <<: *node-cache-from
-    command: sh -c "yarn install; yarn watch"
-    working_dir: /home/node/app
-    depends_on:
-      - php
-    volumes:
-      - ./app:/home/node/app
-
-  nginx:
-    image: ${NGINX_IMAGE:-iw/nginx}
-    build:
-      context: ./app
-      target: app_nginx
-      <<: *app-cache-from
-    depends_on:
-      - php
-      - node
-    volumes:
-      - ./app/public:/srv/app/public:ro
-      #- app-front:/srv/app/public/build:ro
-    ports:
-      - "8082:80"
-
-  adminer:
-    image: adminer
-    environment:
-      ADMINER_DESIGN: galkaev
-    depends_on:
-      - db
-    ports:
-      - "8083:8080"
-
-volumes:
-  db-data: {}
-  app-sf-cache: {}
-  app-front: {}
+    nginx:
+        build: app/docker/nginx
+        ports:
+            - '8082:80'
+        volumes:
+            - './app:/usr/share/nginx/html'
+    php:
+        build: app/docker/php
+        volumes:
+            - './app:/usr/share/nginx/html'
+    adminer:
+        image: 'adminer:4.7'
+        ports:
+            - '8083:8080'
+    composer:
+        image: 'composer:1.8'
+        command: install
+        volumes:
+            - './app:/app'
+    db:
+        image: 'postgres:10.4'
+        environment:
+            - PGDATA=/var/lib/postgresql/data/pgdata
+            - POSTGRES_DB=db
+            - POSTGRES_USER=user
+            - POSTGRES_PASSWORD=pwd
+    node:
+        build: app/docker/node
+        ports:
+            - '3000:3000'
+        volumes:
+            - './app:/home/node/app'
