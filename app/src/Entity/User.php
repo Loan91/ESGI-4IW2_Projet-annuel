@@ -110,13 +110,13 @@ class User implements UserInterface
     private $country;
 
     /**
-     * @Gedmo\Timestampable(on="create")
+     * @Gedmo\Timestampable("create")
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
     /**
-     * @Gedmo\Timestampable(on="update")
+     * @Gedmo\Timestampable("update")
      * @ORM\Column(type="datetime")
      */
     private $updatedAt;

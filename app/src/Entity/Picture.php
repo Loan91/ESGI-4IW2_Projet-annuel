@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=PictureRepository::class)
+ * @ORM\Table(schema="immo")
  */
 class Picture
 {
@@ -24,13 +25,13 @@ class Picture
     private $fileName;
 
     /**
-     * @Gedmo\Timestampable(on="create")
+     * @Gedmo\Timestampable("create")
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
     /**
-     * @Gedmo\Timestampable(on="update")
+     * @Gedmo\Timestampable("update")
      * @ORM\Column(type="datetime")
      */
     private $updatedAt;
