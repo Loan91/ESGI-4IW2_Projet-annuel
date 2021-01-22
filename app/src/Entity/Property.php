@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
+ * @ORM\Table(schema="immo")
  */
 class Property
 {
@@ -202,13 +203,13 @@ class Property
     private $contacts;
 
     /**
-     * @Gedmo\Timestampable(on="create")
+     * @Gedmo\Timestampable("create")
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
     /**
-     * @Gedmo\Timestampable(on="update")
+     * @Gedmo\Timestampable("update")
      * @ORM\Column(type="datetime")
      */
     private $updatedAt;

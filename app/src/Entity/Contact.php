@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=ContactRepository::class)
+ * @ORM\Table(schema="immo")
  */
 class Contact
 {
@@ -36,13 +37,13 @@ class Contact
     private $prospect;
 
     /**
-     * @Gedmo\Timestampable(on="create")
+     * @Gedmo\Timestampable("create")
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
     /**
-     * @Gedmo\Timestampable(on="udpate")
+     * @Gedmo\Timestampable("udpate")
      * @ORM\Column(type="datetime")
      */
     private $updatedAt;
