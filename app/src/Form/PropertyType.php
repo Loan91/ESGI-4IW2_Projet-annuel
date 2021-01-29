@@ -101,7 +101,6 @@ class PropertyType extends AbstractType
             ])
             ->add('energyConsumption', null, [
                 'label' => 'Combien d\'énergie consomme le bien ?',
-                'data' => '1'
             ])
             ->add('gasEmissions', null, [
                 'label' => 'Combien de gaz à émission ce bien émet?'
@@ -111,13 +110,17 @@ class PropertyType extends AbstractType
             ])
             ->add('zipCode', null, [
                 'label' => 'Code postal',
-                'help' => 'The ZIP/Postal code for your credit card\'s billing address.',
+                'help' => 'Le code postal lié à votre adresse.',
             ])
             ->add('city', null, [
                 'label' => 'Ville'
             ])
-            ->add('country', null, [
-                'label' => 'Pays'
+            ->add('country', ChoiceType::class, [
+                'label' => 'Pays',
+                'choices' => [
+                    'France' => 'france'
+                ],
+                'data' => 'france'
             ])
             ->add('rentOrSale', ChoiceType::class, [
                 'label' => 'Vente ou location?',
