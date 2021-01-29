@@ -118,7 +118,7 @@ class Property
     private $elevator;
 
     /**
-     * @ORM\Column(type="boolean", length=255)
+     * @ORM\Column(type="boolean")
      */
     private $externalStorage;
 
