@@ -34,7 +34,11 @@ class PropertyType extends AbstractType
             ])
             ->add('area', null, ['label' => 'Aire en m²'])
             ->add('description', null, ['help' => 'Décrivez votre bien'])
-            ->add('constructionDate', null, ['label' => 'Date de construction du bien'])
+            ->add('constructionDate', null, [
+                'label' => 'Date de construction du bien',
+                'widget' => 'single_text',
+                'html5' => 'true'
+            ])
             ->add('floor', null, [
                 'label' => 'A quel étage se trouve le bien?',
             ])
