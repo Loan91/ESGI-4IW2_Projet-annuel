@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Property index
+{% endblock %}
+
+{% block body %}
+	<h1>Property index</h1>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Type</th>
+				<th>Category</th>
+				<th>Area</th>
+				<th>Description</th>
+				<th>ConstructionDate</th>
+				<th>Floor</th>
+				<th>Floors</th>
+				<th>Rooms</th>
+				<th>Bedrooms</th>
+				<th>Bathrooms</th>
+				<th>Toilets</th>
+				<th>IsFurnished</th>
+				<th>ContainsStorage</th>
+				<th>IsKitchenSeparated</th>
+				<th>ContainDiningRoom</th>
+				<th>Ground</th>
+				<th>Heater</th>
+				<th>Fireplace</th>
+				<th>Elevator</th>
+				<th>ExternalStorage</th>
+				<th>AreaExternalStorage</th>
+				<th>Guarding</th>
+				<th>EnergyConsumption</th>
+				<th>GasEmissions</th>
+				<th>Address</th>
+				<th>ZipCode</th>
+				<th>City</th>
+				<th>Country</th>
+				<th>RentOrSale</th>
+				<th>Price</th>
+				<th>Charges</th>
+				<th>Guarentee</th>
+				<th>FeesPrice</th>
+				<th>InventoryPrice</th>
+				<th>CreatedAt</th>
+				<th>UpdatedAt</th>
+				<th>actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for property in properties %}
+				<tr>
+					<td>{{ property.id }}</td>
+					<td>{{ property.type }}</td>
+					<td>{{ property.category }}</td>
+					<td>{{ property.area }}</td>
+					<td>{{ property.description }}</td>
+					<td>{{ property.constructionDate ? property.constructionDate|date('Y-m-d') : '' }}</td>
+					<td>{{ property.floor }}</td>
+					<td>{{ property.floors }}</td>
+					<td>{{ property.rooms }}</td>
+					<td>{{ property.bedrooms }}</td>
+					<td>{{ property.bathrooms }}</td>
+					<td>{{ property.toilets }}</td>
+					<td>{{ property.isFurnished ? 'Yes' : 'No' }}</td>
+					<td>{{ property.containsStorage ? 'Yes' : 'No' }}</td>
+					<td>{{ property.isKitchenSeparated ? 'Yes' : 'No' }}</td>
+					<td>{{ property.containDiningRoom ? 'Yes' : 'No' }}</td>
+					<td>{{ property.ground }}</td>
+					<td>{{ property.heater }}</td>
+					<td>{{ property.fireplace ? 'Yes' : 'No' }}</td>
+					<td>{{ property.elevator ? 'Yes' : 'No' }}</td>
+					<td>{{ property.externalStorage }}</td>
+					<td>{{ property.areaExternalStorage }}</td>
+					<td>{{ property.guarding ? 'Yes' : 'No' }}</td>
+					<td>{{ property.energyConsumption }}</td>
+					<td>{{ property.gasEmissions }}</td>
+					<td>{{ property.address }}</td>
+					<td>{{ property.zipCode }}</td>
+					<td>{{ property.city }}</td>
+					<td>{{ property.country }}</td>
+					<td>{{ property.rentOrSale }}</td>
+					<td>{{ property.price }}</td>
+					<td>{{ property.charges }}</td>
+					<td>{{ property.guarentee }}</td>
+					<td>{{ property.feesPrice }}</td>
+					<td>{{ property.inventoryPrice }}</td>
+					<td>{{ property.createdAt ? property.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+					<td>{{ property.updatedAt ? property.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+					<td>
+						<a href="{{ path('back_property_show', {'id': property.id}) }}">show</a>
+						<a href="{{ path('back_property_edit', {'id': property.id}) }}">edit</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="38">no records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<a href="{{ path('back_property_new') }}">Create new</a>
+{% endblock %}

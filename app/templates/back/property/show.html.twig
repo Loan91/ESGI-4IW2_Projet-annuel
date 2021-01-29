@@ -1,0 +1,167 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Property
+{% endblock %}
+
+{% block body %}
+	<h1>Property</h1>
+
+	<table class="table">
+		<tbody>
+			<tr>
+				<th>Id</th>
+				<td>{{ property.id }}</td>
+			</tr>
+			<tr>
+				<th>Type</th>
+				<td>{{ property.type }}</td>
+			</tr>
+			<tr>
+				<th>Category</th>
+				<td>{{ property.category }}</td>
+			</tr>
+			<tr>
+				<th>Area</th>
+				<td>{{ property.area }}</td>
+			</tr>
+			<tr>
+				<th>Description</th>
+				<td>{{ property.description }}</td>
+			</tr>
+			<tr>
+				<th>ConstructionDate</th>
+				<td>{{ property.constructionDate ? property.constructionDate|date('Y-m-d') : '' }}</td>
+			</tr>
+			<tr>
+				<th>Floor</th>
+				<td>{{ property.floor }}</td>
+			</tr>
+			<tr>
+				<th>Floors</th>
+				<td>{{ property.floors }}</td>
+			</tr>
+			<tr>
+				<th>Rooms</th>
+				<td>{{ property.rooms }}</td>
+			</tr>
+			<tr>
+				<th>Bedrooms</th>
+				<td>{{ property.bedrooms }}</td>
+			</tr>
+			<tr>
+				<th>Bathrooms</th>
+				<td>{{ property.bathrooms }}</td>
+			</tr>
+			<tr>
+				<th>Toilets</th>
+				<td>{{ property.toilets }}</td>
+			</tr>
+			<tr>
+				<th>IsFurnished</th>
+				<td>{{ property.isFurnished ? 'Yes' : 'No' }}</td>
+			</tr>
+			<tr>
+				<th>ContainsStorage</th>
+				<td>{{ property.containsStorage ? 'Yes' : 'No' }}</td>
+			</tr>
+			<tr>
+				<th>IsKitchenSeparated</th>
+				<td>{{ property.isKitchenSeparated ? 'Yes' : 'No' }}</td>
+			</tr>
+			<tr>
+				<th>ContainDiningRoom</th>
+				<td>{{ property.containDiningRoom ? 'Yes' : 'No' }}</td>
+			</tr>
+			<tr>
+				<th>Ground</th>
+				<td>{{ property.ground }}</td>
+			</tr>
+			<tr>
+				<th>Heater</th>
+				<td>{{ property.heater }}</td>
+			</tr>
+			<tr>
+				<th>Fireplace</th>
+				<td>{{ property.fireplace ? 'Yes' : 'No' }}</td>
+			</tr>
+			<tr>
+				<th>Elevator</th>
+				<td>{{ property.elevator ? 'Yes' : 'No' }}</td>
+			</tr>
+			<tr>
+				<th>ExternalStorage</th>
+				<td>{{ property.externalStorage }}</td>
+			</tr>
+			<tr>
+				<th>AreaExternalStorage</th>
+				<td>{{ property.areaExternalStorage }}</td>
+			</tr>
+			<tr>
+				<th>Guarding</th>
+				<td>{{ property.guarding ? 'Yes' : 'No' }}</td>
+			</tr>
+			<tr>
+				<th>EnergyConsumption</th>
+				<td>{{ property.energyConsumption }}</td>
+			</tr>
+			<tr>
+				<th>GasEmissions</th>
+				<td>{{ property.gasEmissions }}</td>
+			</tr>
+			<tr>
+				<th>Address</th>
+				<td>{{ property.address }}</td>
+			</tr>
+			<tr>
+				<th>ZipCode</th>
+				<td>{{ property.zipCode }}</td>
+			</tr>
+			<tr>
+				<th>City</th>
+				<td>{{ property.city }}</td>
+			</tr>
+			<tr>
+				<th>Country</th>
+				<td>{{ property.country }}</td>
+			</tr>
+			<tr>
+				<th>RentOrSale</th>
+				<td>{{ property.rentOrSale }}</td>
+			</tr>
+			<tr>
+				<th>Price</th>
+				<td>{{ property.price }}</td>
+			</tr>
+			<tr>
+				<th>Charges</th>
+				<td>{{ property.charges }}</td>
+			</tr>
+			<tr>
+				<th>Guarentee</th>
+				<td>{{ property.guarentee }}</td>
+			</tr>
+			<tr>
+				<th>FeesPrice</th>
+				<td>{{ property.feesPrice }}</td>
+			</tr>
+			<tr>
+				<th>InventoryPrice</th>
+				<td>{{ property.inventoryPrice }}</td>
+			</tr>
+			<tr>
+				<th>CreatedAt</th>
+				<td>{{ property.createdAt ? property.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+			</tr>
+			<tr>
+				<th>UpdatedAt</th>
+				<td>{{ property.updatedAt ? property.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<a href="{{ path('back_property_index') }}">back to list</a>
+
+	<a href="{{ path('back_property_edit', {'id': property.id}) }}">edit</a>
+
+	{{ include('back/property/_delete_form.html.twig') }}
+{% endblock %}

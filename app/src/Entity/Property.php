@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
@@ -47,7 +48,7 @@ class Property
     private $constructionDate;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $floor;
 
@@ -147,7 +148,13 @@ class Property
     private $address;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=5)
+     * @Assert\Length(
+     *      min = 5,
+     *      max = 5,
+     *      minMessage = "Your zip code must be at least {{ limit }} characters long",
+     *      maxMessage = "Your zip code cannot be longer than {{ limit }} characters"
+     * )
      */
     private $zipCode;
 
