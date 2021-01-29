@@ -73,8 +73,12 @@ class PropertyType extends AbstractType
             ->add('ground', null, [
                 'label' => 'Quel est le type de sol? (bois, inox...)'
             ])
-            ->add('heater', null, [
-                'label' => 'Y a-t-il un radiateur?'
+            ->add('heater', ChoiceType::class, [
+                'label' => 'Comment est installé le chauffage?',
+                'choices' => [
+                    'Individuel' => 'individuel',
+                    'Collectif' => 'collectif'
+                ]
             ])
             ->add('fireplace', null, [
                 'label' => 'Y a-t-il une cheminée?'
