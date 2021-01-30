@@ -23,7 +23,7 @@ Encore
     .addEntry('app', './assets/app.js')
 
     /** <<< TAILWINDCSS <<< */
-    .addStyleEntry('tailwind', './assets/styles/tailwind.css')
+    .addStyleEntry('tailwind', './assets/styles/index.css')
     // enable post css loader
     .enablePostCssLoader((options) => {
         options.postcssOptions = {
@@ -32,6 +32,7 @@ Encore
         }
 
     })
+
     /** >>> TAILWINDCSS >>> */
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
@@ -82,6 +83,6 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
-;
+    ;
 
 module.exports = Encore.getWebpackConfig();
