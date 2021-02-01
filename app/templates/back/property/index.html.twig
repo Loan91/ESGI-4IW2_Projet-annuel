@@ -10,6 +10,7 @@
 		{% if properties %}
 			<thead>
 				<tr>
+					<th>Numéro de dossier</th>
 					<th>Type</th>
 					<th>Catégorie</th>
 					<th>Date de construction</th>
@@ -28,20 +29,21 @@
 		<tbody>
 			{% for property in properties %}
 				<tr>
-					<td>{{ property.type }}</td>
-					<td>{{ property.category }}</td>
+					<td>{{ property.id }}</td>
+					<td>{{ property.type|uppercaseFirst }}</td>
+					<td>{{ property.category|uppercaseFirst }}</td>
 					<td>{{ property.constructionDate ? property.constructionDate|date('Y-m-d') : '' }}</td>
 					<td>{{ property.floors }}</td>
 					<td>{{ property.rooms }}</td>
 					<td>{{ property.address }}</td>
 					<td>{{ property.zipCode }}</td>
-					<td>{{ property.city }}</td>
-					<td>{{ property.country }}</td>
-					<td>{{ property.rentOrSale }}</td>
+					<td>{{ property.city|uppercaseFirst }}</td>
+					<td>{{ property.country|uppercaseFirst }}</td>
+					<td>{{ property.rentOrSale|uppercaseFirst }}</td>
 					<td>{{ property.price }}</td>
 					<td>
-						<a href="{{ path('back_property_show', {'id': property.id}) }}">Afficher le détail</a>
-						<a href="{{ path('back_property_edit', {'id': property.id}) }}">edit</a>
+						<a href="{{ path('back_property_show', {'id': property.id}) }}" class="btn">Afficher le détail</a>
+						<a href="{{ path('back_property_edit', {'id': property.id}) }}" class="btn">Mettre à jour</a>
 					</td>
 				</tr>
 			{% else %}
@@ -57,7 +59,7 @@
 
 	{% if properties %}
 		<form action="{{ path('back_property_new') }}">
-			<button type="submit" class="button primary mt-4">Ajouter d'autres biens</button>
+			<button type="submit" class="btn mt-4">Ajouter d'autres biens</button>
 		</form>
 	{% endif %}
 {% endblock %}

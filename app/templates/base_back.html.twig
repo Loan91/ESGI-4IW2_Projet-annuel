@@ -10,14 +10,16 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 		{{ encore_entry_link_tags('tailwind') }}
 		{% block stylesheets %}{% endblock %}
+
+		{{ encore_entry_script_tags('app') }}
 	</head>
-	<body>
+	<body class="bg-white">
 		<nav class="red">
 			<div class="nav-wrapper">
 				<a href="#" class="brand-logo">Logo</a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
 					<li>
-						<a href="">attente</a>
+						<a href="{{ path('back_property_index') }}">Mes biens</a>
 					</li>
 					<li>
 						<a href="">attente</a>
@@ -34,7 +36,7 @@
 			</div>
 		</nav>
 
-		<div class="container"> {% block body %}{% endblock %}
+		<div class="container mb-4"> {% block body %}{% endblock %}
 			</div>
 			{% block javascripts %}{% endblock %}
 		</body>

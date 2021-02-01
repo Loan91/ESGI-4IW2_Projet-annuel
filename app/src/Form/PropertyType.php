@@ -63,7 +63,7 @@ class PropertyType extends AbstractType
                 'data' => '1'
             ])
             ->add('isFurnished', null, [
-                'label' => 'Le bien possède t-il des meubles?'
+                'label' => 'Le bien est-il meublé?'
             ])
             ->add('containsStorage', null, [
                 'label' => 'Est-ce que le bien possède des éléments de stockage'
@@ -88,13 +88,13 @@ class PropertyType extends AbstractType
                 'label' => 'Y a-t-il une cheminée?'
             ])
             ->add('elevator', null, [
-                'label' => 'y a-t-il un assenseur?'
+                'label' => 'Y a-t-il un assenseur?'
             ])
             ->add('externalStorage', null, [
                 'label' => 'Y a-t-il une pièce de stockage externe?'
             ])
             ->add('areaExternalStorage', null, [
-                'label' => 'Quelle est la taille de cet espace?'
+                'label' => 'Quelle est la taille de cet espace? (si stockage externe0)'
             ])
             ->add('guarding', null, [
                 'label' => 'Y a-t-il un système de sécurité?'
@@ -110,7 +110,7 @@ class PropertyType extends AbstractType
             ])
             ->add('zipCode', null, [
                 'label' => 'Code postal',
-                'help' => 'Le code postal lié à votre adresse.',
+                'help' => 'Le code postal lié à votre adresse',
             ])
             ->add('city', null, [
                 'label' => 'Ville'
@@ -123,7 +123,7 @@ class PropertyType extends AbstractType
                 'data' => 'france'
             ])
             ->add('rentOrSale', ChoiceType::class, [
-                'label' => 'Vente ou location?',
+                'label' => 'Est-ce une vente ou une location?',
                 'choices' => [
                     'Vente' => 'vente',
                     'Location' => 'location'
@@ -142,7 +142,7 @@ class PropertyType extends AbstractType
                 'label' => 'Prix des honoraires'
             ])
             ->add('inventoryPrice', null, [
-                'label' => 'Prix de la visite'
+                'label' => 'Prix d\'une visite'
             ]);
     }
 

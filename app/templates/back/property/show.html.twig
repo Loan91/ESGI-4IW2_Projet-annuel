@@ -4,21 +4,25 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Property</h1>
+	<h1 class="text-2xl mt-8">Votre bien</h1>
+
+	<p>Dernière mise à jour le
+		{{ property.updatedAt ? property.updatedAt|date('Y/m/d à H:i:s') : '' }}
+	</p>
 
 	<table class="table">
 		<tbody>
 			<tr>
-				<th>Id</th>
+				<th>Numéro de dossier</th>
 				<td>{{ property.id }}</td>
 			</tr>
 			<tr>
-				<th>Type</th>
-				<td>{{ property.type }}</td>
+				<th>Type de bien</th>
+				<td>{{ property.type|uppercaseFirst }}</td>
 			</tr>
 			<tr>
-				<th>Category</th>
-				<td>{{ property.category }}</td>
+				<th>Catégorie du bien</th>
+				<td>{{ property.category|uppercaseFirst }}</td>
 			</tr>
 			<tr>
 				<th>Area</th>
@@ -29,139 +33,131 @@
 				<td>{{ property.description }}</td>
 			</tr>
 			<tr>
-				<th>ConstructionDate</th>
+				<th>Date de construction</th>
 				<td>{{ property.constructionDate ? property.constructionDate|date('Y-m-d') : '' }}</td>
 			</tr>
 			<tr>
-				<th>Floor</th>
+				<th>Etage (si appartement)</th>
 				<td>{{ property.floor }}</td>
 			</tr>
 			<tr>
-				<th>Floors</th>
+				<th>Nombre d'étages</th>
 				<td>{{ property.floors }}</td>
 			</tr>
 			<tr>
-				<th>Rooms</th>
+				<th>Nombre de pièces</th>
 				<td>{{ property.rooms }}</td>
 			</tr>
 			<tr>
-				<th>Bedrooms</th>
+				<th>Nombre de chambres</th>
 				<td>{{ property.bedrooms }}</td>
 			</tr>
 			<tr>
-				<th>Bathrooms</th>
+				<th>Nombre de salles de bain</th>
 				<td>{{ property.bathrooms }}</td>
 			</tr>
 			<tr>
-				<th>Toilets</th>
+				<th>Nombre de toilettes</th>
 				<td>{{ property.toilets }}</td>
 			</tr>
 			<tr>
-				<th>IsFurnished</th>
+				<th>Le bien est-il meublé?</th>
 				<td>{{ property.isFurnished ? 'Yes' : 'No' }}</td>
 			</tr>
 			<tr>
-				<th>ContainsStorage</th>
+				<th>Est-ce que le bien possède des éléments de stockage</th>
 				<td>{{ property.containsStorage ? 'Yes' : 'No' }}</td>
 			</tr>
 			<tr>
-				<th>IsKitchenSeparated</th>
+				<th>Est-ce que la cuisine est séparée de la salle à manger ?</th>
 				<td>{{ property.isKitchenSeparated ? 'Yes' : 'No' }}</td>
 			</tr>
 			<tr>
-				<th>ContainDiningRoom</th>
+				<th>Le bien possède t-il une salle à manger?</th>
 				<td>{{ property.containDiningRoom ? 'Yes' : 'No' }}</td>
 			</tr>
 			<tr>
-				<th>Ground</th>
+				<th>Quel est le type de sol? (bois, inox...)</th>
 				<td>{{ property.ground }}</td>
 			</tr>
 			<tr>
-				<th>Heater</th>
+				<th>Comment est installé le chauffage?</th>
 				<td>{{ property.heater }}</td>
 			</tr>
 			<tr>
-				<th>Fireplace</th>
+				<th>Y a-t-il une cheminée?</th>
 				<td>{{ property.fireplace ? 'Yes' : 'No' }}</td>
 			</tr>
 			<tr>
-				<th>Elevator</th>
+				<th>Y a-t-il un assenseur?</th>
 				<td>{{ property.elevator ? 'Yes' : 'No' }}</td>
 			</tr>
 			<tr>
-				<th>ExternalStorage</th>
+				<th>Y a-t-il une pièce de stockage externe?</th>
 				<td>{{ property.externalStorage }}</td>
 			</tr>
 			<tr>
-				<th>AreaExternalStorage</th>
+				<th>Quelle est la taille de cet espace? (si stockage externe0)</th>
 				<td>{{ property.areaExternalStorage }}</td>
 			</tr>
 			<tr>
-				<th>Guarding</th>
+				<th>Y a-t-il un système de sécurité?</th>
 				<td>{{ property.guarding ? 'Yes' : 'No' }}</td>
 			</tr>
 			<tr>
-				<th>EnergyConsumption</th>
+				<th>Combien d'énergie consomme le bien ?</th>
 				<td>{{ property.energyConsumption }}</td>
 			</tr>
 			<tr>
-				<th>GasEmissions</th>
+				<th>Combien de gaz à émission ce bien émet?</th>
 				<td>{{ property.gasEmissions }}</td>
 			</tr>
 			<tr>
-				<th>Address</th>
+				<th>Adresse du bien</th>
 				<td>{{ property.address }}</td>
 			</tr>
 			<tr>
-				<th>ZipCode</th>
+				<th>Le code postal lié à votre adresse</th>
 				<td>{{ property.zipCode }}</td>
 			</tr>
 			<tr>
-				<th>City</th>
+				<th>Ville</th>
 				<td>{{ property.city }}</td>
 			</tr>
 			<tr>
-				<th>Country</th>
+				<th>Pays</th>
 				<td>{{ property.country }}</td>
 			</tr>
 			<tr>
-				<th>RentOrSale</th>
+				<th>Est-ce une vente ou une location?</th>
 				<td>{{ property.rentOrSale }}</td>
 			</tr>
 			<tr>
-				<th>Price</th>
+				<th>Prix du bien</th>
 				<td>{{ property.price }}</td>
 			</tr>
 			<tr>
-				<th>Charges</th>
+				<th>Prix des charges du bien</th>
 				<td>{{ property.charges }}</td>
 			</tr>
 			<tr>
-				<th>Guarentee</th>
+				<th>Prix de la garantie du loyer</th>
 				<td>{{ property.guarentee }}</td>
 			</tr>
 			<tr>
-				<th>FeesPrice</th>
+				<th>Prix des honoraires</th>
 				<td>{{ property.feesPrice }}</td>
 			</tr>
 			<tr>
-				<th>InventoryPrice</th>
+				<th>Prix d'une visite</th>
 				<td>{{ property.inventoryPrice }}</td>
-			</tr>
-			<tr>
-				<th>CreatedAt</th>
-				<td>{{ property.createdAt ? property.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-			</tr>
-			<tr>
-				<th>UpdatedAt</th>
-				<td>{{ property.updatedAt ? property.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
 			</tr>
 		</tbody>
 	</table>
 
-	<a href="{{ path('back_property_index') }}">back to list</a>
+	<div class="flex flex-row mb-4">
+		<a href="{{ path('back_property_edit', {'id': property.id}) }}" class="btn mr-4">edit</a>
 
-	<a href="{{ path('back_property_edit', {'id': property.id}) }}">edit</a>
-
-	{{ include('back/property/_delete_form.html.twig') }}
+		{{ include('back/property/_delete_form.html.twig') }}
+	</div>
 {% endblock %}
