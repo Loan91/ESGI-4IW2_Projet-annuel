@@ -16,22 +16,17 @@
 	<body class="bg-white">
 		<nav class="red">
 			<div class="nav-wrapper">
-				<a href="#" class="brand-logo">Logo</a>
+				<a href="{{ path('front_default_index') }}" class="brand-logo ml-8">Retour à l'accueil (logo)</a>
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
+					<li>
+						<a href="{{ path('back_default_index') }}">Mon profil</a>
+					</li>
 					<li>
 						<a href="{{ path('back_property_index') }}">Mes biens</a>
 					</li>
 					<li>
-						<a href="">attente</a>
+						<a href="{{ path('app_logout') }}">Se déconnecter</a>
 					</li>
-					<li>
-						<a href="{{ path('front_default_index') }}">Retour to front</a>
-					</li>
-					{% if app.user %}
-						<li>
-							<a href="{{ path('app_logout') }}">Se déconnecter</a>
-						</li>
-					{% endif %}
 				</ul>
 			</div>
 		</nav>
