@@ -12,6 +12,8 @@ class FormExtension extends AbstractExtension
     {
         return [
             new TwigFunction('isCheckbox', [$this, 'isCheckbox']),
+            new TwigFunction('isSelectBox', [$this, 'isSelectBox']),
+            new TwigFunction('isTextArea', [$this, 'isTextArea']),
         ];
     }
 
@@ -23,5 +25,26 @@ class FormExtension extends AbstractExtension
     public function isCheckbox(FormView $row)
     {
         return ($row->vars['block_prefixes'][1] === 'checkbox');
+    }
+
+    /**
+     * Analyse a FormView instance row and tells if it is a select box row.
+     * 
+     * @param FormView $row The row to check
+     */
+    public function isSelectBox(FormView $row)
+    {
+        return ($row->vars['block_prefixes'][1] === 'choice');
+    }
+
+    /**
+     * Analyse a FormView instance row and tells if it is a textarea row.
+     * 
+     * @param FormView $row The row to check
+     */
+    public function isTextArea(FormView $row)
+    {
+        return ($row->vars['block_prefixes'][1] === 'text'
+            && $row->vars['block_prefixes'][1] === 'textarea');
     }
 }
