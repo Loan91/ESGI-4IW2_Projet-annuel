@@ -23,12 +23,12 @@ class Property
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, columnDefinition="ENUM('maison', 'appartement')")
      */
     private $type;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, columnDefinition="ENUM('studio', 'f0', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12', 'f13', 'f14', 'f15')")
      */
     private $category;
 
@@ -103,7 +103,7 @@ class Property
     private $ground;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, columnDefinition="ENUM('individuel', 'collectif')")
      */
     private $heater;
 
@@ -148,13 +148,8 @@ class Property
     private $address;
 
     /**
-     * @ORM\Column(type="string", length=5)
-     * @Assert\Length(
-     *      min = 5,
-     *      max = 5,
-     *      minMessage = "Your zip code must be at least {{ limit }} characters long",
-     *      maxMessage = "Your zip code cannot be longer than {{ limit }} characters"
-     * )
+     * @ORM\Column(type="integer")
+     * @Assert\Positive
      */
     private $zipCode;
 
@@ -169,7 +164,7 @@ class Property
     private $country;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, columnDefinition="ENUM('vente', 'location')")
      */
     private $rentOrSale;
 
@@ -465,12 +460,12 @@ class Property
         return $this;
     }
 
-    public function getExternalStorage(): ?string
+    public function getExternalStorage(): ?bool
     {
         return $this->externalStorage;
     }
 
-    public function setExternalStorage(string $externalStorage): self
+    public function setExternalStorage(bool $externalStorage): self
     {
         $this->externalStorage = $externalStorage;
 
