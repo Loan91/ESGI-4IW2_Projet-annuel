@@ -9,4 +9,6 @@
 // import './styles/app.css';
 
 // start the Stimulus application
-// import './bootstrap';
+// import './stimulus/bootstrap';
+
+import './materialize/bootstrap';

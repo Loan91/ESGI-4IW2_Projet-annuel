@@ -1,0 +1,163 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Property
+{% endblock %}
+
+{% block body %}
+	<h1 class="text-2xl mt-8">Votre bien</h1>
+
+	<p>Dernière mise à jour le
+		{{ property.updatedAt ? property.updatedAt|date('Y/m/d à H:i:s') : '' }}
+	</p>
+
+	<table class="table">
+		<tbody>
+			<tr>
+				<th>Numéro de dossier</th>
+				<td>{{ property.id }}</td>
+			</tr>
+			<tr>
+				<th>Type de bien</th>
+				<td>{{ property.type|uppercaseFirst }}</td>
+			</tr>
+			<tr>
+				<th>Catégorie du bien</th>
+				<td>{{ property.category|uppercaseFirst }}</td>
+			</tr>
+			<tr>
+				<th>Area</th>
+				<td>{{ property.area }}</td>
+			</tr>
+			<tr>
+				<th>Description</th>
+				<td>{{ property.description }}</td>
+			</tr>
+			<tr>
+				<th>Date de construction</th>
+				<td>{{ property.constructionDate ? property.constructionDate|date('Y-m-d') : '' }}</td>
+			</tr>
+			<tr>
+				<th>Etage (si appartement)</th>
+				<td>{{ property.floor }}</td>
+			</tr>
+			<tr>
+				<th>Nombre d'étages</th>
+				<td>{{ property.floors }}</td>
+			</tr>
+			<tr>
+				<th>Nombre de pièces</th>
+				<td>{{ property.rooms }}</td>
+			</tr>
+			<tr>
+				<th>Nombre de chambres</th>
+				<td>{{ property.bedrooms }}</td>
+			</tr>
+			<tr>
+				<th>Nombre de salles de bain</th>
+				<td>{{ property.bathrooms }}</td>
+			</tr>
+			<tr>
+				<th>Nombre de toilettes</th>
+				<td>{{ property.toilets }}</td>
+			</tr>
+			<tr>
+				<th>Le bien est-il meublé?</th>
+				<td>{{ property.isFurnished ? 'Yes' : 'No' }}</td>
+			</tr>
+			<tr>
+				<th>Est-ce que le bien possède des éléments de stockage</th>
+				<td>{{ property.containsStorage ? 'Yes' : 'No' }}</td>
+			</tr>
+			<tr>
+				<th>Est-ce que la cuisine est séparée de la salle à manger ?</th>
+				<td>{{ property.isKitchenSeparated ? 'Yes' : 'No' }}</td>
+			</tr>
+			<tr>
+				<th>Le bien possède t-il une salle à manger?</th>
+				<td>{{ property.containDiningRoom ? 'Yes' : 'No' }}</td>
+			</tr>
+			<tr>
+				<th>Quel est le type de sol? (bois, inox...)</th>
+				<td>{{ property.ground }}</td>
+			</tr>
+			<tr>
+				<th>Comment est installé le chauffage?</th>
+				<td>{{ property.heater }}</td>
+			</tr>
+			<tr>
+				<th>Y a-t-il une cheminée?</th>
+				<td>{{ property.fireplace ? 'Yes' : 'No' }}</td>
+			</tr>
+			<tr>
+				<th>Y a-t-il un assenseur?</th>
+				<td>{{ property.elevator ? 'Yes' : 'No' }}</td>
+			</tr>
+			<tr>
+				<th>Y a-t-il une pièce de stockage externe?</th>
+				<td>{{ property.externalStorage }}</td>
+			</tr>
+			<tr>
+				<th>Quelle est la taille de cet espace? (si stockage externe0)</th>
+				<td>{{ property.areaExternalStorage }}</td>
+			</tr>
+			<tr>
+				<th>Y a-t-il un système de sécurité?</th>
+				<td>{{ property.guarding ? 'Yes' : 'No' }}</td>
+			</tr>
+			<tr>
+				<th>Combien d'énergie consomme le bien ?</th>
+				<td>{{ property.energyConsumption }}</td>
+			</tr>
+			<tr>
+				<th>Combien de gaz à émission ce bien émet?</th>
+				<td>{{ property.gasEmissions }}</td>
+			</tr>
+			<tr>
+				<th>Adresse du bien</th>
+				<td>{{ property.address }}</td>
+			</tr>
+			<tr>
+				<th>Le code postal lié à votre adresse</th>
+				<td>{{ property.zipCode }}</td>
+			</tr>
+			<tr>
+				<th>Ville</th>
+				<td>{{ property.city }}</td>
+			</tr>
+			<tr>
+				<th>Pays</th>
+				<td>{{ property.country }}</td>
+			</tr>
+			<tr>
+				<th>Est-ce une vente ou une location?</th>
+				<td>{{ property.rentOrSale }}</td>
+			</tr>
+			<tr>
+				<th>Prix du bien</th>
+				<td>{{ property.price }}</td>
+			</tr>
+			<tr>
+				<th>Prix des charges du bien</th>
+				<td>{{ property.charges }}</td>
+			</tr>
+			<tr>
+				<th>Prix de la garantie du loyer</th>
+				<td>{{ property.guarentee }}</td>
+			</tr>
+			<tr>
+				<th>Prix des honoraires</th>
+				<td>{{ property.feesPrice }}</td>
+			</tr>
+			<tr>
+				<th>Prix d'une visite</th>
+				<td>{{ property.inventoryPrice }}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div class="flex flex-row mb-4">
+		<a href="{{ path('back_property_edit', {'id': property.id}) }}" class="btn mr-4">edit</a>
+
+		{{ include('back/property/_delete_form.html.twig') }}
+	</div>
+{% endblock %}
