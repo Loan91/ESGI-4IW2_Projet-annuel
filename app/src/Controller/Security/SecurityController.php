@@ -5,6 +5,7 @@ namespace App\Controller\Security;
 
 use App\Form\ResetPasswordFormType;
 use App\Form\UserRegistrationFormType;
+use ContainerPhAbnYx\getSecurity_Csrf_TokenGeneratorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,11 +42,12 @@ class SecurityController extends AbstractController
     /**
      * @Route("/register", name="app_register", methods={"GET", "POST"})
      * @param Request $request
+     * @param EntityManagerInterface $em
      * @param UserPasswordEncoderInterface $passwordEncoder
-     * @param $em
+     * @param TokenGeneratorInterface $tokenGenerator
      * @return Response
      */
-    public function register(Request $request,EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder)
+    public function register(Request $request,EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder, TokenGeneratorInterface $tokenGenerator)
     {
         $form = $this->createForm(UserRegistrationFormType::class);
 
@@ -53,11 +55,10 @@ class SecurityController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
-
             $password = $form->get('password')->getData();
             $user->setPassword($passwordEncoder->encodePassword($user, $password));
             $user->setRoles(["ROLE_USER"]);
-
+            $user->setForgotPasswordToken($tokenGenerator->generateToken());
             $em->persist($user);
             $em->flush();
 
