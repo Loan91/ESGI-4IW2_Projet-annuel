@@ -20,10 +20,10 @@ class ForgotPasswordType extends AbstractType
                 'type'            => EmailType::class,
                 'invalid_message' => "Les adresses e-mail doivent être identiques.",
                 'required'        => true,
-                /*'constraints'     => [
+                'constraints'     => [
                     new NotBlank(),
                     new Email()
-                ],*/
+                ],
                 'first_options'  => [
                     'label' => 'Saisir votre adresse e-mail'
                 ],
@@ -36,7 +36,7 @@ class ForgotPasswordType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => User::class,
+
         ]);
     }
 }

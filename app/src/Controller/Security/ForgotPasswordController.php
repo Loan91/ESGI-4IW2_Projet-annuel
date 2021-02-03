@@ -40,7 +40,7 @@ $this->userRepository = $userRepository;
 * @param TokenGeneratorInterface $tokenGenerator
 * @return Response
 */
-public function sendlink(Request $request, MailerInterface $sendEmail, TokenGeneratorInterface $tokenGenerator): Response
+public function sendLinkPassword(Request $request, MailerInterface $sendEmail, TokenGeneratorInterface $tokenGenerator): Response
 {
 
 $form = $this->createForm(ForgotPasswordType::class);
@@ -86,9 +86,12 @@ return $this->render('security/forgot_password/forgot_password_step_1.html.twig'
 ]);
 }
 
-/**
-* @Route("/forgot-password/{id<\d+>}/{token}", name="app_retrieve_credentials", methods={"GET"})
-*/
+    /**
+     * @Route("/forgot-password/{id<\d+>}/{token}", name="app_retrieve_credentials", methods={"GET"})
+     * @param string $token
+     * @param User $user
+     * @return RedirectResponse
+     */
 public function retrieveCredentialsFromTheUrl(string $token, User $user): RedirectResponse
 {
 $this->session->set('Reset-Password-Token-URL', $token);
@@ -98,9 +101,12 @@ $this->session->set('Reset-Password-User-Email', $user->getEmail());
 return $this->redirectToRoute('app_reset_password');
 }
 
-/**
-* @Route("/reset-password", name="app_reset_password", methods={"GET", "POST"})
-*/
+    /**
+     * @Route("/reset-password", name="app_reset_password", methods={"GET", "POST"})
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * @return Response
+     */
 public function resetPassword(Request $request, UserPasswordEncoderInterface  $encoder): Response
 {
 /*recuperation token et email à partir de la session*/
@@ -160,7 +166,7 @@ private function getCredentialsFromSession(): array
 {
 return [
 'token' => $this->session->get('Reset-Password-Token-URL'),
-'UserEmail' => $this->session->get('Reset-Password-User-Email')
+'userEmail' => $this->session->get('Reset-Password-User-Email')
 ];
 }
 
