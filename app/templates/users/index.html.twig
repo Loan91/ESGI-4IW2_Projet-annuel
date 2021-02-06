@@ -6,6 +6,9 @@
 {% block body %}
 
     <div class="mt-5">
+        {% for success in app.flashes('success') %}
+            <div class="alert-success" role="alert">{{ success }}</div>
+        {% endfor %}
         <div class="flex justify-center max-w-md mx-auto">
             <div class="mt-5 md:mt-0 md:col-span-2">
                 <h1 class="text-4xl text-center text-gray-900 mb-16">Profile de {{ app.user.name }}</h1>
