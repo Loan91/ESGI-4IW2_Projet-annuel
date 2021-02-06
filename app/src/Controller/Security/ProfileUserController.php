@@ -10,7 +10,7 @@ class ProfileUserController extends AbstractController
 {
 
     /**
-     * @Route("/users", name="users")
+     * @Route("/users", name="app_users")
      */
     public function index()
     {
