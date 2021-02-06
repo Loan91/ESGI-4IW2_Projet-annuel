@@ -6,7 +6,12 @@
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% block body %}
+
+            <p>Nom : {{ app.user.name }}</p>
+            <p>E-mail : {{ app.user.email }}</p>
+
+        {% endblock %}
         {% block javascripts %}{% endblock %}
     </body>
 </html>
