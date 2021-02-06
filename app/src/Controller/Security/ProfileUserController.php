@@ -4,8 +4,8 @@ namespace App\Controller\Security;
 
 
 use App\Form\EditProfileType;
-use http\Env\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ProfileUserController extends AbstractController
