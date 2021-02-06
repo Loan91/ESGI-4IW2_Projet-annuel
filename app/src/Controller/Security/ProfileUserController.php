@@ -62,6 +62,12 @@ class ProfileUserController extends AbstractController
             //verification si les deux mot de passe sont identiques
             if($request->request->get('password') == $request->request->get('password2')){
 
+                $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
+                $em->flush();
+
+                $this->addFlash('success', 'Mot de passe mis à jour avec succès');
+                return $this->redirectToRoute('app_users');
+
             }else{
                 $this->addFlash('error', 'Les deux mots de passe ne sont pas identique');
             }
