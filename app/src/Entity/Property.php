@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
@@ -22,12 +23,12 @@ class Property
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, columnDefinition="ENUM('maison', 'appartement')")
      */
     private $type;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, columnDefinition="ENUM('studio', 'f0', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12', 'f13', 'f14', 'f15')")
      */
     private $category;
 
@@ -47,7 +48,7 @@ class Property
     private $constructionDate;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $floor;
 
@@ -102,7 +103,7 @@ class Property
     private $ground;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, columnDefinition="ENUM('individuel', 'collectif')")
      */
     private $heater;
 
@@ -117,7 +118,7 @@ class Property
     private $elevator;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="boolean")
      */
     private $externalStorage;
 
@@ -148,6 +149,7 @@ class Property
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Positive
      */
     private $zipCode;
 
@@ -162,7 +164,7 @@ class Property
     private $country;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, columnDefinition="ENUM('vente', 'location')")
      */
     private $rentOrSale;
 
@@ -458,12 +460,12 @@ class Property
         return $this;
     }
 
-    public function getExternalStorage(): ?string
+    public function getExternalStorage(): ?bool
     {
         return $this->externalStorage;
     }
 
-    public function setExternalStorage(string $externalStorage): self
+    public function setExternalStorage(bool $externalStorage): self
     {
         $this->externalStorage = $externalStorage;
 
