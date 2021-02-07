@@ -23,7 +23,6 @@ yarn-error.log
 # Managed by Composer
 /app/app/bootstrap.php.cache
 /app/var/bootstrap.php.cache
-/app/bin/*
 !/app/bin/console
 !/app/bin/symfony_requirements
 /app/vendor/
