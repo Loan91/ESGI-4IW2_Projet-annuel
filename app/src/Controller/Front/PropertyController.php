@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class PropertyController extends AbstractController
 {
     /**
-     * @Route("/", name="front_property_index", methods={"GET"})
+     * @Route("/", name="property_index", methods={"GET"})
      */
     public function index(PropertyRepository $propertyRepository): Response
     {
@@ -26,7 +26,7 @@ class PropertyController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="front_property_new", methods={"GET","POST"})
+     * @Route("/new", name="property_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -50,7 +50,7 @@ class PropertyController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="front_property_show", methods={"GET"})
+     * @Route("/{id}", name="property_show", methods={"GET"})
      */
     public function show(Property $property): Response
     {
@@ -60,7 +60,7 @@ class PropertyController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="front_property_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="property_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Property $property): Response
     {
@@ -80,7 +80,7 @@ class PropertyController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="front_property_delete", methods={"DELETE"})
+     * @Route("/{id}", name="property_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Property $property): Response
     {

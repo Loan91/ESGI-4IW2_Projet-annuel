@@ -13,7 +13,7 @@ class ProfileUserController extends AbstractController
 {
 
     /**
-     * @Route("/users", name="front_users")
+     * @Route("/users", name="users")
      */
     public function index()
     {
@@ -21,7 +21,7 @@ class ProfileUserController extends AbstractController
     }
 
     /**
-     * @Route("/users/profile/modifier", name="front_user_profil_modifier")
+     * @Route("/users/profile/modifier", name="user_profil_modifier")
      * @param Request $request
      */
     public function editProfile(Request $request)
@@ -46,7 +46,7 @@ class ProfileUserController extends AbstractController
     }
 
     /**
-     * @Route("/users/pass/modifier", name="front_user_pass_modifier")
+     * @Route("/users/pass/modifier", name="user_pass_modifier")
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
