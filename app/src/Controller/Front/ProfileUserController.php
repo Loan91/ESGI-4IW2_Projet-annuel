@@ -95,6 +95,6 @@ class ProfileUserController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('default_index');
+        return $this->redirect($this->generateUrl('default_index'));
     }
 }
