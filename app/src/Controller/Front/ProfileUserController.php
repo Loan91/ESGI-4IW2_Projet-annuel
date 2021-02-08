@@ -13,15 +13,15 @@ class ProfileUserController extends AbstractController
 {
 
     /**
-     * @Route("/users", name="app_users")
+     * @Route("/users", name="front_users")
      */
     public function index()
     {
-        return $this->render('users/index.html.twig');
+        return $this->render('front/users/index.html.twig');
     }
 
     /**
-     * @Route("/users/profile/modifier", name="app_user_profil_modifier")
+     * @Route("/users/profile/modifier", name="front_user_profil_modifier")
      * @param Request $request
      */
     public function editProfile(Request $request)
@@ -37,16 +37,16 @@ class ProfileUserController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Profil mis à jour');
-            return $this->redirectToRoute('app_users');
+            return $this->redirectToRoute('front_users');
         }
 
-        return $this->render('users/editprofile.html.twig', [
+        return $this->render('front/users/editprofile.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/users/pass/modifier", name="app_user_pass_modifier")
+     * @Route("/users/pass/modifier", name="front_user_pass_modifier")
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
@@ -72,6 +72,6 @@ class ProfileUserController extends AbstractController
                 $this->addFlash('error', 'Les deux mots de passe ne sont pas identique');
             }
         }
-        return $this->render('users/editpass.html.twig');
+        return $this->render('front/users/editpass.html.twig');
     }
 }

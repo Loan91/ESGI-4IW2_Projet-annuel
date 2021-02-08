@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class ContactController extends AbstractController
 {
     /**
-     * @Route("/compte/rendez-vous", name="contact_index")
+     * @Route("/compte/rendez-vous", name="front_contact_index")
      */
     public function index(ContactRepository $contactRepository): Response
     {

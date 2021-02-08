@@ -16,17 +16,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class PropertyController extends AbstractController
 {
     /**
-     * @Route("/", name="app_property_index", methods={"GET"})
+     * @Route("/", name="front_property_index", methods={"GET"})
      */
     public function index(PropertyRepository $propertyRepository): Response
     {
-        return $this->render('property/index.html.twig', [
+        return $this->render('front/property/index.html.twig', [
             'properties' => $propertyRepository->findAll(),
         ]);
     }
 
     /**
-     * @Route("/new", name="app_property_new", methods={"GET","POST"})
+     * @Route("/new", name="front_property_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -40,27 +40,27 @@ class PropertyController extends AbstractController
             $entityManager->persist($property);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_property_index');
+            return $this->redirectToRoute('front_property_index');
         }
 
-        return $this->render('property/new.html.twig', [
+        return $this->render('front/property/new.html.twig', [
             'property' => $property,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="app_property_show", methods={"GET"})
+     * @Route("/{id}", name="front_property_show", methods={"GET"})
      */
     public function show(Property $property): Response
     {
-        return $this->render('property/show.html.twig', [
+        return $this->render('front/property/show.html.twig', [
             'property' => $property,
         ]);
     }
 
     /**
-     * @Route("/{id}/edit", name="app_property_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="front_property_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Property $property): Response
     {
@@ -70,17 +70,17 @@ class PropertyController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('app_property_index');
+            return $this->redirectToRoute('front_property_index');
         }
 
-        return $this->render('property/edit.html.twig', [
+        return $this->render('front/property/edit.html.twig', [
             'property' => $property,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="app_property_delete", methods={"DELETE"})
+     * @Route("/{id}", name="front_property_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Property $property): Response
     {
@@ -90,6 +90,6 @@ class PropertyController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_property_index');
+        return $this->redirectToRoute('front_property_index');
     }
 }
