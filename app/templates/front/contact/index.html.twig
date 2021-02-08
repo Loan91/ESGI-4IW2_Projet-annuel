@@ -1,0 +1,214 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Mes rendez-vous{% endblock %}
+
+{% block body %}
+    <h1 class="text-2xl py-4">Mes demandes de rendez-vous</h1>
+
+    {% if contacts is not empty %}
+    <table class="border-collapse w-full">
+        <thead>
+        <tr>
+            <th class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">En attente</th>
+            <th class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">En cours</th>
+            <th class="p-3 font-bold uppercase bg-gray-200 text-gray-600 border border-gray-300 hidden lg:table-cell">Terminé</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for contact in contacts %}
+            <tr class="bg-white lg:hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0 lg:grid-cols-3">
+                <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
+                    {% if contact.status is same as "EN_ATTENTE" %}
+                        <div class="p-4">
+                            <div class="w-full m-auto ">
+                                <div
+                                        class=" grid grid-cols-3 grid-rows-7 grid-flow-row overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out"
+                                >
+                                    <div class="col-span-3 row-span-4 p-1 m-1">
+                                        <a href="#">
+                                            <img
+                                                    src="https://cache.marieclaire.fr/data/photo/w1000_ci/5o/illico-travaux-conseils-extension-maison-bois.jpg"
+                                                    alt="Placeholder"
+                                                    class="rounded-t-xl object-cover h-48 w-full"
+                                            />
+                                        </a>
+                                    </div>
+
+                                    <div class="col-span-3 row-span-1 m-0">
+                                        <div class="flex align-bottom flex-col leading-none p-2 md:p-4 m-0">
+                                            <div class="flex flex-row justify-between items-center m-0">
+                                                <a
+                                                        class="flex items-center no-underline hover:underline text-black m-0"
+                                                        href="#"
+                                                >
+                                                    <img
+                                                            alt="Placeholder"
+                                                            class="block rounded-full m-0"
+                                                            src="https://picsum.photos/32/32/?random"
+                                                    />
+                                                    <span class="ml-2 text-sm"> {{ contact.getProperty().getOwner().getName() | uppercaseFirst }}</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-span-3 row-span-1 m-0">
+                                        <span class="ml-2 text-sm">Demande de rendez-vous pour le {{ contact.getDesiredDate() | date('d/m/Y à H:i') }}</span>
+                                    </div>
+
+                                    <div class="col-span-3 row-span-1 m-0">
+                                        <header
+                                                class="flex items-center justify-between leading-tight p-2 md:p-4 m-0"
+                                        >
+                                            <h1 class="text-lg m-0">
+                                                <a class="no-underline hover:underline text-black m-0" href="#">
+                                                    {{ contact.getProperty().getDescription() | uppercaseFirst }}
+                                                </a>
+                                            </h1>
+                                            <p class="text-grey-darker text-sm">
+                                                {{ contact.getProperty().getRentOrSale() is same as 'rent' ? 'Location' : 'Vente' }}<br>
+                                                <b>{{ contact.getProperty().getPrice() }}€</b>
+                                            </p>
+                                        </header>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </td>
+                <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
+                    {% if contact.status is same as "EN_COURS" %}
+                        <div class="p-4">
+                            <div class="w-full m-auto ">
+                                <div
+                                        class=" grid grid-cols-3 grid-rows-7 grid-flow-row overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out"
+                                >
+                                    <div class="col-span-3 row-span-4 p-1 m-1">
+                                        <a href="#">
+                                            <img
+                                                    src="https://cache.marieclaire.fr/data/photo/w1000_ci/5o/illico-travaux-conseils-extension-maison-bois.jpg"
+                                                    alt="Placeholder"
+                                                    class="rounded-t-xl object-cover h-48 w-full"
+                                            />
+                                        </a>
+                                    </div>
+
+                                    <div class="col-span-3 row-span-1">
+                                        <div class="flex align-bottom flex-col leading-none p-2 md:p-4">
+                                            <div class="flex flex-row justify-between items-center">
+                                                <a
+                                                        class="flex items-center no-underline hover:underline text-black"
+                                                        href="#"
+                                                >
+                                                    <img
+                                                            alt="Placeholder"
+                                                            class="block rounded-full"
+                                                            src="https://picsum.photos/32/32/?random"
+                                                    />
+                                                    <span class="ml-2 text-sm"> {{ contact.getProperty().getOwner().getName() | uppercaseFirst }} </span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-span-3 row-span-1 m-0">
+                                        <span class="ml-2 text-sm">Rendez-vous fixé pour le {{ contact.getDesiredDate() | date('d/m/Y à H:i') }}</span>
+                                    </div>
+
+                                    <div class="col-span-3 row-span-1">
+                                        <header
+                                                class="flex items-center justify-between leading-tight p-2 md:p-4"
+                                        >
+                                            <h1 class="text-lg">
+                                                <a class="no-underline hover:underline text-black" href="#">
+                                                    {{ contact.getProperty().getDescription() | uppercaseFirst }}
+                                                </a>
+                                            </h1>
+                                            <p class="text-grey-darker text-sm">
+                                                {{ contact.getProperty().getRentOrSale() is same as 'rent' ? 'Location' : 'Vente' }}<br>
+                                                <b>{{ contact.getProperty().getPrice() }}€</b>
+                                            </p>
+                                        </header>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </td>
+                <td class="w-full lg:w-auto p-3 text-gray-800 text-center border border-b block lg:table-cell relative lg:static">
+                    {% if contact.status is same as "TERMINE" %}
+                        <div class="p-4">
+                            <div class="w-full m-auto ">
+                                <div
+                                        class=" grid grid-cols-3 grid-rows-7 grid-flow-row overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out"
+                                >
+                                    <div class="col-span-3 row-span-4 p-1 m-1">
+                                        <a href="#">
+                                            <img
+                                                    src="https://cache.marieclaire.fr/data/photo/w1000_ci/5o/illico-travaux-conseils-extension-maison-bois.jpg"
+                                                    alt="Placeholder"
+                                                    class="rounded-t-xl object-cover h-48 w-full"
+                                            />
+                                        </a>
+                                    </div>
+
+                                    <div class="col-span-3 row-span-1">
+                                        <div class="flex align-bottom flex-col leading-none p-2 md:p-4">
+                                            <div class="flex flex-row justify-between items-center">
+                                                <a
+                                                        class="flex items-center no-underline hover:underline text-black"
+                                                        href="#"
+                                                >
+                                                    <img
+                                                            alt="Placeholder"
+                                                            class="block rounded-full"
+                                                            src="https://picsum.photos/32/32/?random"
+                                                    />
+                                                    <span class="ml-2 text-sm"> {{ contact.getProperty().getOwner().getName() | uppercaseFirst }} </span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-span-3 row-span-1 m-0">
+                                        <span class="ml-2 text-sm">Rendez-vous terminé le {{ contact.getDesiredDate() | date('d/m/Y') }}</span>
+                                    </div>
+
+                                    <div class="col-span-3 row-span-1">
+                                        <header
+                                                class="flex items-center justify-between leading-tight p-2 md:p-4"
+                                        >
+                                            <h1 class="text-lg">
+                                                <a class="no-underline hover:underline text-black" href="#">
+                                                    {{ contact.getProperty().getDescription() | uppercaseFirst }}
+                                                </a>
+                                            </h1>
+                                            <p class="text-grey-darker text-sm">
+                                                {{ contact.getProperty().getRentOrSale() is same as 'rent' ? 'Location' : 'Vente' }}<br>
+                                                <b>{{ contact.getProperty().getPrice() }}€</b>
+                                            </p>
+                                        </header>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        Aucun rendez-vous.
+    {% endif %}
+
+    <style>
+        .hide-scroll-bar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .hide-scroll-bar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+{% endblock %}
