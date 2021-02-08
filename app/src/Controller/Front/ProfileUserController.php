@@ -3,6 +3,7 @@
 namespace App\Controller\Front;
 
 
+use App\Entity\User;
 use App\Form\EditProfileType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,5 +74,19 @@ class ProfileUserController extends AbstractController
             }
         }
         return $this->render('front/users/editpass.html.twig');
+    }
+
+    /**
+     * @Route("/{id}", name="user_pass_delete", methods={"DELETE"})
+     */
+    public function delete(Request $request, User $user): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($user);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('front_users');
     }
 }
