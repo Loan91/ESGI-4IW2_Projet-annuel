@@ -66,7 +66,7 @@ class ProfileUserController extends AbstractController
                 $em->flush();
 
                 $this->addFlash('success', 'Mot de passe mis à jour avec succès');
-                return $this->redirectToRoute('users');
+                return $this->redirectToRoute('front_users');
 
             }else{
                 $this->addFlash('error', 'Les deux mots de passe ne sont pas identique');
