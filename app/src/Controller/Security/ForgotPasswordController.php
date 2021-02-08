@@ -4,12 +4,16 @@ namespace App\Controller\Security;
 
 
 
+use App\Entity\User;
 use App\Form\ResetPasswordType;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
 class ForgotPasswordController extends AbstractController
 {
@@ -53,7 +57,7 @@ class ForgotPasswordController extends AbstractController
 
             // On essaie d'écrire le token en base de données
             try{
-                $user->setResetToken($token);
+                $user->setForgotPasswordToken($token);
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($user);
                 $entityManager->flush();
@@ -86,7 +90,7 @@ class ForgotPasswordController extends AbstractController
         }
 
         // On envoie le formulaire à la vue
-        return $this->render('security/forgotten_password.html.twig',['emailForm' => $form->createView()]);
+        return $this->render('security/forgot_password.html.twig',['emailForm' => $form->createView()]);
     }
 
     /**
@@ -99,7 +103,7 @@ class ForgotPasswordController extends AbstractController
     public function resetPassword(Request $request, string $token, UserPasswordEncoderInterface $passwordEncoder)
     {
         // On cherche un utilisateur avec le token donné
-        $user = $this->getDoctrine()->getRepository(Users::class)->findOneBy(['reset_token' => $token]);
+        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['forgotPasswordToken' => $token]);
 
         // Si l'utilisateur n'existe pas
         if ($user === null) {
@@ -111,7 +115,7 @@ class ForgotPasswordController extends AbstractController
         // Si le formulaire est envoyé en méthode post
         if ($request->isMethod('POST')) {
             // On supprime le token
-            $user->setResetToken(null);
+            $user->setForgotPasswordToken(null);
 
             // On chiffre le mot de passe
             $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
