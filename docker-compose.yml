@@ -32,3 +32,8 @@ services:
             - '3000:3000'
         volumes:
             - './app:/home/node/app'
+    mailcatcher:
+        image: yappabe/mailcatcher
+        ports:
+            - 1025:1025
+            - 1080:1080
