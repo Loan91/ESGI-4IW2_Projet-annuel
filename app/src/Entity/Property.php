@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
@@ -47,7 +48,7 @@ class Property
     private $constructionDate;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $floor;
 
@@ -117,7 +118,7 @@ class Property
     private $elevator;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="boolean")
      */
     private $externalStorage;
 
@@ -148,6 +149,7 @@ class Property
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Positive
      */
     private $zipCode;
 
@@ -458,12 +460,12 @@ class Property
         return $this;
     }
 
-    public function getExternalStorage(): ?string
+    public function getExternalStorage(): ?bool
     {
         return $this->externalStorage;
     }
 
-    public function setExternalStorage(string $externalStorage): self
+    public function setExternalStorage(bool $externalStorage): self
     {
         $this->externalStorage = $externalStorage;
 

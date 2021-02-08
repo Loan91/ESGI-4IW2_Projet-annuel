@@ -1,33 +1,37 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}Welcome!
+			{% endblock %}
+		</title>
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-        <link rel="stylesheet" href="{{ asset('main.css') }}">
-        {% block stylesheets %}{% endblock %}
-    </head>
-    <body>
-        <nav class="red">
-            <div class="nav-wrapper">
-                <a href="#" class="brand-logo">Logo</a>
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a href="">attente</a></li>
-                    <li><a href="">attente</a></li>
-                    <li><a href="{{ path('front_default_index') }}">Retour to front</a></li>
-                    {% if app.user %}
-                        <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
-                    {% endif %}
-                </ul>
-            </div>
-        </nav>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+		{{ encore_entry_link_tags('tailwind') }}
+		{% block stylesheets %}{% endblock %}
 
-        <div class="container">
-            {% block body %}{% endblock %}
-        </div>
-        {% block javascripts %}{% endblock %}
-    </body>
+		{{ encore_entry_script_tags('app') }}
+	</head>
+	<body class="bg-white">
+		<nav class="red">
+			<div class="nav-wrapper">
+				<a href="{{ path('front_default_index') }}" class="brand-logo ml-8">Retour à l'accueil (logo)</a>
+				<ul id="nav-mobile" class="right hide-on-med-and-down">
+					<li>
+						<a href="{{ path('back_default_index') }}">Mon profil</a>
+					</li>
+					<li>
+						<a href="{{ path('app_logout') }}">Se déconnecter</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-</html>
+		<div class="container mb-4"> {% block body %}{% endblock %}
+			</div>
+			{% block javascripts %}{% endblock %}
+		</body>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+	</html>
