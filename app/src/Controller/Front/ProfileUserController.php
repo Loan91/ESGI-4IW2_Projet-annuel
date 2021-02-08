@@ -77,7 +77,7 @@ class ProfileUserController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="user_pass_delete", methods={"DELETE"})
+     * @Route("/users/profile/delete/{id}", name="user_pass_delete", methods={"DELETE"})
      */
     public function delete(Request $request, User $user): Response
     {
