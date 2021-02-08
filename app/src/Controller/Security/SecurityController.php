@@ -4,13 +4,15 @@ namespace App\Controller\Security;
 
 
 use App\Form\ResetPasswordFormType;
+use App\Repository\UserRepository;
+use App\Service\Mailer;
 use App\Form\UserRegistrationFormType;
 use ContainerPhAbnYx\getSecurity_Csrf_TokenGeneratorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
@@ -18,6 +20,22 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
+
+    /**
+     * @var Mailer
+     */
+    private $mailer;
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    public function __construct(Mailer $mailer, UserRepository $userRepository)
+    {
+        $this->mailer = $mailer;
+        $this->userRepository = $userRepository;
+    }
+
     /**
      * @Route("/login", name="app_login")
      * @param AuthenticationUtils $authenticationUtils
@@ -58,9 +76,13 @@ class SecurityController extends AbstractController
             $password = $form->get('password')->getData();
             $user->setPassword($passwordEncoder->encodePassword($user, $password));
             $user->setRoles(["ROLE_USER"]);
+            $user->setEnabled(false);
             $user->setForgotPasswordToken($tokenGenerator->generateToken());
+            $user->setToken($tokenGenerator->generateToken());
             $em->persist($user);
             $em->flush();
+            $this->mailer->sendEmail($user->getEmail(), $user->getToken(), $user->getName());
+            $this->addFlash("warning", "Un mail de confirmation d'inscription vous a été envoyé ! ");
 
             return $this->redirectToRoute('front_default_index');
         }
@@ -68,6 +90,28 @@ class SecurityController extends AbstractController
         return $this->render('security/register.html.twig', [
             'registrationForm' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/confirmAccount/{token}", name="confirmAccount")
+     * @param string $token
+     */
+
+    public function confirmAccount(string $token)
+    {
+        $user = $this->userRepository->findOneBy(["token"=> $token]);
+        if ($user)
+        {
+            $user->setToken(null);
+            $user->setEnabled(true);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+            $this->addFlash("success", "Compte crée avec succes !");
+            return $this->redirectToRoute('front_default_index');
+        } else {
+            $this->addFlash("error", "ce compte n'existe pas");
+            return  $this->redirectToRoute('front_default_index');        }
     }
 
     /**
