@@ -95,6 +95,6 @@ class ProfileUserController extends AbstractController
             $session->invalidate();
         }
 
-        return $this->redirect($this->generateUrl('front_default_index'));
+        return $this->redirectToRoute('front_default_index');
     }
 }
