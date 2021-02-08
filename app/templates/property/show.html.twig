@@ -156,8 +156,8 @@
 	</table>
 
 	<div class="flex flex-row mb-4">
-		<a href="{{ path('back_property_edit', {'id': property.id}) }}" class="btn mr-4">edit</a>
+		<a href="{{ path('app_property_edit', {'id': property.id}) }}" class="btn mr-4">edit</a>
 
-		{{ include('back/property/_delete_form.html.twig') }}
+		{{ include('property/_delete_form.html.twig') }}
 	</div>
 {% endblock %}
