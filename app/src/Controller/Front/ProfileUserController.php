@@ -86,12 +86,13 @@ class ProfileUserController extends AbstractController
     public function delete(Request $request, User $user): Response
     {
         $session = new Session();
-        $session->invalidate();
+
 
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($user);
             $entityManager->flush();
+            $session->invalidate();
         }
 
         return $this->redirect($this->generateUrl('front_default_index'));
