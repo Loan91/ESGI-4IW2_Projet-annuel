@@ -90,6 +90,6 @@ class ProfileUserController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('front_users');
+        return $this->redirectToRoute('front_default_index');
     }
 }
