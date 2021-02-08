@@ -12,7 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Mailer\MailerInterface;
+use App\Service\Mailerpass;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
@@ -36,11 +36,11 @@ class ForgotPasswordController extends AbstractController
     /**
      * @Route("/forgot-password", name="app_forgot_password", methods={"GET", "POST"})
      * @param Request $request
-     * @param MailerInterface $sendEmail
+     * @param EntityManagerInterface $em
      * @param TokenGeneratorInterface $tokenGenerator
      * @return Response
      */
-    public function sendLinkPassword(Request $request, MailerInterface $sendEmail, TokenGeneratorInterface $tokenGenerator): Response
+    public function sendLinkPassword(Request $request, EntityManagerInterface $em, TokenGeneratorInterface $tokenGenerator): Response
     {
 
         $form = $this->createForm(ForgotPasswordType::class);
@@ -62,16 +62,10 @@ class ForgotPasswordController extends AbstractController
             $user->setForgotPasswordToken($tokenGenerator->generateToken());
 
 
-            $this->entityManager->flush();
-
-            $sendEmail->send([
-                'recipient_email' => $user->getEmail(),
-                'subject'         => 'Modification de votre mot de passe',
-                'html_template'   => 'security/forgot_password/forgot_password_email.html.twig',
-                'context'         => [
-                    'user' => $user
-                ]
-            ]);
+            $user->setToken($tokenGenerator->generateToken());
+            $em->persist($user);
+            $em->flush();
+            $this->mailerpass->sendEmail($user->getEmail(), $user->getToken(), $user->getName());
 
             $this->addFlash('success', 'Un email vous a été envoyé pour redéfinir votre mot de passe');
 
