@@ -10,6 +10,8 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 class PropertyFixtures extends Fixture implements DependentFixtureInterface
 {
+    public const PROPERTY_REFERENCE = 'bien';
+
     public function load(ObjectManager $manager)
     {
         $faker = \Faker\Factory::create('fr_FR');
@@ -56,6 +58,9 @@ class PropertyFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($bien);
 
         $manager->flush();
+
+        // other fixtures can get this object using the UserFixtures::ADMIN_USER_REFERENCE constant
+        $this->addReference(self::PROPERTY_REFERENCE, $bien);
     }
 
     public function getDependencies()
