@@ -17,37 +17,5 @@
 		}
 	</style>
 
-	<div class="example-wrapper">
-			{% for message in app.flashes('succes') %}
-				<div class="flash-notice">
-					<div class="bg-green-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-						<span class="block sm:inline">{{ message }}</span>
-					</div>
-				</div>
-			{% endfor %}
-			{% for message in app.flashes('error') %}
-				<div class="flash-notice">
-					<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-						<span class="block sm:inline">{{ message }}</span>
-					</div>
-				</div>
-			{% endfor %}
-		{% for message in app.flashes('warning') %}
-			<div class="flash-notice">
-				<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-					<span class="block sm:inline">{{ message }}</span>
-				</div>
-			</div>
-		{% endfor %}
 
-
-		{% for type, messages in app.flashes %}
-			{% for message in messages %}
-				<div class="alert alert-{{ type }}" role="alert">
-					{{ message }}
-				</div>
-			{% endfor %}
-		{% endfor %}
-
-	</div>
 {% endblock %}
