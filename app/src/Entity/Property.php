@@ -297,7 +297,7 @@ class Property
         return $this->floor;
     }
 
-    public function setFloor(int $floor): self
+    public function setFloor(?int $floor): self
     {
         $this->floor = $floor;
 

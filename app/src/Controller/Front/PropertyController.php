@@ -2,21 +2,23 @@
 
 namespace App\Controller\Front;
 
-use App\Entity\Property;
-use App\Form\PropertyType;
+use App\Data\SearchData;
+use App\Form\SearchType;
 use App\Repository\PropertyRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Property;
+use App\Form\PropertyType;
 
-/**
- * @Route("/propriete")
- */
+
 class PropertyController extends AbstractController
 {
+
+
     /**
-     * @Route("/", name="property_index", methods={"GET"})
+     * @Route("/property", name="property_index", methods={"GET"})
      */
     public function index(PropertyRepository $propertyRepository): Response
     {
@@ -26,7 +28,7 @@ class PropertyController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="property_new", methods={"GET","POST"})
+     * @Route("/property/new", name="property_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -50,7 +52,7 @@ class PropertyController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="property_show", methods={"GET"})
+     * @Route("/property/{id}", name="property_show", methods={"GET"})
      */
     public function show(Property $property): Response
     {
@@ -60,7 +62,7 @@ class PropertyController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="property_edit", methods={"GET","POST"})
+     * @Route("/property/{id}/edit", name="property_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Property $property): Response
     {
@@ -80,7 +82,7 @@ class PropertyController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="property_delete", methods={"DELETE"})
+     * @Route("/property/{id}", name="property_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Property $property): Response
     {
@@ -91,5 +93,30 @@ class PropertyController extends AbstractController
         }
 
         return $this->redirectToRoute('front_property_index');
+    }
+
+    /**
+     * @Route("/search", name="property_search")
+     * @param PropertyRepository $repository
+     * @param Request $request
+     * @return Response
+     */
+    public function search(PropertyRepository $repository, Request $request): Response
+    {
+      $data = new SearchData();
+
+      $form = $this->createForm(SearchType::class, $data);
+      $form->handleRequest($request);
+
+      if ($form->isSubmitted() && $form->isValid()) {
+        $properties = $repository->findSearch($data);
+      } else {
+        $properties = $repository->findAll();
+      }
+
+      return $this->render('front/property/search.html.twig', [
+          'properties' => $properties,
+          'form' => $form->createView(),
+      ]);
     }
 }

@@ -14,53 +14,70 @@ class PropertyFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-        $faker = \Faker\Factory::create('fr_FR');
+        for($i = 0; $i < 15; $i++) {
+          $this->makeProperty($manager);
+        }
+    }
 
-        $bien = new Property();
-        $bien = $bien
-            ->setType('maison')
-            ->setCategory('f4')
-            ->setArea('24')
-            ->setDescription('put a description in here')
-            ->setConstructionDate($faker->dateTime())
-            // ->setFloor() // Nullable
-            ->setFloors(0)
-            ->setRooms(4)
-            ->setBedrooms(2)
-            ->setBathrooms(1)
-            ->setToilets(1)
-            ->setIsFurnished(true)
-            ->setContainsStorage(true)
-            ->setIsKitchenSeparated(false)
-            ->setContainDiningRoom(true)
-            ->setGround('Bois')
-            ->setHeater('individuel')
-            ->setFireplace(true)
-            ->setElevator(true)
-            ->setExternalStorage(true)
-            ->setAreaExternalStorage(8)
-            ->setGuarding(true)
-            ->setEnergyConsumption(120)
-            ->setGasEmissions(36)
-            ->setAddress($faker->address)
-            ->setZipCode((int)$faker->postcode)
-            ->setCity($faker->city)
-            ->setCountry($faker->country)
-            ->setRentOrSale('sale')
-            ->setPrice($faker->randomNumber(6, true))
-            ->setCharges($faker->randomNumber(3, true))
-            ->setGuarentee($faker->randomNumber(4, true))
-            ->setFeesPrice($faker->randomNumber(2, true))
-            ->setInventoryPrice($faker->randomNumber(2, true))
+    public function makeProperty(ObjectManager $manager)
+    {
+      $faker = \Faker\Factory::create('fr_FR');
 
-            ->setOwner($this->getReference(UserFixtures::USER_REFERENCE));
+      $bien = new Property();
 
-        $manager->persist($bien);
+      $bien = $bien
+          ->setType($type = $faker->randomElement(['maison', 'appartement']))
+          ->setCategory($faker->randomElement([
+                  'Studio' => 'studio'
+              ] + (function () {
+                $data = [];
+                for ($i = 0; $i < 15; $i++) {
+                  $data['f' . $i] = 'f' . $i;
+                }
+                return $data;
+              })()
+          ))
+          ->setArea($faker->numberBetween($min = 3, $max = 240))
+          ->setDescription($faker->text($maxNbChars = 100))
+          ->setConstructionDate($faker->dateTime())
+          ->setFloor($type === 'appartement' ? $faker->numberBetween($min = 0, $max = 4) : null) // Nullable
+          ->setFloors($type === 'maison' ? $faker->numberBetween($min = 3, $max = 12) : 0)
+          ->setRooms($faker->numberBetween($min = 0, $max = 4))
+          ->setBedrooms($faker->numberBetween($min = 0, $max = 4))
+          ->setBathrooms($faker->numberBetween($min = 0, $max = 4))
+          ->setToilets($faker->numberBetween($min = 0, $max = 2))
+          ->setIsFurnished(true)
+          ->setContainsStorage(true)
+          ->setIsKitchenSeparated(false)
+          ->setContainDiningRoom(true)
+          ->setGround('Bois')
+          ->setHeater('individuel')
+          ->setFireplace(true)
+          ->setElevator(true)
+          ->setExternalStorage(true)
+          ->setAreaExternalStorage(8)
+          ->setGuarding(true)
+          ->setEnergyConsumption(120)
+          ->setGasEmissions(36)
+          ->setAddress($faker->address)
+          ->setZipCode((int)$faker->postcode)
+          ->setCity($faker->city)
+          ->setCountry($faker->country)
+          ->setRentOrSale('sale')
+          ->setPrice($faker->randomNumber(6, true))
+          ->setCharges($faker->randomNumber(3, true))
+          ->setGuarentee($faker->randomNumber(4, true))
+          ->setFeesPrice($faker->randomNumber(2, true))
+          ->setInventoryPrice($faker->randomNumber(2, true))
 
-        $manager->flush();
+          ->setOwner($this->getReference(UserFixtures::USER_REFERENCE));
 
-        // other fixtures can get this object using the UserFixtures::ADMIN_USER_REFERENCE constant
-        $this->addReference(self::PROPERTY_REFERENCE, $bien);
+      $manager->persist($bien);
+
+      $manager->flush();
+
+      // other fixtures can get this object using the UserFixtures::ADMIN_USER_REFERENCE constant
+      $this->setReference(self::PROPERTY_REFERENCE, $bien);
     }
 
     public function getDependencies()

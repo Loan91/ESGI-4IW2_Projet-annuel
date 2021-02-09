@@ -59,3 +59,6 @@ app/public/upload/
 .idea
 dump*.sql
 /db-data
+
+/vendor
+/node_modules

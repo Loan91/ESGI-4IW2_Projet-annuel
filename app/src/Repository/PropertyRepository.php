@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Data\SearchData;
 use App\Entity\Property;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,32 +20,29 @@ class PropertyRepository extends ServiceEntityRepository
         parent::__construct($registry, Property::class);
     }
 
-    // /**
-    //  * @return Property[] Returns an array of Property objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Property
+  /**
+   * Récupère les propriétés en lien avec la recherche soumise.
+   * @param SearchData $searchData
+   * @return Property[]
+   */
+    public function findSearch(SearchData $searchData)
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+
+        $query = $this
+            ->createQueryBuilder('p')
+            ->where('p.type = :type')
+            ->andWhere('p.category = :categories')
+            ->andWhere('p.price >= :minPrice')
+            ->andWhere('p.price <= :maxPrice')
+            ->setParameters([
+                'type' => $searchData->type,
+                'categories' => $searchData->categories,
+                'minPrice' => $searchData->minPrice,
+                'maxPrice' => $searchData->maxPrice
+            ])
+          ;
+
+        return $query->getQuery()->getResult();
     }
-    */
 }
