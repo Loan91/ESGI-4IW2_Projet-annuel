@@ -51,6 +51,16 @@ class User implements UserInterface
      */
     private $forgotPasswordToken;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $token;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $Enabled;
+
 
     public function getId(): ?int
     {
@@ -157,6 +167,32 @@ class User implements UserInterface
     public function setForgotPasswordToken($forgotPasswordToken): void
     {
         $this->forgotPasswordToken = $forgotPasswordToken;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): self
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function getEnabled(): ?bool
+    {
+        $Enabled = $this->Enabled;
+        $Enabled = false;
+        return $this->Enabled;
+    }
+
+    public function setEnabled(bool $Enabled): self
+    {
+        $this->Enabled = $Enabled;
+
+        return $this;
     }
 
 

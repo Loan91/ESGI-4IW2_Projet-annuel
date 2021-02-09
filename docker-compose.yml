@@ -33,3 +33,8 @@ services:
         volumes:
             - './app:/home/node/app'
         command: 'yarn install'
+    mailcatcher:
+        image: yappabe/mailcatcher
+        ports:
+            - 1025:1025
+            - 1080:1080

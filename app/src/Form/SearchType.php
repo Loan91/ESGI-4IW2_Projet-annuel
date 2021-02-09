@@ -47,7 +47,6 @@ class SearchType extends AbstractType
                     'placeholder' => 'Prix max.'
                 ]
             ])
-
         ;
     }
 

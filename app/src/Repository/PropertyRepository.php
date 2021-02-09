@@ -28,20 +28,20 @@ class PropertyRepository extends ServiceEntityRepository
    */
     public function findSearch(SearchData $searchData)
     {
-        #dd($searchData);
+
         $query = $this
             ->createQueryBuilder('p')
-          ->where('p.type = :type')
-          ->andWhere('p.category = :categories')
-          ->andWhere('p.price >= :minPrice')
-          ->andWhere('p.price <= :maxPrice')
-          ->setParameters([
-              'type' => $searchData->type,
-              'categories' => $searchData->categories,
-              'minPrice' => $searchData->minPrice,
-              'maxPrice' => $searchData->maxPrice
-          ])
-        ;
+            ->where('p.type = :type')
+            ->andWhere('p.category = :categories')
+            ->andWhere('p.price >= :minPrice')
+            ->andWhere('p.price <= :maxPrice')
+            ->setParameters([
+                'type' => $searchData->type,
+                'categories' => $searchData->categories,
+                'minPrice' => $searchData->minPrice,
+                'maxPrice' => $searchData->maxPrice
+            ])
+          ;
 
         return $query->getQuery()->getResult();
     }

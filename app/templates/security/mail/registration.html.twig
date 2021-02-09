@@ -1,0 +1,10 @@
+<div class="flex justify-center ...">
+    <div>Bonjour {{ name }}</div>
+    <br>
+    <p> Veuillez cliquez sur le lien suivant pour valider votre compte sur notre site internet !</p>
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <a href="{{ url('confirmAccount', {"token": token}) }}">Cliquer ici pour confirmer votre compte</a>
+    </button>
+</div>
+
+
