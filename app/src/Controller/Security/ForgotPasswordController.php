@@ -90,7 +90,7 @@ class ForgotPasswordController extends AbstractController
         }
 
         // On envoie le formulaire à la vue
-        return $this->render('security/forgot_password.html.twig',['emailForm' => $form->createView()]);
+        return $this->render('security/forgotpassword/forgot_password.html.twig',['emailForm' => $form->createView()]);
     }
 
     /**
@@ -132,7 +132,7 @@ class ForgotPasswordController extends AbstractController
             return $this->redirectToRoute('app_login');
         }else {
             // Si on n'a pas reçu les données, on affiche le formulaire
-            return $this->render('security/reset_password.html.twig', ['token' => $token]);
+            return $this->render('security/forgotpassword/reset_password.html.twig', ['token' => $token]);
         }
 
     }
