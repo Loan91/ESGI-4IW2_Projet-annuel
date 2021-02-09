@@ -108,7 +108,7 @@ class ForgotPasswordController extends AbstractController
         // Si l'utilisateur n'existe pas
         if ($user === null) {
             // On affiche une erreur
-            $this->addFlash('danger', 'Token Inconnu');
+            $this->addFlash('error', 'Token Inconnu');
             return $this->redirectToRoute('app_login');
         }
 
