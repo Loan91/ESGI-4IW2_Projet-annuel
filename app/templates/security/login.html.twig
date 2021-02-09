@@ -1,30 +1,100 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_front.html.twig' %}
 
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+    <div class="mt-5">
+        <div class="flex justify-center max-w-md mx-auto">
+            <div class="mt-5 md:mt-0 md:col-span-2">
+                <h1 class="text-4xl text-center text-gray-900 mb-16">Connexion</h1>
+                <form action="#" method="POST">
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    {% endif %}
 
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+                    {% if app.user %}
+                        <div class="mb-3">
+                            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+                        </div>
+                    {% endif %}
+
+                    <div class="example-wrapper">
+                        {% for message in app.flashes('succes') %}
+                            <div class="flash-notice">
+                                <div class="bg-green-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                                    <span class="block sm:inline">{{ message }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% for message in app.flashes('error') %}
+                            <div class="flash-notice">
+                                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                                    <span class="block sm:inline">{{ message }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% for message in app.flashes('warning') %}
+                            <div class="flash-notice">
+                                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                                    <span class="block sm:inline">{{ message }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+
+                        {% for type, messages in app.flashes %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ type }}" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+
+                    </div>
+                    <div class="shadow overflow-hidden sm:rounded-md">
+                        <div class="px-4 py-5 bg-white sm:p-6">
+                            <div class="grid grid-cols-6 gap-6">
+                                <div class="col-span-6 sm:col-span-4">
+                                    <label for="inputEmail" class="block text-sm font-medium text-gray-700">Email</label>
+                                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="mt-1 pl-1 border-2 border-black rounded" required autofocus>
+
+                                </div>
+                                <div class="col-span-6 sm:col-span-4">
+                                    <label for="inputPassword" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+                                    <input type="password" name="password" id="inputPassword" class="mt-1 pl-1 border-2 border-black rounded" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-left sm:px-6">
+                            <label for="_remember_me">
+                                <input type="checkbox" id="remember_me" name="remember_me">
+                                Se souvenir de moi
+                            </label>
+
+                        </div>
+                        <div class="sm:px-6">
+                            <a href="{{ path('app_forgotten_password') }}" class="text-red text-xs italic">Mot de passe oublié ?</a>
+                        </div>
+                        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                            <button type="submit" class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Valider
+                            </button>
+                        </div>
+                        <div class="m-3">
+                            <p>
+                                Pas encore inscrit ? <a href="{{ path('app_register') }}" class="ml-2"> Créer un compte</a>
+                            </p>
+                        </div>
+                    </div>
+                    <input type="hidden" name="_csrf_token"
+                           value="{{ csrf_token('authenticate') }}"
+                    >
+                </form>
+            </div>
         </div>
-    {% endif %}
+    </div>
 
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" required>
-
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
-
-    {#
+        {#
         Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
         See https://symfony.com/doc/current/security/remember_me.html
 
@@ -33,10 +103,5 @@
                 <input type="checkbox" name="_remember_me"> Remember me
             </label>
         </div>
-    #}
-
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-</form>
+        #}
 {% endblock %}

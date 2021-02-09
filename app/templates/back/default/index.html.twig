@@ -1,0 +1,12 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Hello Admin!
+{% endblock %}
+
+{% block body %}
+	<h1 class="text-4xl my-4">Mon profil</h1>
+
+	<div>
+		<a href="{{ path('back_property_index') }}" class="btn">Voir mes biens</a>
+	</div>
+{% endblock %}

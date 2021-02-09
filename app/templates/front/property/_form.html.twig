@@ -1,0 +1,36 @@
+{{ form_start(form) }}
+
+{% for row in form.children %}
+	{% if isCheckbox(row) %}
+		<article class="my-2">
+			<label>
+				{{ form_widget(row) }}
+				<span for="{{ row.vars.label }}">{{ row.vars.label }}</span>
+			</label>
+			<help>{{ form_help(row) }}</help>
+			<errors>{{ form_errors(row) }}</errors>
+		</article>
+	{% elseif isSelectBox(row) %}
+		<article>
+			{{ form_label(row) }}
+			{{ form_widget(row, {attr: {class: 'input-field'}}) }}
+			<help>{{ form_help(row) }}</help>
+			<errors>{{ form_errors(row) }}</errors>
+		</article>
+	{% elseif isSelectBox(row) %}
+		<article>
+			{{ form_label(row) }}
+			{{ form_widget(row, {attr: {class: 'materialize-textarea'}}) }}
+			<help>{{ form_help(row) }}</help>
+			<errors>{{ form_errors(row) }}</errors>
+		</article>
+	{% else %}
+		{{ form_row(row) }}
+	{% endif %}
+
+{% endfor %}
+
+<button class="btn">{{ button_label|default('Ajouter ce bien') }}</button>
+<a href="{{ path('front_property_index') }}" class="btn">Retour à la liste des biens</a>
+
+{{ form_end(form) }}

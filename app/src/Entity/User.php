@@ -5,10 +5,11 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @ORM\Table(name="`user_account`", schema="immo")
+ * @ORM\Table(name="user_account", schema="immo")
  */
 class User implements UserInterface
 {
@@ -21,6 +22,8 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank
+     * @Assert\Email
      */
     private $email;
 
@@ -32,8 +35,32 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\NotBlank
+     * @Assert\Length(min=6)
      */
     private $password;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $forgotPasswordToken;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $token;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $Enabled;
+
 
     public function getId(): ?int
     {
@@ -61,6 +88,7 @@ class User implements UserInterface
     {
         return (string) $this->email;
     }
+
 
     /**
      * @see UserInterface
@@ -112,4 +140,61 @@ class User implements UserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getForgotPasswordToken()
+    {
+        return $this->forgotPasswordToken;
+    }
+
+    /**
+     * @param mixed $forgotPasswordToken
+     */
+    public function setForgotPasswordToken($forgotPasswordToken): void
+    {
+        $this->forgotPasswordToken = $forgotPasswordToken;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): self
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function getEnabled(): ?bool
+    {
+        $Enabled = $this->Enabled;
+        $Enabled = false;
+        return $this->Enabled;
+    }
+
+    public function setEnabled(bool $Enabled): self
+    {
+        $this->Enabled = $Enabled;
+
+        return $this;
+    }
+
+
+
 }

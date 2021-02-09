@@ -23,10 +23,11 @@ yarn-error.log
 # Managed by Composer
 /app/app/bootstrap.php.cache
 /app/var/bootstrap.php.cache
-/app/bin/*
 !/app/bin/console
 !/app/bin/symfony_requirements
 /app/vendor/
+/vendor/
+/node_modules/
 
 # Assets and user uploads
 /app/app/web/bundles/
@@ -58,3 +59,6 @@ app/public/upload/
 .idea
 dump*.sql
 /db-data
+
+/vendor
+/node_modules
