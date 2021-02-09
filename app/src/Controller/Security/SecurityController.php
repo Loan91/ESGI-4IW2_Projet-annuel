@@ -107,10 +107,10 @@ class SecurityController extends AbstractController
             $em->persist($user);
             $em->flush();
             $this->addFlash("success", "Compte crée avec succes !");
-            return $this->redirectToRoute('front_default_index');
+            return $this->redirectToRoute('app_login');
         } else {
             $this->addFlash("error", "ce compte n'existe pas");
-            return  $this->redirectToRoute('front_default_index');        }
+            return  $this->redirectToRoute('app_login');        }
     }
 
     /**
