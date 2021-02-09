@@ -23,12 +23,12 @@ class Property
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, columnDefinition="ENUM('maison', 'appartement')")
+     * @ORM\Column(type="string", length=255)
      */
     private $type;
 
     /**
-     * @ORM\Column(type="string", length=255, columnDefinition="ENUM('studio', 'f0', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12', 'f13', 'f14', 'f15')")
+     * @ORM\Column(type="string", length=255)
      */
     private $category;
 
@@ -103,7 +103,7 @@ class Property
     private $ground;
 
     /**
-     * @ORM\Column(type="string", length=255, columnDefinition="ENUM('individuel', 'collectif')")
+     * @ORM\Column(type="string", length=255)
      */
     private $heater;
 
@@ -164,7 +164,7 @@ class Property
     private $country;
 
     /**
-     * @ORM\Column(type="string", length=255, columnDefinition="ENUM('vente', 'location')")
+     * @ORM\Column(type="string", length=255)
      */
     private $rentOrSale;
 
