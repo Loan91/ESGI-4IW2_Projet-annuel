@@ -77,7 +77,6 @@ class SecurityController extends AbstractController
             $user->setPassword($passwordEncoder->encodePassword($user, $password));
             $user->setRoles(["ROLE_USER"]);
             $user->setEnabled(false);
-            $user->setForgotPasswordToken($tokenGenerator->generateToken());
             $user->setToken($tokenGenerator->generateToken());
             $em->persist($user);
             $em->flush();
