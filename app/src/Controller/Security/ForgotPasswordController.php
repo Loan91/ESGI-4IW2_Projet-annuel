@@ -76,8 +76,7 @@ class ForgotPasswordController extends AbstractController
                 ->setBody(
                     "Bonjour,<br><br>Une demande de réinitialisation de mot de passe a été effectuée. Veuillez cliquer sur le lien suivant : " . $url,
                     'text/html'
-                )
-            ;
+                );
 
             // On envoie l'e-mail
             $mailer->send($message);
