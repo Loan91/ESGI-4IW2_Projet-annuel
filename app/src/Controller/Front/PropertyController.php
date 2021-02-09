@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class PropertyController extends AbstractController
 {
   /**
-   * @Route("/propriete", name="front_property")
+   * @Route("/proprieties", name="front_properties")
    * @param PropertyRepository $repository
    * @param Request $request
    * @return Response
