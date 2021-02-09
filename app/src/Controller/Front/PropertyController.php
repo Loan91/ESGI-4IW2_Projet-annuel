@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Back;
+namespace App\Controller\Front;
 
 use App\Entity\Property;
 use App\Form\PropertyType;
@@ -20,7 +20,7 @@ class PropertyController extends AbstractController
      */
     public function index(PropertyRepository $propertyRepository): Response
     {
-        return $this->render('back/property/index.html.twig', [
+        return $this->render('front/property/index.html.twig', [
             'properties' => $propertyRepository->findAll(),
         ]);
     }
@@ -40,10 +40,10 @@ class PropertyController extends AbstractController
             $entityManager->persist($property);
             $entityManager->flush();
 
-            return $this->redirectToRoute('back_property_index');
+            return $this->redirectToRoute('front_property_index');
         }
 
-        return $this->render('back/property/new.html.twig', [
+        return $this->render('front/property/new.html.twig', [
             'property' => $property,
             'form' => $form->createView(),
         ]);
@@ -54,7 +54,7 @@ class PropertyController extends AbstractController
      */
     public function show(Property $property): Response
     {
-        return $this->render('back/property/show.html.twig', [
+        return $this->render('front/property/show.html.twig', [
             'property' => $property,
         ]);
     }
@@ -70,10 +70,10 @@ class PropertyController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('back_property_index');
+            return $this->redirectToRoute('front_property_index');
         }
 
-        return $this->render('back/property/edit.html.twig', [
+        return $this->render('front/property/edit.html.twig', [
             'property' => $property,
             'form' => $form->createView(),
         ]);
@@ -90,6 +90,6 @@ class PropertyController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('back_property_index');
+        return $this->redirectToRoute('front_property_index');
     }
 }

@@ -1,4 +1,4 @@
-{% extends 'base_back.html.twig' %}
+{% extends 'base_front.html.twig' %}
 
 {% block title %}Property index
 {% endblock %}
@@ -42,8 +42,8 @@
 					<td>{{ property.rentOrSale|uppercaseFirst }}</td>
 					<td>{{ property.price }}</td>
 					<td>
-						<a href="{{ path('back_property_show', {'id': property.id}) }}" class="btn">Afficher le détail</a>
-						<a href="{{ path('back_property_edit', {'id': property.id}) }}" class="btn">Mettre à jour</a>
+						<a href="{{ path('front_property_show', {'id': property.id}) }}" class="btn">Afficher le détail</a>
+						<a href="{{ path('front_property_edit', {'id': property.id}) }}" class="btn">Mettre à jour</a>
 					</td>
 				</tr>
 			{% else %}
@@ -51,14 +51,14 @@
 					<td colspan="38">Vous ne possédez encore aucun bien :(
 						<br/>
 						Vous souhaiterez certainement
-						<a href="{{ path('back_property_new') }}" class="basic-link">en ajouter</a>.</td>
+						<a href="{{ path('front_property_new') }}" class="basic-link">en ajouter</a>.</td>
 				</tr>
 			{% endfor %}
 		</tbody>
 	</table>
 
 	{% if properties %}
-		<form action="{{ path('back_property_new') }}">
+		<form action="{{ path('front_property_new') }}">
 			<button type="submit" class="btn mt-4">Ajouter d'autres biens</button>
 		</form>
 	{% endif %}
