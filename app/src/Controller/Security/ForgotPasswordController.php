@@ -46,7 +46,7 @@ class ForgotPasswordController extends AbstractController
             // Si l'utilisateur n'existe pas
             if ($user === null) {
                 // On envoie une alerte disant que l'adresse e-mail est inconnue
-                $this->addFlash('danger', 'Cette adresse e-mail est inconnue');
+                $this->addFlash('error', 'Cette adresse e-mail est inconnue');
 
                 // On retourne sur la page de connexion
                 return $this->redirectToRoute('app_login');
