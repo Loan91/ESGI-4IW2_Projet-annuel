@@ -83,7 +83,7 @@ class ForgotPasswordController extends AbstractController
             $mailer->send($message);
 
             // On crée le message flash de confirmation
-            $this->addFlash('message', 'E-mail de réinitialisation du mot de passe envoyé !');
+            $this->addFlash('succes', 'E-mail de réinitialisation du mot de passe envoyé !');
 
             // On redirige vers la page de login
             return $this->redirectToRoute('app_login');
@@ -126,7 +126,7 @@ class ForgotPasswordController extends AbstractController
             $entityManager->flush();
 
             // On crée le message flash
-            $this->addFlash('message', 'Mot de passe mis à jour');
+            $this->addFlash('succes', 'Mot de passe mis à jour');
 
             // On redirige vers la page de connexion
             return $this->redirectToRoute('app_login');
