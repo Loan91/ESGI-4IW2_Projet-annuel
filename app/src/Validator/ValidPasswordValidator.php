@@ -18,7 +18,7 @@ class ValidPasswordValidator extends ConstraintValidator
             return;
         }
 
-        if (!preg_match('/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\S+$).{8,20}$/', $value, $matches)) {
+        if (!preg_match('/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\S+$).{6,20}$/', $value, $matches)) {
             // the argument must be a string or an object implementing __toString()
             $this->context->buildViolation($constraint->message)
                 ->addViolation();
