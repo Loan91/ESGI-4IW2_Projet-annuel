@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Validator\ValidPassword;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -39,7 +40,7 @@ class UserRegistrationFormType extends AbstractType
             ])
             ->add('password', PasswordType::class, [
                 'label' => 'mot de passe',
-                'required' => false,
+                'required' => true,
                 'empty_data' => '',
                 'constraints' => [
                     new Assert\Length([
@@ -48,7 +49,24 @@ class UserRegistrationFormType extends AbstractType
                     ]),
                     new ValidPassword(['min' => 6])
                 ],
-            ]);
+            ])
+            // ->add('password', RepeatedType::class, [
+            //     'type' => PasswordType::class,
+            //     'empty_data' => '',
+            //     'invalid_message' => 'The password fields must match.',
+            //     'options' => ['attr' => ['class' => 'password-field']],
+            //     'required' => true,
+            //     'first_options'  => ['label' => 'mot de passe'],
+            //     'second_options' => ['label' => 'répétrez le mode de passe'],
+            //     'constraints' => [
+            //         new Assert\Length([
+            //             'min' => 6,
+            //             'minMessage' => 'Le mot de passe est trop court. Entrez au minimum 6 caractères.'
+            //         ]),
+            //         new ValidPassword(['min' => 6])
+            //     ],
+            // ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
