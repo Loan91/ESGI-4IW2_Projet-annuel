@@ -11,24 +11,28 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Property;
 use App\Form\PropertyType;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-
+/**
+ * @Route("/properties")
+ */
 class PropertyController extends AbstractController
 {
-
-
     /**
-     * @Route("/property", name="property_index", methods={"GET"})
+     * @Route("/", name="property_index", methods={"GET"})
      */
-    public function index(PropertyRepository $propertyRepository): Response
+    public function index(PropertyRepository $propertyRepository, TokenStorageInterface $tokenStorage): Response
     {
+        // Utilisateur courant
+        $user = $tokenStorage->getToken()->getUser();
+
         return $this->render('front/property/index.html.twig', [
-            'properties' => $propertyRepository->findAll(),
+            'properties' => $propertyRepository->getUserProperties($user)
         ]);
     }
 
     /**
-     * @Route("/property/new", name="property_new", methods={"GET","POST"})
+     * @Route("/new", name="property_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -52,7 +56,7 @@ class PropertyController extends AbstractController
     }
 
     /**
-     * @Route("/property/{id}", name="property_show", methods={"GET"})
+     * @Route("/{id}", name="property_show", methods={"GET"})
      */
     public function show(Property $property): Response
     {
@@ -62,7 +66,7 @@ class PropertyController extends AbstractController
     }
 
     /**
-     * @Route("/property/{id}/edit", name="property_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="property_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Property $property): Response
     {
@@ -82,7 +86,7 @@ class PropertyController extends AbstractController
     }
 
     /**
-     * @Route("/property/{id}", name="property_delete", methods={"DELETE"})
+     * @Route("/{id}", name="property_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Property $property): Response
     {
@@ -103,20 +107,20 @@ class PropertyController extends AbstractController
      */
     public function search(PropertyRepository $repository, Request $request): Response
     {
-      $data = new SearchData();
+        $data = new SearchData();
 
-      $form = $this->createForm(SearchType::class, $data);
-      $form->handleRequest($request);
+        $form = $this->createForm(SearchType::class, $data);
+        $form->handleRequest($request);
 
-      if ($form->isSubmitted() && $form->isValid()) {
-        $properties = $repository->findSearch($data);
-      } else {
-        $properties = $repository->findAll();
-      }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $properties = $repository->findSearch($data);
+        } else {
+            $properties = $repository->findAll();
+        }
 
-      return $this->render('front/property/search.html.twig', [
-          'properties' => $properties,
-          'form' => $form->createView(),
-      ]);
+        return $this->render('front/property/search.html.twig', [
+            'properties' => $properties,
+            'form' => $form->createView(),
+        ]);
     }
 }

@@ -1,21 +1,23 @@
 {% extends 'base_front.html.twig' %}
 
 
-{% block title %}Créer un compte{% endblock %}
+{% block title %}Créer un compte
+{% endblock %}
 
 {% block body %}
 
-    <div class="mt-5">
-        <div class="flex justify-center max-w-3xl mx-auto">
-            {{ form_start(registrationForm) }}
-            <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-3xl">
-                <h1 class="text-4xl text-center text-gray-900 mb-16">Inscrivez-vous</h1>
-                <form action="#" method="POST">
-                    <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-                        <div class="">
-                            <div class="">
-                                <label for="name" class="block text-sm font-medium text-gray-700">Nom</label>
-                                {{ form_widget(registrationForm.name,
+	<div class="mt-5">
+		<div class="flex justify-center max-w-3xl mx-auto">
+			{{ form_start(registrationForm) }}
+
+			<div class="mt-8 sm:mx-auto sm:w-full sm:max-w-3xl">
+				<h1 class="text-4xl text-center text-gray-900 mb-16">Inscrivez-vous</h1>
+				<form action="#" method="POST">
+					<div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+						<div class="">
+							<div class="">
+								<label for="name" class="block text-sm font-medium text-gray-700">{{ registrationForm.name.vars.label|uppercaseFirst }}</label>
+								{{ form_widget(registrationForm.name,
                                     {
                                         'attr' :
                                         {
@@ -26,11 +28,16 @@
                                         }
                                     }
                                 )}}
-                            </div>
+							</div>
+							{% if not registrationForm.name.vars.valid %}
+								<div class="bg-red-200 p-2 rounded mt-2">
+									{{ form_errors(registrationForm.name) }}
+								</div>
+							{% endif %}
 
-                            <div class="mt-4">
-                                <label class="block text-sm font-medium text-gray-700">Email</label>
-                                {{ form_widget(registrationForm.email,
+							<div class="mt-4">
+								<label class="block text-sm font-medium text-gray-700">{{ registrationForm.email.vars.label|uppercaseFirst }}</label>
+								{{ form_widget(registrationForm.email,
                                     {
                                         'attr' :
                                         {
@@ -40,10 +47,16 @@
                                             'id' : 'email'
                                         }
                                     }) }}
-                            </div>
-                            <div class="mt-4">
-                                <label class="block text-sm font-medium text-gray-700">Mot de passe</label>
-                                {{ form_widget(registrationForm.password,
+							</div>
+							{% if not registrationForm.email.vars.valid %}
+								<div class="bg-red-200 p-2 rounded mt-2">
+									{{ form_errors(registrationForm.email) }}
+								</div>
+							{% endif %}
+
+							<div class="mt-4">
+								<label class="block text-sm font-medium text-gray-700">{{ registrationForm.password.vars.label|uppercaseFirst }}</label>
+								{{ form_widget(registrationForm.password,
                                     {
                                         'attr' :
                                         {
@@ -53,22 +66,32 @@
                                             'id' : 'password'
                                         }
                                     }) }}
-                            </div>
-                        </div>
-                        <div class="mt-6">
-                            <button type="submit" class="py-2 px-4 w-full border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                Valider
-                            </button>
-                            <div class="mt-3">
-                                <p>
-                                    Déjà inscrit ? <a href="{{ path('app_login') }}" class="ml-2"> Se connecter</a>
-                                </p>
-                            </div>
-                            {{ form_end(registrationForm) }}
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+							</div>
+
+							{% if not registrationForm.password.vars.valid %}
+								<div class="bg-red-200 p-2 rounded mt-2">
+									{{ form_errors(registrationForm.password) }}
+								</div>
+							{% endif %}
+
+						</div>
+						<div class="mt-6">
+							<button type="submit" class="py-2 px-4 w-full border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+								Valider
+							</button>
+							<div class="mt-3">
+								<p>
+									Déjà inscrit ?
+									<a href="{{ path('app_login') }}" class="ml-2">
+										Se connecter</a>
+								</p>
+							</div>
+
+							{{ form_end(registrationForm) }}
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 {% endblock %}
