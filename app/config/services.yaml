@@ -36,3 +36,9 @@ services:
             - '@twig'
         tags:
             - { name: kernel.event_listener, event: kernel.request }
+    App\Command\UpWebsiteCommand:
+        arguments:
+            - '%maintenanceFilePath%'
+    App\Command\DownWebsiteCommand:
+        arguments:
+            - '%maintenanceFilePath%'
