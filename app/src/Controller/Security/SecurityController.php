@@ -41,9 +41,9 @@ class SecurityController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser() && in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
-            return $this->redirectToRoute('back_default_index');
+            return $this->redirectToRoute('back_dashboard');
         } elseif ($this->getUser()) {
-            return $this->redirectToRoute('front_default_index');
+            return $this->redirectToRoute('front_home');
         }
 
         // get the login error if there is one
