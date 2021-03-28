@@ -49,26 +49,22 @@
                     <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
                     <a href="{{ path('front_home') }}"
                         class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Homepage</a>
-                    {% if app.user and is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('back_dashboard') }}"
-                        class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Administrateur</a>
-                    {% endif %}
                     {% if app.user %}
                     <a href="{{ path('front_users') }}"
-                        class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Mon
-                        profile</a>
+                        class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Mon profil</a>
                     <a href="{{ path('front_contact_index') }}"
-                        class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Mes
-                        rendez-vous</a>
+                        class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Mes rendez-vous</a>
+                        {% if app.user and is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('back_dashboard') }}"
+                        class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
+                    {% endif %}
                     <a href="{{ path('app_logout') }}"
-                        class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Se
-                        deconnecter</a>
+                        class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Déconnexion</a>
                     {% else %}
                     <a href="{{ path('app_register') }}"
                         class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">S'inscrire</a>
                     <a href="{{ path('app_login') }}"
-                        class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Se
-                        connecter</a>
+                        class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Se connecter</a>
                     {% endif %}
                 </div>
             </div>
