@@ -1,21 +1,28 @@
 {% extends 'base_front.html.twig' %}
 
 
-{% block title %}Modification du profil de {{ app.user.name }}{% endblock %}
+{% block title %}Modification du profil de {{ app.user.email }}{% endblock %}
 
 {% block body %}
 
     <div class="mt-5">
         <div class="flex justify-center px-4">
             <div class=" pt-8 md:mt-0 md:col-span-2">
-                <h1 class="text-4xl text-center text-gray-900 mb-8 font-bold">Modification du profil de {{ app.user.name }}</h1>
+                <h1 class="text-4xl text-center text-gray-900 mb-8 font-bold">Modification du profil de {{ app.user.email }}</h1>
                 {{ form_start(form) }}
 
                     <div class="mb-2">
-                        <div class="text-red-600 font-bold">{{ form_errors(form.name) }}</div>
-                        {{ form_label(form.name) }}
-                        {{ form_widget(form.name, {'attr': {'class': 'ml-2 border border-black rounded p-1'}}) }}
-                        <div>{{ form_help(form.name) }}</div>
+                        <div class="text-red-600 font-bold">{{ form_errors(form.firstname) }}</div>
+                        {{ form_label(form.firstname) }}
+                        {{ form_widget(form.firstname, {'attr': {'class': 'ml-2 border border-black rounded p-1'}}) }}
+                        <div>{{ form_help(form.firstname) }}</div>
+
+                    </div>
+                    <div class="mb-2">
+                        <div class="text-red-600 font-bold">{{ form_errors(form.lastname) }}</div>
+                        {{ form_label(form.lastname) }}
+                        {{ form_widget(form.lastname, {'attr': {'class': 'ml-2 border border-black rounded p-1'}}) }}
+                        <div>{{ form_help(form.lastname) }}</div>
 
                     </div>
                     <div class="mb-8">

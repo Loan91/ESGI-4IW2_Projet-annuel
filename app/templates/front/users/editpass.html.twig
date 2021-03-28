@@ -1,7 +1,7 @@
 {% extends 'base_front.html.twig' %}
 
 
-{% block title %}Modification du mot de passe de {{ app.user.name }}{% endblock %}
+{% block title %}Modification du mot de passe de {{ app.user.email }}{% endblock %}
 
 {% block body %}
 
@@ -11,9 +11,8 @@
         {% endfor %}
         <div class="flex justify-center max-w-md mx-auto">
             <div class="mt-5 md:mt-0 md:col-span-2">
-                <h1 class="text-4xl text-center text-gray-900 mb-16">Modification du mot de passe de {{ app.user.name }}</h1>
+                <h1 class="text-4xl text-center text-gray-900 mb-16">Modification du mot de passe de {{ app.user.email }}</h1>
                     <form method="post">
-
                         <div class="col-span-6 sm:col-span-4">
                             <label for="inputPassword" class="block text-sm font-medium text-gray-700">Mot de passe</label>
                             <input type="password" name="password" id="password" class="mt-1 pl-1 border-2 border-black rounded" required>

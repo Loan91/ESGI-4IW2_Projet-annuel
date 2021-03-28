@@ -100,7 +100,7 @@ class AppCustomAuthenticator extends AbstractFormLoginAuthenticator implements P
         //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
 
         $request->getSession()->getFlashBag()->add('success', 'Connecté avec success');
-        return new RedirectResponse($this->urlGenerator->generate('front_default_index'));
+        return new RedirectResponse($this->urlGenerator->generate('front_home'));
     }
 
     protected function getLoginUrl()

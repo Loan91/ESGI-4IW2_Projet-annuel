@@ -5,91 +5,76 @@
 
 {% block body %}
 	<div class="mt-5">
-		<div class="flex justify-center max-w-md mx-auto">
+		<div class="flex justify-center lg:w-1/2 mx-auto">
 			<div class="mt-5 md:mt-0 md:col-span-2">
-				<h1 class="text-4xl text-center text-gray-900 mb-16">Connexion</h1>
-				<form action="#" method="POST" id="login-form">
-					{% if error %}
-						<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-					{% endif %}
-
-					{% if app.user %}
-						<div class="mb-3">
-							You are logged in as
-							{{ app.user.username }},
-							<a href="{{ path('app_logout') }}">Logout</a>
-						</div>
-					{% endif %}
-
-					<div class="example-wrapper">
-						{% for message in app.flashes('succes') %}
-							<div class="flash-notice">
-								<div class="bg-green-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-									<span class="block sm:inline">{{ message }}</span>
+				<h1 class="text-4xl text-center text-gray-900 mb-16 font-bold">Connexion</h1>
+					<form action="#" method="POST" id="login-form">
+						{% if error %}
+							<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+						{% endif %}
+	
+						{% if app.user %}
+							<div class="mb-3">
+								You are logged in as
+								{{ app.user.username }},
+								<a href="{{ path('app_logout') }}">Logout</a>
+							</div>
+						{% endif %}
+	
+						<div class="example-wrapper">
+							{% for type, messages in app.flashes %}
+							<div class="flex items-center bg-white shadow  rounded-md mt-6 px-2 mx-8" style="width: 24rem;">
+								<div class="mr-6 bg-green-500 rounded px-4 py-2  text-center -ml-3">
+									<svg fill="none" viewBox="0 0 24 24" class="w-8 h-8 text-white" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+									</svg>
+								</div>
+								<div class="flex items-center">
+									{# <h2 class="text-green-500 text-2xl font-bold mr-2 ">Success</h2> #}
+									{% for message in messages %}
+										<p class="text-sm text-gray-700">{{ message }}</p>
+									{% endfor %}
 								</div>
 							</div>
-						{% endfor %}
-						{% for message in app.flashes('error') %}
-							<div class="flash-notice">
-								<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-									<span class="block sm:inline">{{ message }}</span>
-								</div>
-							</div>
-						{% endfor %}
-						{% for message in app.flashes('warning') %}
-							<div class="flash-notice">
-								<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-									<span class="block sm:inline">{{ message }}</span>
-								</div>
-							</div>
-						{% endfor %}
-
-
-						{% for type, messages in app.flashes %}
-							{% for message in messages %}
-								<div class="alert alert-{{ type }}" role="alert">
-									{{ message }}
-								</div>
 							{% endfor %}
-						{% endfor %}
-
-					</div>
-					<div class="shadow overflow-hidden sm:rounded-md">
-						<div class="px-4 py-5 bg-white sm:p-6">
-							<div class="">
-								<!-- Email -->
-								<div class="col-span-6 sm:col-span-4 mb-2">
-									<label for="inputEmail" class="block text-sm font-medium text-gray-700">Email</label>
-									<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="mt-1 pl-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:border-gray-700 sm:text-sm" required autofocus>
-								</div>
-
-								<!-- Mot de passe -->
-								<div class="col-span-6 sm:col-span-4 mb-2">
-									<label for="inputPassword" class="block text-sm font-medium text-gray-700">Mot de passe</label>
-									<input type="password" name="password" id="inputPassword" class="mt-1 pl-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:border-gray-700 sm:text-sm" required>
-								</div>
-
-								{# See https://symfony.com/doc/current/security/remember_me.html #}
-								<div class="mb-3">
-									<a href="{{ path('app_forgotten_password') }}" class="text-red text-xs italic">Mot de passe oublié ?</a>
-								</div>
-								
+	
+						</div>
+						<div class="shadow overflow-hidden sm:rounded-md">
+							<div class="px-4 py-5 bg-white sm:p-6">
 								<div class="">
-									<div class="text-red text-xs">
-										Pas encore inscrit ?
-										<a href="{{ path('app_register') }}" class="ml-2 italic">
-											Créer un compte</a>
+									<!-- Email -->
+									<div class="col-span-6 sm:col-span-4 mb-2">
+										<label for="inputEmail" class="block text-sm font-medium text-gray-700">Email</label>
+										<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="mt-1 pl-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:border-gray-700 sm:text-sm" required autofocus>
+									</div>
+	
+									<!-- Mot de passe -->
+									<div class="col-span-6 sm:col-span-4 mb-2">
+										<label for="inputPassword" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+										<input type="password" name="password" id="inputPassword" class="mt-1 pl-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:border-gray-700 sm:text-sm" required>
+									</div>
+	
+									{# See https://symfony.com/doc/current/security/remember_me.html #}
+									<div class="mb-3">
+										<a href="{{ path('app_forgotten_password') }}" class="text-red text-xs italic">Mot de passe oublié ?</a>
+									</div>
+									
+									<div class="">
+										<div class="text-red text-xs">
+											Pas encore inscrit ?
+											<a href="{{ path('app_register') }}" class="ml-2 italic">
+												Créer un compte</a>
+										</div>
+									</div>
+	
+									<!-- Validation -->
+									<div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+										<button type="submit" z class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+											Valider
+										</button>
 									</div>
 								</div>
-
-								<!-- Validation -->
-								<div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-									<button type="submit" z class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-										Valider
-									</button>
-								</div>
-							</div>
-							<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+								<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 							</div>
 						</div>
 					</div>
