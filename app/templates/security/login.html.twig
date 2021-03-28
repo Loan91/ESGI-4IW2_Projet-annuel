@@ -56,41 +56,43 @@
 					</div>
 					<div class="shadow overflow-hidden sm:rounded-md">
 						<div class="px-4 py-5 bg-white sm:p-6">
-							<div class="grid grid-cols-6 gap-6">
-								<div class="col-span-6 sm:col-span-4">
+							<div class="">
+								<!-- Email -->
+								<div class="col-span-6 sm:col-span-4 mb-2">
 									<label for="inputEmail" class="block text-sm font-medium text-gray-700">Email</label>
-									<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="mt-1 pl-1 border-2 border-black rounded" required autofocus>
-
+									<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="mt-1 pl-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:border-gray-700 sm:text-sm" required autofocus>
 								</div>
-								<div class="col-span-6 sm:col-span-4">
+
+								<!-- Mot de passe -->
+								<div class="col-span-6 sm:col-span-4 mb-2">
 									<label for="inputPassword" class="block text-sm font-medium text-gray-700">Mot de passe</label>
-									<input type="password" name="password" id="inputPassword" class="mt-1 pl-1 border-2 border-black rounded" required>
+									<input type="password" name="password" id="inputPassword" class="mt-1 pl-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:border-gray-700 sm:text-sm" required>
+								</div>
+
+								{# See https://symfony.com/doc/current/security/remember_me.html #}
+								<div class="mb-3">
+									<a href="{{ path('app_forgotten_password') }}" class="text-red text-xs italic">Mot de passe oublié ?</a>
+								</div>
+								
+								<div class="">
+									<div class="text-red text-xs">
+										Pas encore inscrit ?
+										<a href="{{ path('app_register') }}" class="ml-2 italic">
+											Créer un compte</a>
+									</div>
+								</div>
+
+								<!-- Validation -->
+								<div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+									<button type="submit" z class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+										Valider
+									</button>
 								</div>
 							</div>
+							<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+							</div>
 						</div>
-
-						<<<<<<<Updatedupstream</div><divclass="sm:px-6"><ahref="{{path('app_forgotten_password')}}"class="text-redtext-xsitalic">Motdepasseoublié?</a></div><divclass="px-4py-3bg-gray-50text-rightsm:px-6"><buttontype="submit"class="py-2px-4borderborder-transparentshadow-smtext-smfont-mediumrounded-mdtext-whitebg-indigo-600hover:bg-indigo-700focus:outline-nonefocus:ring-2focus:ring-offset-2focus:ring-indigo-500">Valider</button></div><divclass="m-3"><p>Pasencoreinscrit?<ahref="{{path('app_register')}}"class="ml-2">Créeruncompte</a></p></div></div><inputtype="hidden"name="_csrf_token"value="{{csrf_token('authenticate')}}"></form></div></div></div>=======<divclass="text-leftsm:px-6"><labelfor="_remember_me"><inputtype="checkbox"id="remember_me"name="remember_me">Sesouvenirdemoi</label>>>>>>>> Stashed changes
-
 					</div>
-
-					{# See https://symfony.com/doc/current/security/remember_me.html #}
-					<div class="sm:px-6">
-						<a href="{{ path('app_forgot_password') }}" class="text-red text-xs italic">Mot de passe oublié ?</a>
-					</div>
-					<div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-						<button type="submit" z class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-							Valider
-						</button>
-					</div>
-					<div class="m-3">
-						<p>
-							Pas encore inscrit ?
-							<a href="{{ path('app_register') }}" class="ml-2">
-								Créer un compte</a>
-						</p>
-					</div>
-				</div>
-				<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 			</form>
 		</div>
 	</div>

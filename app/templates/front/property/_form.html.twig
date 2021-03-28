@@ -1,36 +1,103 @@
+{% form_theme form 'themes/tailwindcss.html.twig' %}
+
 {{ form_start(form) }}
 
-{% for row in form.children %}
-	{% if isCheckbox(row) %}
-		<article class="my-2">
-			<label>
-				{{ form_widget(row) }}
-				<span for="{{ row.vars.label }}">{{ row.vars.label }}</span>
-			</label>
-			<help>{{ form_help(row) }}</help>
-			<errors>{{ form_errors(row) }}</errors>
-		</article>
-	{% elseif isSelectBox(row) %}
-		<article>
-			{{ form_label(row) }}
-			{{ form_widget(row, {attr: {class: 'input-field'}}) }}
-			<help>{{ form_help(row) }}</help>
-			<errors>{{ form_errors(row) }}</errors>
-		</article>
-	{% elseif isSelectBox(row) %}
-		<article>
-			{{ form_label(row) }}
-			{{ form_widget(row, {attr: {class: 'materialize-textarea'}}) }}
-			<help>{{ form_help(row) }}</help>
-			<errors>{{ form_errors(row) }}</errors>
-		</article>
-	{% else %}
-		{{ form_row(row) }}
-	{% endif %}
+<div class="">
+	<section class="sm:grid sm:grid-cols-2 gap-8">
+		<div class="shadow sm:rounded-md sm:overflow-hidden">
+			<div class="px-4 py-5 bg-gray-50 space-y-6 sm:p-6">
+				<h3 class="text-xl font-medium leading-6 text-gray-900 mb-6">Information du bien</h3>
 
-{% endfor %}
+				<div>
+					<div class="grid grid-cols-2 gap-6">
+						<div>{{ form_row(form.type) }}</div>
+						<div>{{ form_row(form.category) }}</div>
+						<div>{{ form_row(form.area) }}</div>
+					</div>
+					<div class="grid grid-cols-3 gap-6">
+						<div class="col-span-3 mt-6">{{ form_row(form.address) }}</div>
+						<div>{{ form_row(form.city) }}</div>
+						<div>{{ form_row(form.zipCode) }}</div>
+						<div>{{ form_row(form.country) }}</div>
+					</div>
+				</div>
 
-<button class="btn">{{ button_label|default('Ajouter ce bien') }}</button>
-<a href="{{ path('front_property_index') }}" class="btn">Retour à la liste des biens</a>
+				<div class="flex mt-6">
+					<label class="flex items-center">
+						<input type="checkbox" class="form-checkbox">
+						<span class="ml-2">I agree to the <span class="underline">privacy policy</span></span>
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="shadow sm:rounded-md sm:overflow-hidden">
+			<div class="px-4 py-5 bg-gray-50 space-y-6 sm:p-6">
+				<h3 class="text-xl font-medium leading-6 text-gray-900 mb-6">Description</h3>
+
+				<div>
+					<div class="grid grid-cols-3 gap-6">
+						<div class="col-span-3">{{ form_row(form.description) }}</div>
+						<div class="col-span-2">{{ form_row(form.constructionDate) }}</div>
+						<div></div>
+						<div>{{ form_row(form.floor) }}</div>
+						<div>{{ form_row(form.floors) }}</div>
+						<div>{{ form_row(form.rooms) }}</div>
+						<div>{{ form_row(form.bedrooms) }}</div>
+						<div>{{ form_row(form.bathrooms) }}</div>
+						<div>{{ form_row(form.toilets) }}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="shadow sm:rounded-md sm:overflow-hidden">
+			<div class="px-4 py-5 bg-gray-50 space-y-6 sm:p-6">
+				<h3 class="text-xl font-medium leading-6 text-gray-900 mb-6">Case à cocher</h3>
+
+				<div>
+					<div class="grid grid-cols-3 gap-6">
+						<div>{{ form_row(form.isFurnished) }}</div>
+						<div>{{ form_row(form.containsStorage) }}</div>
+						<div>{{ form_row(form.isKitchenSeparated) }}</div>
+						<div>{{ form_row(form.containDiningRoom) }}</div>
+						<div class="col-span-2">{{ form_row(form.ground) }}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="shadow sm:rounded-md sm:overflow-hidden">
+			<div class="px-4 py-5 bg-gray-50 space-y-6 sm:p-6">
+				<h3 class="text-xl font-medium leading-6 text-gray-900 mb-6">Case à cocher</h3>
+
+				<div>
+					<div class="grid grid-cols-3 gap-6">
+						<div>{{ form_row(form.heater) }}</div>
+						<div>{{ form_row(form.fireplace) }}</div>
+						<div>{{ form_row(form.elevator) }}</div>
+						<div>{{ form_row(form.externalStorage) }}</div>
+						<div>{{ form_row(form.areaExternalStorage) }}</div>
+						<div>{{ form_row(form.guarding) }}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="shadow sm:rounded-md sm:overflow-hidden">
+			<div class="px-4 py-5 bg-gray-50 space-y-6 sm:p-6">
+				<h3 class="text-xl font-medium leading-6 text-gray-900 mb-6">Autres info</h3>
+
+				<div>
+					<div class="grid grid-cols-3 gap-6">
+						<div>{{ form_row(form.energyConsumption) }}</div>
+						<div>{{ form_row(form.gasEmissions) }}</div>
+						<div>{{ form_row(form.feesPrice) }}</div>
+						<div>{{ form_row(form.inventoryPrice) }}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
 
 {{ form_end(form) }}
+
+<button class="inline-flex items-center px-8 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-white bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">{{ button_label|default('Ajouter ce bien') }}</button>
+<a href="{{ path('front_property_index') }}" class="inline-flex items-center px-8 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-white bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Retour à la liste des biens</a>

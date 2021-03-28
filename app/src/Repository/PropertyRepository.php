@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Data\SearchData;
 use App\Entity\Property;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,32 +22,41 @@ class PropertyRepository extends ServiceEntityRepository
     }
 
 
-  /**
-   * Récupère les propriétés en lien avec la recherche soumise.
-   * @param SearchData $searchData
-   * @return Property[]
-   */
+    /**
+     * Récupère les propriétés en lien avec la recherche soumise.
+     * @param SearchData $searchData
+     * @return Property[]
+     */
     public function findSearch(SearchData $searchData)
     {
 
         $query = $this->createQueryBuilder('p');
 
-        if(!empty($searchData->type)) {
+        if (!empty($searchData->type)) {
             $query = $query->where('p.type = :type')->setParameter('type', $searchData->type);
         }
 
-        if(!empty($searchData->categories)) {
+        if (!empty($searchData->categories)) {
             $query = $query->andWhere('p.category = :categories')->setParameter('categories', $searchData->categories);
         }
 
-        if(!empty($searchData->minPrice)) {
+        if (!empty($searchData->minPrice)) {
             $query = $query->andWhere('p.price >= :minPrice')->setParameter('minPrice', $searchData->minPrice);
         }
 
-        if(!empty($searchData->maxPrice)) {
+        if (!empty($searchData->maxPrice)) {
             $query = $query->andWhere('p.price <= :maxPrice')->setParameter('maxPrice', $searchData->maxPrice);
         }
 
         return $query->getQuery()->getResult();
+    }
+
+    public function getUserProperties(User $user)
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.owner = :user')
+            ->setParameter('user', $user)
+            ->orderBy('p.id')
+            ->getQuery()->getResult();
     }
 }

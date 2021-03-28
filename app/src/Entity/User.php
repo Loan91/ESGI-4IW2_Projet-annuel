@@ -22,8 +22,12 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Assert\NotBlank
-     * @Assert\Email
+     * @Assert\Email(
+     *     message = "L'email {{ value }} n'est pas une adresse email valide."
+     * )
+     * @Assert\NotBlank(
+     *      message = "L'email ne peut pas être vide."
+     * )
      */
     private $email;
 
@@ -35,14 +39,24 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Assert\NotBlank
-     * @Assert\Length(min=6)
+     * @Assert\NotBlank(
+     *      message = "Le mot de passe ne peut pas être vide."
+     * )
+     * @Assert\Length(
+     *      min = 6,
+     *      minMessage = "Le mot de passe est trop court. Entrez au minimum 6 caractères."
+     * )
+     * @App\Validator\ValidPassword(
+     *      min = 6
+     * )
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
+     * @Assert\NotBlank(
+     *      message = "Le nom ne peut pas être vide."
+     * )
      */
     private $name;
 
@@ -194,7 +208,4 @@ class User implements UserInterface
 
         return $this;
     }
-
-
-
 }
