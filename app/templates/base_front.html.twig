@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>
-        {% block title %}Welcome!
+        {% block title %}{{ appName }}
         {% endblock %}
     </title>
     <link rel="stylesheet" href="{{ asset('main.css') }}">
@@ -47,10 +47,10 @@
                 </div>
                 <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                     <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-                    <a href="{{ path('front_default_index') }}"
+                    <a href="{{ path('front_home') }}"
                         class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Homepage</a>
                     {% if app.user and is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('back_default_index') }}"
+                    <a href="{{ path('back_dashboard') }}"
                         class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Administrateur</a>
                     {% endif %}
                     {% if app.user %}
