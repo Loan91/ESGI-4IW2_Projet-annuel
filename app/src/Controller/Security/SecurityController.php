@@ -3,16 +3,13 @@
 namespace App\Controller\Security;
 
 
-use App\Form\ResetPasswordFormType;
 use App\Repository\UserRepository;
 use App\Service\Mailer;
 use App\Form\UserRegistrationFormType;
-use ContainerPhAbnYx\getSecurity_Csrf_TokenGeneratorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
@@ -65,23 +62,25 @@ class SecurityController extends AbstractController
      * @param TokenGeneratorInterface $tokenGenerator
      * @return Response
      */
-    public function register(Request $request,EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder, TokenGeneratorInterface $tokenGenerator)
+    public function register(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder, TokenGeneratorInterface $tokenGenerator)
     {
         $form = $this->createForm(UserRegistrationFormType::class);
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
             $password = $form->get('password')->getData();
-            $user->setPassword($passwordEncoder->encodePassword($user, $password));
-            $user->setRoles(["ROLE_USER"]);
-            $user->setEnabled(false);
-            $user->setToken($tokenGenerator->generateToken());
+            $user = $user->setFirstname('')
+                ->setLastname('')
+                ->setPassword($passwordEncoder->encodePassword($user, $password))
+                ->setRoles(["ROLE_USER"])
+                ->setEnabled(false)
+                ->setToken($tokenGenerator->generateToken());
             $em->persist($user);
             $em->flush();
-            $this->mailer->sendEmail($user->getEmail(), $user->getToken(), $user->getName());
-            $this->addFlash("warning", "Un mail de confirmation d'inscription vous a été envoyé ! ");
+            $this->mailer->sendEmail($user->getEmail(), $user->getToken(), $user->getFirstname() . ' ' . $user->getLastname());
+            $this->addFlash("success", "Un mail de confirmation d'inscription vous a été envoyé ! ");
 
             return $this->redirectToRoute('app_login');
         }
@@ -98,19 +97,19 @@ class SecurityController extends AbstractController
 
     public function confirmAccount(string $token)
     {
-        $user = $this->userRepository->findOneBy(["token"=> $token]);
-        if ($user)
-        {
+        $user = $this->userRepository->findOneBy(["token" => $token]);
+        if ($user) {
             $user->setToken(null);
             $user->setEnabled(true);
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
-            $this->addFlash("success", "Compte crée avec succes !");
+            $this->addFlash("success", "Compte créé avec succes !");
             return $this->redirectToRoute('app_login');
         } else {
             $this->addFlash("error", "ce compte n'existe pas");
-            return  $this->redirectToRoute('app_login');        }
+            return  $this->redirectToRoute('app_login');
+        }
     }
 
     /**

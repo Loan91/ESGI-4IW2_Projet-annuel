@@ -1,7 +1,7 @@
 {% extends 'base_front.html.twig' %}
 
 
-{% block title %}Profile de {{ app.user.name }}{% endblock %}
+{% block title %}Profil de {{ app.user.firstname ~ ' ' ~ app.user.lastname }}{% endblock %}
 
 {% block body %}
 
@@ -11,13 +11,11 @@
         {% endfor %}
         <div class="flex justify-center max-w-md mx-auto">
             <div class="mt-5 md:mt-0 md:col-span-2">
-                <h1 class="text-4xl text-center text-gray-900 mb-16">Profil de {{ app.user.name }}</h1>
+                <h1 class="text-4xl text-center text-gray-900 mb-16">Profil de {{ app.user.email }}</h1>
 
                     <div class="shadow overflow-hidden sm:rounded-md">
                         <div class="px-4 py-5 bg-white sm:p-6">
-
-
-                                <p>Nom : <strong>{{ app.user.name }}</strong></p>
+                                {# <p>Nom : <strong>{{ app.user.firstname ~ ' ' ~ app.user.lastname }}</strong></p> #}
                                 <p>Email : <strong>{{ app.user.email }}</strong></p>
                                 <br>
                                 <a href="{{ path('front_user_profil_modifier') }}" class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Modifier le profil</a>

@@ -19,13 +19,15 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
+        $faker = \Faker\Factory::create('fr_FR');
+
         $user = new User();
         $user->setEmail('admin@dev.com')
             ->setPassword($this->passwordEncoder->encodePassword($user, 'password'))
-            ->setName('admin')
+            ->setFirstname($faker->firstname)
+            ->setLastname($faker->lastname)
             ->setRoles(['ROLE_ADMIN'])
             ->setEnabled(true);
-
 
         $manager->persist($user);
         $manager->flush();

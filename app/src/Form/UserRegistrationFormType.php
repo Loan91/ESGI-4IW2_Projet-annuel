@@ -16,25 +16,36 @@ class UserRegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $notBlank = new Assert\NotBlank([
-            'message' => 'Le champ {{ label }} ne peut pas être vide.'
-        ]);
-
         $builder
-            ->add('name', TextType::class, [
-                'label' => 'nom d\'utilisateur',
-                'required' => false,
-                'empty_data' => '',
-            ])
             ->add('email', TextType::class, [
                 'label' => 'email',
                 'required' => false,
                 'empty_data' => '',
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => "L'email ne peut pas être vide."
+                    ]),
+                    new Assert\Email([
+                        'message' => "L'email {{ value }} n'est pas une adresse email valide."
+                    ])
+                ]
             ])
             ->add('password', PasswordType::class, [
                 'label' => 'mot de passe',
                 'required' => true,
                 'empty_data' => '',
+                'constraints' => [
+                    new Assert\Length([
+                        'min' => 6,
+                        'minMessage' => "Le mot de passe est trop court. Entrez au minimum 6 caractères."
+                    ]),
+                    new Assert\NotBlank([
+                        'message' => "Le mot de passe ne peut pas être vide."
+                    ]),
+                    new \App\Validator\ValidPassword([
+                        'min' => 6
+                    ])
+                ]
             ])
             // ->add('password', RepeatedType::class, [
             //     'type' => PasswordType::class,
