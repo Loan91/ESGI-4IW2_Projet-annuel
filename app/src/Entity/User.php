@@ -26,7 +26,7 @@ class User implements UserInterface
      *     message = "L'email {{ value }} n'est pas une adresse email valide."
      * )
      * @Assert\NotBlank(
-     *      message = "Le champ {{ label }} ne peut pas être vide."
+     *      message = "L'email ne peut pas être vide."
      * )
      */
     private $email;
@@ -40,7 +40,7 @@ class User implements UserInterface
      * @var string The hashed password
      * @ORM\Column(type="string")
      * @Assert\NotBlank(
-     *      message = "Le champ {{ label }} ne peut pas être vide."
+     *      message = "Le mot de passe ne peut pas être vide."
      * )
      * @Assert\Length(
      *      min = 6,
@@ -55,7 +55,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(
-     *      message = "Le champ {{ label }} ne peut pas être vide."
+     *      message = "Le nom ne peut pas être vide."
      * )
      */
     private $name;

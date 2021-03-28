@@ -10,16 +10,21 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class EditProfileType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class)
-            ->add('email', EmailType::class)
-            ->add('Valider', SubmitType::class);
+            ->add('name', TextType::class, [
+                'label' => 'Nom',
+                'empty_data' => ''
+            ])
+            ->add('email', EmailType::class, [
+                'label' =>  'Adresse email',
+                'empty_data' => ''
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
