@@ -25,30 +25,16 @@ class UserRegistrationFormType extends AbstractType
                 'label' => 'nom d\'utilisateur',
                 'required' => false,
                 'empty_data' => '',
-                'constraints' => [$notBlank],
             ])
             ->add('email', TextType::class, [
                 'label' => 'email',
                 'required' => false,
                 'empty_data' => '',
-                'constraints' => [
-                    $notBlank,
-                    new Assert\Email([
-                        'message' => 'L\'email {{ value }} n\'est pas une adresse email valide.'
-                    ])
-                ],
             ])
             ->add('password', PasswordType::class, [
                 'label' => 'mot de passe',
                 'required' => true,
                 'empty_data' => '',
-                'constraints' => [
-                    new Assert\Length([
-                        'min' => 6,
-                        'minMessage' => 'Le mot de passe est trop court. Entrez au minimum 6 caractères.'
-                    ]),
-                    new ValidPassword(['min' => 6])
-                ],
             ])
             // ->add('password', RepeatedType::class, [
             //     'type' => PasswordType::class,
