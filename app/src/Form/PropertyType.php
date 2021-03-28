@@ -41,7 +41,7 @@ class PropertyType extends AbstractType
                 'empty_data' => ''
             ])
             ->add('constructionDate', null, [
-                'label' => 'Date de construction du bien',
+                'label' => 'Date de construction',
                 'widget' => 'single_text',
                 'html5' => 'true',
                 'empty_data' => ''
