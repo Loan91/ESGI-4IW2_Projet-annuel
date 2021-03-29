@@ -32,7 +32,9 @@ services:
             - '3000:3000'
         volumes:
             - './app:/home/node/app'
-        command: 'yarn install'
+        command:
+            - 'yarn install'
+            - 'yarn run dev'
     mailcatcher:
         image: yappabe/mailcatcher
         ports:
