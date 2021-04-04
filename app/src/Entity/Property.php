@@ -221,6 +221,11 @@ class Property
      */
     private $favorites;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Images", mappedBy="property",cascade={"persist"})
+     */
+    private $images;
+
     public function __construct()
     {
         $this->contacts = new ArrayCollection();
@@ -730,6 +735,37 @@ class Property
             // set the owning side to null (unless already changed)
             if ($favorite->getProperty() === $this) {
                 $favorite->setProperty(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Images[]
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Images $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setProperty($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Images $image): self
+    {
+        if ($this->images->contains($image)) {
+            $this->images->removeElement($image);
+            // set the owning side to null (unless already changed)
+            if ($image->getProperty() === $this) {
+                $image->setProperty(null);
             }
         }
 

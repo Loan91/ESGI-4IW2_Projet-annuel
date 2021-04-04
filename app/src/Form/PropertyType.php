@@ -176,6 +176,14 @@ class PropertyType extends AbstractType
             ->add('inventoryPrice', null, [
                 'label' => 'Prix d\'une visite',
                 'empty_data' => 0
+            ])
+            // On ajoute le champ "images" dans le formulaire
+            // Il n'est pas lié à la base de données (mapped à false)
+            ->add('images', FileType::class,[
+                'label' => false,
+                'multiple' => true,
+                'mapped' => false,
+                'required' => false
             ]);
     }
 
