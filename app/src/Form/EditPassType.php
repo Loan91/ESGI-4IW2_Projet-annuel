@@ -26,7 +26,7 @@ class EditPassType extends AbstractType
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => 'The password fields must match.',
+                'invalid_message' => 'Les deux mot de passe doivent correspondre.',
                 'options' => ['attr' => ['class' => '']],
                 'required' => true,
                 'first_options'  => ['label' => 'Mot de passe', 'attr' => ['class' => 'mb-2']],
