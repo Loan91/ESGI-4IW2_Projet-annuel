@@ -20,6 +20,9 @@ class ProfileUserController extends AbstractController
      */
     public function index()
     {
+        if(is_null($this->getUser())) {
+            return $this->redirectToRoute('app_login');
+        }
         return $this->render('front/users/index.html.twig');
     }
 
