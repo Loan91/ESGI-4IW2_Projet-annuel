@@ -18,12 +18,12 @@
                                 {# <p>Nom : <strong>{{ app.user.firstname ~ ' ' ~ app.user.lastname }}</strong></p> #}
                                 <p>Email : <strong>{{ app.user.email }}</strong></p>
                                 <br>
-                                <a href="{{ path('front_user_profil_modifier') }}" class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Modifier le profil</a>
-                                <a href="{{ path('front_user_pass_modifier') }}" class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Modifier le mot de passe</a>
+                                <a href="{{ path('front_user_profil_modifier') }}" class="focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg mr-4">Modifier le profil</a>
+                                <a href="{{ path('front_user_pass_modifier') }}" class="focus:outline-none text-blue-600 text-sm py-2.5 px-5 rounded-md border border-blue-600 hover:bg-blue-50">Modifier le mot de passe</a>
                         </div>
 
                         <div class="px-4 py-5 bg-white sm:p-6">
-                            <a href="{{ path('front_property_index') }}" class="py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Voir mes biens</a>
+                            <a href="{{ path('front_property_index') }}" class="focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-gray-500 hover:bg-gray-600 hover:shadow-lg">Voir mes biens</a>
                         </div>
 
             </div>
