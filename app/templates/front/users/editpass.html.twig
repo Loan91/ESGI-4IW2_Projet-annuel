@@ -17,7 +17,11 @@
                     {% form_theme form 'themes/tailwindcss.html.twig' %}
                     {{ form_start(form) }}
 
+
+                        <div class="text-red-600 font-bold">{{ form_errors(form.old_password) }}</div>
                         {{ form_row(form.old_password) }}
+
+                        <div class="text-red-600 font-bold">{{ form_errors(form.password) }}</div>
                         {{ form_row(form.password) }}
                         
                         <button type="submit" class="mt-8 focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg mr-2 mb-4">

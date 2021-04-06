@@ -20,7 +20,7 @@ class EditPassType extends AbstractType
                 'label' => 'Ancien mot de passe',
                 'constraints' => [
                     new UserPassword([
-                        'message' => 'Ce mot de passe est différent de l\'ancien',
+                        'message' => 'L\'ancien mot de passe est incorrect',
                     ])
                 ]
             ])
