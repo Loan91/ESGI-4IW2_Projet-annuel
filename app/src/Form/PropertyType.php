@@ -5,6 +5,9 @@ namespace App\Form;
 use App\Entity\Property;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CountryType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -32,12 +35,12 @@ class PropertyType extends AbstractType
                     return $data;
                 })()
             ])
-            ->add('area', null, [
+            ->add('area', IntegerType::class, [
                 'label' => 'Aire en m²',
                 'empty_data' => 0
             ])
             ->add('description', null, [
-                'help' => 'Décrivez votre bien',
+                // 'help' => 'Décrivez votre bien',
                 'empty_data' => ''
             ])
             ->add('constructionDate', null, [
@@ -46,31 +49,32 @@ class PropertyType extends AbstractType
                 'html5' => 'true',
                 'empty_data' => ''
             ])
-            ->add('floor', null, [
+            ->add('floor', IntegerType::class, [
+                'required' => false, // Si appartement
                 'label' => 'A quel étage se trouve le bien?',
                 'empty_data' => 0
             ])
-            ->add('floors', null, [
+            ->add('floors', IntegerType::class, [
                 'label' => 'Nombre d\'étages',
                 'data' => '1',
                 'empty_data' => 0
             ])
-            ->add('rooms', null, [
+            ->add('rooms', IntegerType::class, [
                 'label' => 'Nombre de pièces',
                 'data' => '1',
                 'empty_data' => 0
             ])
-            ->add('bedrooms', null, [
+            ->add('bedrooms', IntegerType::class, [
                 'label' => 'Nombre de chambres',
                 'data' => '1',
                 'empty_data' => 0
             ])
-            ->add('bathrooms', null, [
+            ->add('bathrooms', IntegerType::class, [
                 'label' => 'Nombre de salles de bain/salles d\'eau',
                 'data' => '1',
                 'empty_data' => 0
             ])
-            ->add('toilets', null, [
+            ->add('toilets', IntegerType::class, [
                 'label' => 'Nombre de toilettes',
                 'data' => '1',
                 'empty_data' => 0
@@ -115,6 +119,7 @@ class PropertyType extends AbstractType
                 'empty_data' => false
             ])
             ->add('areaExternalStorage', null, [
+                'required' => false,
                 'label' => 'Quelle est la taille de cet espace? (si stockage externe)',
                 'empty_data' => 0
             ])
@@ -122,11 +127,11 @@ class PropertyType extends AbstractType
                 'label' => 'Y a-t-il un système de sécurité?',
                 'empty_data' => false
             ])
-            ->add('energyConsumption', null, [
+            ->add('energyConsumption', IntegerType::class, [
                 'label' => 'Combien d\'énergie consomme le bien ?',
                 'empty_data' => 0
             ])
-            ->add('gasEmissions', null, [
+            ->add('gasEmissions', IntegerType::class, [
                 'label' => 'Combien de gaz à émission ce bien émet?',
                 'empty_data' => 0
             ])
@@ -136,19 +141,16 @@ class PropertyType extends AbstractType
             ])
             ->add('zipCode', null, [
                 'label' => 'Code postal',
-                'help' => 'Le code postal lié à votre adresse',
+                // 'help' => 'Le code postal lié à votre adresse',
                 'empty_data' => ''
             ])
             ->add('city', null, [
                 'label' => 'Ville',
                 'empty_data' => ''
             ])
-            ->add('country', ChoiceType::class, [
+            ->add('country', CountryType::class, [
                 'label' => 'Pays',
-                'choices' => [
-                    'France' => 'france'
-                ],
-                'data' => 'france'
+                'data' => 'FR'
             ])
             ->add('rentOrSale', ChoiceType::class, [
                 'label' => 'Est-ce une vente ou une location?',
@@ -157,25 +159,30 @@ class PropertyType extends AbstractType
                     'Location' => 'location'
                 ]
             ])
-            ->add('price', null, [
+            ->add('price', MoneyType::class, [
                 'label' => 'Prix du bien',
-                'empty_data' => 0
+                'empty_data' => 0,
+                'currency' => ''
             ])
-            ->add('charges', null, [
+            ->add('charges', MoneyType::class, [
                 'label' => 'Prix des charges du bien',
-                'empty_data' => 0
+                'empty_data' => 0,
+                'currency' => ''
             ])
-            ->add('guarentee', null, [
+            ->add('guarentee', MoneyType::class, [
                 'label' => 'Prix de la garantie du loyer',
-                'empty_data' => 0
+                'empty_data' => 0,
+                'currency' => ''
             ])
-            ->add('feesPrice', null, [
+            ->add('feesPrice', MoneyType::class, [
                 'label' => 'Prix des honoraires',
-                'empty_data' => 0
+                'empty_data' => 0,
+                'currency' => ''
             ])
-            ->add('inventoryPrice', null, [
+            ->add('inventoryPrice', MoneyType::class, [
                 'label' => 'Prix d\'une visite',
-                'empty_data' => 0
+                'empty_data' => 0,
+                'currency' => ''
             ]);
     }
 

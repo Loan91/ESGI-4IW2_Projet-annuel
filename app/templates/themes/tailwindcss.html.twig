@@ -11,12 +11,12 @@
 {%- endblock textarea_widget %}
 
 {% block choice_widget_collapsed -%}
-    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' w-full block border pl-3 pr-10 py-2 text-base bg-focus:outline-none sm:text-sm rounded-md')|trim}) -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' w-full block border pl-3 pr-10 py-2 text-base bg-white bg-focus:outline-none sm:text-sm rounded-md')|trim}) -%}
     {{- parent() -}}
 {%- endblock choice_widget_collapsed %}
 
 {% block checkbox_widget -%}
-    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' ml-2 mt-1 pl-3 pr-10 py-2 text-base bg-focus:outline-none sm:text-sm rounded-md')|trim}) -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' ml-2 mt-1 pl-3 pr-10 py-2 text-base bg-white  bg-focus:outline-none sm:text-sm rounded-md')|trim}) -%}
     {{- parent() -}}
 {%- endblock checkbox_widget %}
 
