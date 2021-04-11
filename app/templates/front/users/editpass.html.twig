@@ -1,7 +1,7 @@
 {% extends 'base_front.html.twig' %}
 
 
-{% block title %}Modification du mot de passe de {{ app.user.email }}{% endblock %}
+{% block title %}Modification du mot de passe de {{ userFullname(app.user) }}{% endblock %}
 
 {% block body %}
 
@@ -11,7 +11,7 @@
         {% endfor %}
         <div class="flex justify-center mx-auto">
             <div class="mt-5 md:mt-0 md:col-span-2">
-                <h1 class="text-4xl text-center text-gray-900 mb-16">Modification du mot de passe de {{ app.user.email }}</h1>
+                <h1 class="text-4xl text-center text-gray-900 mb-16">Modification du mot de passe de {{ userFullname(app.user) }}</h1>
 
                 <div class="w-2/3 mx-auto">
                     {% form_theme form 'themes/tailwindcss.html.twig' %}
