@@ -25,7 +25,29 @@
     {{- parent() -}}
 {%- endblock checkbox_widget %}
 
+{# Checkbox and Radio #}
+
+{# {% block checkbox_label -%}
+    {{- block('checkbox_radio_label') -}}
+{%- endblock checkbox_label %}
+
+{% block radio_label -%}
+    {{- block('checkbox_radio_label') -}}
+{%- endblock radio_label %}
+
+{% block checkbox_radio_label %}
+{{ dump(label_attr)}}
+    {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' LOL')|trim}) %}
+
+    <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+        {{ label is not same as(false) ? (translation_domain is same as(false) ? label : label|trans({}, translation_domain)) -}}
+    </label>
+    
+{% endblock checkbox_radio_label %} #}
+
+{# Global row #}
 {% block form_row -%}
+    <div class="text-red-600 font-bold">{{ form_errors(form) }}</div>
     {%- if compound is defined and compound -%}
         {%- set element = 'fieldset' -%}
     {%- endif -%}

@@ -74,6 +74,16 @@ class User implements UserInterface
      */
     private $updatedAt;
 
+    /**
+     * @ORM\Column(type="string", length=20)
+     */
+    private $civility;
+
+    /**
+     * @ORM\Column(type="string", length=10, nullable=true)
+     */
+    private $phone;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -239,6 +249,30 @@ class User implements UserInterface
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getCivility(): ?string
+    {
+        return $this->civility;
+    }
+
+    public function setCivility(string $civility): self
+    {
+        $this->civility = $civility;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
 
         return $this;
     }

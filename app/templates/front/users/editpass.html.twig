@@ -6,9 +6,8 @@
 {% block body %}
 
     <div class="mt-5">
-        {% for error in app.flashes('error') %}
-            <div class="alert-error" role="alert">{{ error }}</div>
-        {% endfor %}
+        {% include "components/alert.html.twig" %}
+        
         <div class="flex justify-center mx-auto">
             <div class="mt-5 md:mt-0 md:col-span-2">
                 <h1 class="text-4xl text-center text-gray-900 mb-16">Modification du mot de passe de {{ userFullname(app.user) }}</h1>
@@ -17,11 +16,8 @@
                     {% form_theme form 'themes/tailwindcss.html.twig' %}
                     {{ form_start(form) }}
 
-
-                        <div class="text-red-600 font-bold">{{ form_errors(form.old_password) }}</div>
                         {{ form_row(form.old_password) }}
 
-                        <div class="text-red-600 font-bold">{{ form_errors(form.password) }}</div>
                         {{ form_row(form.password) }}
                         
                         <button type="submit" class="mt-8 focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg mr-2 mb-4">

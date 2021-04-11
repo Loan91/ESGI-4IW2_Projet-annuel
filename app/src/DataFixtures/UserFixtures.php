@@ -22,7 +22,10 @@ class UserFixtures extends Fixture
         $faker = \Faker\Factory::create('fr_FR');
 
         $user = new User();
-        $user->setEmail('admin@dev.com')
+        $user
+            ->setCivility($faker->boolean ? 'Monsieur' : 'Madame')
+            ->setEmail('admin@dev.com')
+            ->setPhone('0602030405')
             ->setPassword($this->passwordEncoder->encodePassword($user, 'password'))
             ->setFirstname($faker->firstname)
             ->setLastname($faker->lastname)
