@@ -5,12 +5,7 @@
 
 {% block body %}
 <div class="mt-5">
-    {% for success in app.flashes('success') %}
-        <div class="alert-success" role="alert">{{ success }}</div>
-    {% endfor %}
-    <div class="flex max-w-md px-5">
-        <h1 class="text-4xl  text-gray-900 mb-6">Profil de {{ userFullname(app.user) }}</h1>
-    </div>
+    {% include "components/alert.html.twig" %}
 </div>
 
 <div class="container mx-auto my-5 p-5">
@@ -23,7 +18,7 @@
                     <img class="h-auto w-full mx-auto rounded" src="https://previews.123rf.com/images/donets/donets1506/donets150600578/41663749-vector-user-icon.jpg" alt="">
                 </div>
                 <div class="text-center leading-3 my-4">
-                    <h1 class="text-gray-900 tracking-wide font-bold text-xl">{{ userFullname(app.user) }}</h1>
+                    <h1 class="text-gray-900 tracking-wide font-bold text-xl mb-2">{{ userFullname(app.user) }}</h1>
                     <a class="text-blue-800" href="mailto:jane@example.com">{{ app.user.email }}</a>
                 </div>
 
@@ -108,20 +103,20 @@
                         </div>
                         <div class="grid grid-cols-2">
                             <div class="px-4 py-2 font-semibold">Civilité</div>
-                            <div class="px-4 py-2">Monsieur</div>
+                            <div class="px-4 py-2">{{ app.user.civilite ?? "Non définit" }}</div>
                         </div>
                         <div class="grid grid-cols-2">
                             <div class="px-4 py-2 font-semibold">Contact</div>
-                            <div class="px-4 py-2">+(33) 07 00 00 00 00</div>
+                            <div class="px-4 py-2">{{ app.user.phone ?? "+(33) 07 00 00 00 00" }}</div>
                         </div>
-                        <div class="grid grid-cols-2">
+                        {# <div class="grid grid-cols-2">
                             <div class="px-4 py-2 font-semibold">Adresse</div>
                             <div class="px-4 py-2">Beech Creek, PA, Pennsylvania</div>
                         </div>
                         <div class="grid grid-cols-2">
                             <div class="px-4 py-2 font-semibold">Birthday</div>
                             <div class="px-4 py-2">Feb 06, 1998</div>
-                        </div>
+                        </div> #}
                     </div>
                 </div>
             </div>
