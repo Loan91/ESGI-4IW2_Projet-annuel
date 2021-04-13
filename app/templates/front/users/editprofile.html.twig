@@ -12,7 +12,9 @@
             <div class=" pt-8 md:mt-0 md:col-span-2">
                 <h1 class="text-4xl text-center text-gray-900 mb-8 font-bold">Modification du profil de {{ userFullname(app.user) }}</h1>
                 {% form_theme form 'themes/tailwindcss.html.twig' %}
-                {{ form_start(form) }}
+                {{ form_start(form, {attr: {class: "inline"}}) }}
+
+                    {{ form_row(form.civility) }}
 
                     {{ form_row(form.firstname) }}
 
@@ -24,14 +26,11 @@
                         Valider les modifications
                     </button>
                 
-                    <a href="{{ path('front_users') }}" class="focus:outline-none text-white text-sm py-3 px-5 rounded-md bg-gray-500 hover:bg-gray-600 hover:shadow-lg  mr-2">Retour sur le profil</a>
+                    <a href="{{ path('front_users') }}" class="focus:outline-none text-gray-600 text-sm py-2.5 px-5 rounded-md border border-gray-600 hover:bg-gray-50 mr-2">Retour sur le profil</a>
                 {{ form_end(form) }}
+                
                 {% if not is_granted('ROLE_ADMIN') %}
-                <div class="shadow overflow-hidden sm:rounded-md">
-                    <div class="px-4 py-5 bg-white sm:p-6">
-                        {{ include('front/users/_delete_form.html.twig') }}
-                    </div>
-                </div>
+                    {{ include('front/users/_delete_form.html.twig') }}
                 {% endif %}
 
             </div>
