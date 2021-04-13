@@ -49,7 +49,7 @@ class ForgotPasswordController extends AbstractController
                 $this->addFlash('error', 'Cette adresse e-mail est inconnue');
 
                 // On retourne sur la page de connexion
-                return $this->redirectToRoute('app_login');
+                return $this->redirectToRoute('app_forgotten_password');
             }
 
             // On génère un token
@@ -82,14 +82,16 @@ class ForgotPasswordController extends AbstractController
             $mailer->send($message);
 
             // On crée le message flash de confirmation
-            $this->addFlash('succes', 'E-mail de réinitialisation du mot de passe envoyé !');
+            $this->addFlash('success', 'E-mail de réinitialisation du mot de passe envoyé !');
 
             // On redirige vers la page de login
             return $this->redirectToRoute('app_login');
         }
 
         // On envoie le formulaire à la vue
-        return $this->render('security/forgotpassword/forgot_password.html.twig',['emailForm' => $form->createView()]);
+        return $this->render('security/forgotpassword/forgot_password.html.twig', [
+            'emailForm' => $form->createView()
+        ]);
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Entity\User;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -18,6 +19,20 @@ class EditProfileType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('civility', ChoiceType::class, [
+                'label' => 'Civilité',
+                'choices' => [
+                    'M.' => 'Monsieur',
+                    'Mme./Mlle.' => 'Madame'
+                ],
+                'empty_data' => '',
+                'expanded' => true,
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => "La civilité ne peut pas être vide."
+                    ])
+                ]
+            ])
             ->add('firstname', TextType::class, [
                 'label' => 'Prénom',
                 'empty_data' => '',

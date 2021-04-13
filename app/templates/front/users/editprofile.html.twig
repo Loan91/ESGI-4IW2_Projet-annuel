@@ -1,45 +1,36 @@
 {% extends 'base_front.html.twig' %}
 
 
-{% block title %}Modification du profil de {{ app.user.email }}{% endblock %}
+{% block title %}Modification du profil{% endblock %}
 
 {% block body %}
-
     <div class="mt-5">
+
+        {% include "components/alert.html.twig" %}
+        
         <div class="flex justify-center px-4">
             <div class=" pt-8 md:mt-0 md:col-span-2">
-                <h1 class="text-4xl text-center text-gray-900 mb-8 font-bold">Modification du profil de {{ app.user.email }}</h1>
-                {{ form_start(form) }}
+                <h1 class="text-4xl text-center text-gray-900 mb-8 font-bold">Modification du profil de {{ userFullname(app.user) }}</h1>
+                {% form_theme form 'themes/tailwindcss.html.twig' %}
+                {{ form_start(form, {attr: {class: "inline"}}) }}
 
-                    <div class="mb-2">
-                        <div class="text-red-600 font-bold">{{ form_errors(form.firstname) }}</div>
-                        {{ form_label(form.firstname) }}
-                        {{ form_widget(form.firstname, {'attr': {'class': 'ml-2 border border-black rounded p-1'}}) }}
-                        <div>{{ form_help(form.firstname) }}</div>
+                    {{ form_row(form.civility) }}
 
-                    </div>
-                    <div class="mb-2">
-                        <div class="text-red-600 font-bold">{{ form_errors(form.lastname) }}</div>
-                        {{ form_label(form.lastname) }}
-                        {{ form_widget(form.lastname, {'attr': {'class': 'ml-2 border border-black rounded p-1'}}) }}
-                        <div>{{ form_help(form.lastname) }}</div>
+                    {{ form_row(form.firstname) }}
 
-                    </div>
-                    <div class="mb-8">
-                        <div class="text-red-600 font-bold">{{ form_errors(form.email) }}</div>
-                        {{ form_label(form.email) }}
-                        {{ form_widget(form.email, {'attr': {'class': 'ml-2 border border-black rounded p-1'}}) }}
-                        <div>{{ form_help(form.email) }}</div>
-                    </div>
+                    {{ form_row(form.lastname) }}
 
-                    <button type="submit" class="focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg">Valider les modifications</button>
+                    {{ form_row(form.email) }}
+
+                    <button type="submit" class="mt-8 focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg mr-2 mb-4">
+                        Valider les modifications
+                    </button>
+                
+                    <a href="{{ path('front_users') }}" class="focus:outline-none text-gray-600 text-sm py-2.5 px-5 rounded-md border border-gray-600 hover:bg-gray-50 mr-2">Retour sur le profil</a>
                 {{ form_end(form) }}
+                
                 {% if not is_granted('ROLE_ADMIN') %}
-                <div class="shadow overflow-hidden sm:rounded-md">
-                    <div class="px-4 py-5 bg-white sm:p-6">
-                        {{ include('front/users/_delete_form.html.twig') }}
-                    </div>
-                </div>
+                    {{ include('front/users/_delete_form.html.twig') }}
                 {% endif %}
 
             </div>
