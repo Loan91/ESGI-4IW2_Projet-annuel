@@ -1,24 +1,23 @@
 version: '3.6'
 services:
+    # Server web
     nginx:
         build: app/docker/nginx
         ports:
             - '8082:80'
         volumes:
             - './app:/usr/share/nginx/html'
+    # Php (and the package manager)
     php:
         build: app/docker/php
         volumes:
             - './app:/usr/share/nginx/html'
-    adminer:
-        image: 'adminer:4.7'
-        ports:
-            - '8083:8080'
     composer:
         image: 'composer:1.8'
         command: install
         volumes:
             - './app:/app'
+    ## Database (and a web manager)
     db:
         image: 'postgres:10.4'
         environment:
@@ -26,15 +25,25 @@ services:
             - POSTGRES_DB=db
             - POSTGRES_USER=user
             - POSTGRES_PASSWORD=pwd
+    adminer:
+        image: 'adminer:4.7'
+        ports:
+            - '8083:8080'
+    # Node with yarn
     node:
         build: app/docker/node
         ports:
             - '3000:3000'
         volumes:
             - './app:/home/node/app'
-        command: 'yarn install'
+        command:
+            - 'yarn install'
+            - 'yarn run dev'
+    # Mail service
     mailcatcher:
         image: yappabe/mailcatcher
         ports:
+            # SMTP port
             - 1025:1025
+            # Web port
             - 1080:1080

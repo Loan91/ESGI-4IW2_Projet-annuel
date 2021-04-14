@@ -6,6 +6,7 @@ use App\Entity\User;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -18,6 +19,20 @@ class EditProfileType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('civility', ChoiceType::class, [
+                'label' => 'Civilité',
+                'choices' => [
+                    'M.' => 'Monsieur',
+                    'Mme./Mlle.' => 'Madame'
+                ],
+                'empty_data' => '',
+                'expanded' => true,
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => "La civilité ne peut pas être vide."
+                    ])
+                ]
+            ])
             ->add('firstname', TextType::class, [
                 'label' => 'Prénom',
                 'empty_data' => '',
@@ -27,7 +42,7 @@ class EditProfileType extends AbstractType
                     ]),
                     new Assert\Length([
                         'max' => 80,
-                        'minMessage' => "Le prénom ne peut excéder 80 caractères"
+                        'maxMessage' => "Le prénom ne peut excéder 80 caractères"
                     ]),
                 ]
             ])
@@ -40,7 +55,7 @@ class EditProfileType extends AbstractType
                     ]),
                     new Assert\Length([
                         'max' => 100,
-                        'minMessage' => "Le nom de famille ne peut excéder 100 caractères"
+                        'maxMessage' => "Le nom de famille ne peut excéder 100 caractères"
                     ]),
                 ]
             ])
@@ -54,6 +69,23 @@ class EditProfileType extends AbstractType
                     new Assert\Email([
                         'message' => "L'email {{ value }} n'est pas une adresse email valide."
                     ])
+                ]
+            ])
+            ->add('phone', TextType::class, [
+                'label' => 'Téléphone',
+                'data' => '0601010101',
+                'empty_data' => '',
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => "Le numéro de téléphone ne peut pas être vide."
+                    ]),
+                    new Assert\Length([
+                        'min' => 10,
+                        'minMessage' => "Le numéro de téléphone ne peut excéder 100 caractères",
+                        'max' => 10,
+                        'maxMessage' => "Le numéro de téléphone ne peut excéder 100 caractères",
+                        'exactMessage' => 'Le numéro de téléphone doit faire {{ limit }} caractères.'
+                    ]),
                 ]
             ]);
     }

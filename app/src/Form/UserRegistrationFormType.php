@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\User;
 use App\Validator\ValidPassword;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -17,9 +18,40 @@ class UserRegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('civility', ChoiceType::class, [
+                'label' => 'Civilité',
+                'choices' => [
+                    'M.' => 'Monsieur',
+                    'Mme./Mlle.' => 'Madame'
+                ],
+                'empty_data' => '',
+                'expanded' => true,
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => "La civilité ne peut pas être vide."
+                    ])
+                ]
+            ])
+            ->add('firstname', TextType::class, [
+                'label' => 'Prénom',
+                'empty_data' => '',
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => "Le prénom ne peut pas être vide."
+                    ])
+                ]
+            ])
+            ->add('lastname', TextType::class, [
+                'label' => 'Nom',
+                'empty_data' => '',
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => "Le nom ne peut pas être vide."
+                    ])
+                ]
+            ])
             ->add('email', TextType::class, [
-                'label' => 'email',
-                'required' => false,
+                'label' => 'Email',
                 'empty_data' => '',
                 'constraints' => [
                     new Assert\NotBlank([
@@ -30,39 +62,24 @@ class UserRegistrationFormType extends AbstractType
                     ])
                 ]
             ])
-            ->add('password', PasswordType::class, [
-                'label' => 'mot de passe',
+            ->add('password', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'invalid_message' => 'Les deux mot de passe doivent correspondre.',
+                'options' => ['attr' => ['class' => '']],
                 'required' => true,
-                'empty_data' => '',
+                'first_options'  => ['label' => 'Mot de passe', 'attr' => ['class' => 'mb-2']],
+                'second_options' => ['label' => 'Répéter le mot de passe'],
                 'constraints' => [
-                    new Assert\Length([
-                        'min' => 6,
-                        'minMessage' => "Le mot de passe est trop court. Entrez au minimum 6 caractères."
-                    ]),
                     new Assert\NotBlank([
                         'message' => "Le mot de passe ne peut pas être vide."
                     ]),
-                    new \App\Validator\ValidPassword([
-                        'min' => 6
-                    ])
+                    new Assert\Length([
+                        'max' => 100,
+                        'minMessage' => "Le nom de famille ne peut excéder 100 caractères"
+                    ]),
+                    new ValidPassword(['min' => 8])
                 ]
             ])
-            // ->add('password', RepeatedType::class, [
-            //     'type' => PasswordType::class,
-            //     'empty_data' => '',
-            //     'invalid_message' => 'The password fields must match.',
-            //     'options' => ['attr' => ['class' => 'password-field']],
-            //     'required' => true,
-            //     'first_options'  => ['label' => 'mot de passe'],
-            //     'second_options' => ['label' => 'répétrez le mode de passe'],
-            //     'constraints' => [
-            //         new Assert\Length([
-            //             'min' => 6,
-            //             'minMessage' => 'Le mot de passe est trop court. Entrez au minimum 6 caractères.'
-            //         ]),
-            //         new ValidPassword(['min' => 6])
-            //     ],
-            // ])
         ;
     }
 

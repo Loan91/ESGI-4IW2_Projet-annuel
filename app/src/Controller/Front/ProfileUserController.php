@@ -4,6 +4,7 @@ namespace App\Controller\Front;
 
 
 use App\Entity\User;
+use App\Form\EditPassType;
 use App\Form\EditProfileType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,25 +57,24 @@ class ProfileUserController extends AbstractController
     public function editPass(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
 
-        if($request->isMethod('POST')){
+        $form = $this->createForm(EditPassType::class);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-
             $user = $this->getUser();
+            $password = $request->request->get('edit_pass')['password']['first'];
+            $user->setPassword($passwordEncoder->encodePassword($user, $password));
+            $em->flush();
 
-            //verification si les deux mot de passe sont identiques
-            if($request->request->get('password') == $request->request->get('password2')){
-
-                $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
-                $em->flush();
-
-                $this->addFlash('success', 'Mot de passe mis à jour avec succès');
-                return $this->redirectToRoute('front_users');
-
-            }else{
-                $this->addFlash('error', 'Les deux mots de passe ne sont pas identique');
-            }
+            $this->addFlash('success', 'Le mot de passe a été mis à jour avec succès');
+            return $this->redirectToRoute('front_users');
         }
-        return $this->render('front/users/editpass.html.twig');
+
+        return $this->render('front/users/editpass.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**

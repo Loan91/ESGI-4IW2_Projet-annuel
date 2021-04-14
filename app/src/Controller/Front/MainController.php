@@ -44,4 +44,12 @@ class MainController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    /**
+     * @Route("/vue")
+     */
+    public function showProperty()
+    {
+        return $this->render('front/property/show2.html.twig');
+    }
 }

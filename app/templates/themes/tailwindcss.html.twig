@@ -1,26 +1,8 @@
 {% use 'form_div_layout.html.twig' %}
 
-{% block form_widget_simple -%}
-    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' w-full shadow-sm border focus:outline-none sm:text-sm border-gray-300 rounded-md py-2 px-3')|trim}) -%}
-    {{ parent() }}
-{%- endblock form_widget_simple %}
-
-{% block textarea_widget -%}
-    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' w-full shadow-sm border focus:outline-none sm:text-sm border-gray-300 rounded-md py-2 px-3')|trim}) -%}
-    {{ parent() }}
-{%- endblock textarea_widget %}
-
-{% block choice_widget_collapsed -%}
-    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' w-full block border pl-3 pr-10 py-2 text-base bg-focus:outline-none sm:text-sm rounded-md')|trim}) -%}
-    {{- parent() -}}
-{%- endblock choice_widget_collapsed %}
-
-{% block checkbox_widget -%}
-    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' ml-2 mt-1 pl-3 pr-10 py-2 text-base bg-focus:outline-none sm:text-sm rounded-md')|trim}) -%}
-    {{- parent() -}}
-{%- endblock checkbox_widget %}
-
+{# Global row #}
 {% block form_row -%}
+    <div class="text-red-600 font-bold">{{ form_errors(form) }}</div>
     {%- if compound is defined and compound -%}
         {%- set element = 'fieldset' -%}
     {%- endif -%}
@@ -28,9 +10,55 @@
     {%- if help is not empty -%}
         {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
     {%- endif -%}
-    <{{ element|default('div') }}{% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' form-group')|trim})} %}{{ block('attributes') }}{% endwith %}>
+    <{{ element|default('div') }}{% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' fieldset-class')|trim})} %}{{ block('attributes') }}{% endwith %}>
         {{- form_label(form) -}}
         {{- form_widget(form, widget_attr) -}}
         {{- form_help(form) -}}
     </{{ element|default('div') }}>
 {%- endblock form_row %}
+
+
+{# Global label #}
+{% block form_label -%}
+    {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' pt-2 text-md inline mb-2 text-gray-900')|trim}) -%}
+    {{ parent() }}
+{%- endblock form_label %}
+
+{# Input text/number/email... #}
+{% block form_widget_simple -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' w-full shadow-sm border focus:outline-none sm:text-sm border-gray-300 rounded-md py-2 px-3')|trim}) -%}
+    {{ parent() }}
+{%- endblock form_widget_simple %}
+
+{# Textarea #}
+{% block textarea_widget -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' w-full shadow-sm border focus:outline-none sm:text-sm border-gray-300 rounded-md py-2 px-3')|trim}) -%}
+    {{ parent() }}
+{%- endblock textarea_widget %}
+
+{# Select-option #}
+{% block choice_widget_collapsed -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' w-full block border pl-3 pr-10 py-2 text-base bg-white bg-focus:outline-none sm:text-sm rounded-md')|trim}) -%}
+    {{- parent() -}}
+{%- endblock choice_widget_collapsed %}
+
+{# Checkbox and Radio #}
+{% block radio_widget -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' ml-4 mr-1')|trim}) -%}
+    {{- parent() -}}
+{%- endblock radio_widget %}
+
+{% block checkbox_widget -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' ml-4 mr-1 inline')|trim}) -%}
+    {{- parent() -}}
+{%- endblock checkbox_widget %}
+
+{% block choice_widget_expanded -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' inline')|trim}) -%}
+    <div {{ block('widget_container_attributes') }}>
+    {%- for child in form %}
+        {{- form_widget(child) -}}
+        {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
+    {% endfor -%}
+    </div>
+{%- endblock choice_widget_expanded %}

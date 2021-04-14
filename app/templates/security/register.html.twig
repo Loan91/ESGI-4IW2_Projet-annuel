@@ -5,73 +5,53 @@
 {% endblock %}
 
 {% block body %}
+<div class="lg:w-1/3 mx-auto lg:pt-12 pt-8 px-4">
+	<h1 class="text-4xl text-center text-gray-900 mb-4 font-bold">Inscrivez-vous</h1>
 
-	<div class="mt-5">
-		<div class="flex justify-center max-w-3xl mx-auto">
-			{{ form_start(registrationForm) }}
+	{% include "components/alert.html.twig" %}
 
-			<div class="mt-8 sm:mx-auto sm:w-full sm:max-w-3xl">
-				<h1 class="text-4xl text-center text-gray-900 mb-16">Inscrivez-vous</h1>
-				<form action="{{ path('app_register') }}" method="POST">
-					<div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-						<div class="">
-							<div class="mt-4">
-								<label class="block text-sm font-medium text-gray-700">{{ registrationForm.email.vars.label|uppercaseFirst }}</label>
-								{{ form_widget(registrationForm.email,
-                                    {
-                                        'attr' :
-                                        {
-                                            'placeholder' : 'Email',
-                                            'class' : 'appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:border-gray-700 sm:text-sm',
-                                            'type' : 'email',
-                                            'id' : 'email'
-                                        }
-                                    }) }}
-							</div>
-							{% if not registrationForm.email.vars.valid %}
-								<div class="bg-red-200 p-2 rounded mt-2">
-									{{ form_errors(registrationForm.email) }}
-								</div>
-							{% endif %}
+	{% form_theme registrationForm 'themes/tailwindcss.html.twig' %}
+	{{ form_start(registrationForm) }}
 
-							<div class="mt-4">
-								<label class="block text-sm font-medium text-gray-700">{{ registrationForm.password.vars.label|uppercaseFirst }}</label>
-								{{ form_widget(registrationForm.password,
-                                    {
-                                        'attr' :
-                                        {
-                                            'placeholder' : 'Mot de passe',
-                                            'class' : 'appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:border-gray-700 sm:text-sm',
-                                            'type' : 'password',
-                                            'id' : 'password'
-                                        }
-                                    }) }}
-							</div>
-
-							{% if not registrationForm.password.vars.valid %}
-								<div class="bg-red-200 p-2 rounded mt-2">
-									{{ form_errors(registrationForm.password) }}
-								</div>
-							{% endif %}
-
-						</div>
-						<div class="mt-6">
-							<button type="submit" class="py-2 px-4 w-full border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-								Valider
-							</button>
-							<div class="mt-3">
-								<p>
-									Déjà inscrit ?
-									<a href="{{ path('app_login') }}" class="ml-2 italic">
-										Se connecter</a>
-								</p>
-							</div>
-
-							{{ form_end(registrationForm) }}
-						</div>
-					</div>
-				</form>
-			</div>
+	<div class="grid grid-cols-3 gap-6">
+		<div class="col-span-2">
+			{{ form_row(registrationForm.civility) }}
 		</div>
 	</div>
+
+	<div class="grid grid-cols-4 gap-4">
+		<div class="col-span-2">
+			{{ form_row(registrationForm.firstname) }}
+		</div>
+
+		<div class="col-span-2">
+			{{ form_row(registrationForm.lastname) }}
+		</div>
+	</div>
+
+
+	{{ form_row(registrationForm.email) }}
+
+	{{ form_row(registrationForm.password) }}
+
+	<div class="mt-6">
+		<div class="mt-3">
+			<p>
+				Déjà inscrit ?
+				<a href="{{ path('app_login') }}" class="ml-2 italic">
+					Se connecter</a>
+			</p>
+		</div>
+
+		<!-- Validation -->
+		<div class="py-3 bg-gray-50 text-right">
+			<button type="submit" z
+				class="w-full focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg">
+				Valider
+			</button>
+		</div>
+		{{ form_end(registrationForm) }}
+	</div>
+	</form>
+</div>
 {% endblock %}
