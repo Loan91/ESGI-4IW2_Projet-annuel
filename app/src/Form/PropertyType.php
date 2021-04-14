@@ -8,8 +8,10 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class PropertyType extends AbstractType
 {
@@ -35,9 +37,15 @@ class PropertyType extends AbstractType
                     return $data;
                 })()
             ])
-            ->add('area', IntegerType::class, [
+            ->add('area', TextType::class, [
                 'label' => 'Aire en m²',
-                'empty_data' => 0
+                'empty_data' => 0,
+                'constraints' => [
+                    new Assert\Type([
+                        'type' => ['numeric'],
+                        'message' => "La donnée {{ value }} n'est pas un nombre valide."
+                    ])
+                ]
             ])
             ->add('description', null, [
                 // 'help' => 'Décrivez votre bien',
@@ -127,26 +135,61 @@ class PropertyType extends AbstractType
                 'label' => 'Y a-t-il un système de sécurité?',
                 'empty_data' => false
             ])
-            ->add('energyConsumption', IntegerType::class, [
+            ->add('energyConsumption', TextType::class, [
                 'label' => 'Combien d\'énergie consomme le bien ?',
-                'empty_data' => 0
+                'empty_data' => 0,
+                'constraints' => [
+                    new Assert\Type([
+                        'type' => ['numeric'],
+                        'message' => "La donnée {{ value }} n'est pas un nombre valide."
+                    ])
+                ]
             ])
-            ->add('gasEmissions', IntegerType::class, [
+            ->add('gasEmissions', TextType::class, [
                 'label' => 'Combien de gaz à émission ce bien émet?',
-                'empty_data' => 0
+                'empty_data' => 0,
+                'constraints' => [
+                    new Assert\Type([
+                        'type' => ['numeric'],
+                        'message' => "La donnée {{ value }} n'est pas un nombre valide."
+                    ])
+                ]
             ])
             ->add('address', null, [
                 'label' => 'Adresse du bien',
-                'empty_data' => ''
+                'empty_data' => '',
+                'constraints' => [
+                    new Assert\Length([
+                        'min' => 1,
+                        'max' => 150,
+                        'minMessage' => "L'adresse doit faire minimum {{ limit }} caractères.",
+                        'maxMessage' => "L'adresse doit faire maximum {{ limit }} caractères.",
+                    ]),
+                ]
             ])
             ->add('zipCode', null, [
                 'label' => 'Code postal',
                 // 'help' => 'Le code postal lié à votre adresse',
-                'empty_data' => ''
+                'empty_data' => '',
+                'constraints' => [
+                    new Assert\Length([
+                        'min' => 5,
+                        'max' => 5,
+                        'exactMessage' => "Le code postal doit faire {{ limit }} caractères."
+                    ]),
+                ]
             ])
             ->add('city', null, [
                 'label' => 'Ville',
-                'empty_data' => ''
+                'empty_data' => '',
+                'constraints' => [
+                    new Assert\Length([
+                        'min' => 1,
+                        'max' => 100,
+                        'minMessage' => "La ville doit faire minimum {{ limit }} caractères.",
+                        'maxMessage' => "La ville doit faire maximum {{ limit }} caractères.",
+                    ]),
+                ]
             ])
             ->add('country', CountryType::class, [
                 'label' => 'Pays',
