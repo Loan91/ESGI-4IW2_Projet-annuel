@@ -62,22 +62,6 @@ class UserRegistrationFormType extends AbstractType
                     ])
                 ]
             ])
-            // ->add('password', PasswordType::class, [
-            //     'label' => 'Mot de passe',
-            //     'empty_data' => '',
-            //     'constraints' => [
-            //         new Assert\Length([
-            //             'min' => 6,
-            //             'minMessage' => "Le mot de passe est trop court. Entrez au minimum 6 caractères."
-            //         ]),
-            //         new Assert\NotBlank([
-            //             'message' => "Le mot de passe ne peut pas être vide."
-            //         ]),
-            //         new \App\Validator\ValidPassword([
-            //             'min' => 6
-            //         ])
-            //     ]
-            // ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les deux mot de passe doivent correspondre.',

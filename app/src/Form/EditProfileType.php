@@ -42,7 +42,7 @@ class EditProfileType extends AbstractType
                     ]),
                     new Assert\Length([
                         'max' => 80,
-                        'minMessage' => "Le prénom ne peut excéder 80 caractères"
+                        'maxMessage' => "Le prénom ne peut excéder 80 caractères"
                     ]),
                 ]
             ])
@@ -55,7 +55,7 @@ class EditProfileType extends AbstractType
                     ]),
                     new Assert\Length([
                         'max' => 100,
-                        'minMessage' => "Le nom de famille ne peut excéder 100 caractères"
+                        'maxMessage' => "Le nom de famille ne peut excéder 100 caractères"
                     ]),
                 ]
             ])
@@ -69,6 +69,23 @@ class EditProfileType extends AbstractType
                     new Assert\Email([
                         'message' => "L'email {{ value }} n'est pas une adresse email valide."
                     ])
+                ]
+            ])
+            ->add('phone', TextType::class, [
+                'label' => 'Téléphone',
+                'data' => '0601010101',
+                'empty_data' => '',
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => "Le numéro de téléphone ne peut pas être vide."
+                    ]),
+                    new Assert\Length([
+                        'min' => 10,
+                        'minMessage' => "Le numéro de téléphone ne peut excéder 100 caractères",
+                        'max' => 10,
+                        'maxMessage' => "Le numéro de téléphone ne peut excéder 100 caractères",
+                        'exactMessage' => 'Le numéro de téléphone doit faire {{ limit }} caractères.'
+                    ]),
                 ]
             ]);
     }
