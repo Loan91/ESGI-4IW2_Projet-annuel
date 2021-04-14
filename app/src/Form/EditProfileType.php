@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\User;
-
+use App\Validator\Phone;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -79,13 +79,7 @@ class EditProfileType extends AbstractType
                     new Assert\NotBlank([
                         'message' => "Le numéro de téléphone ne peut pas être vide."
                     ]),
-                    new Assert\Length([
-                        'min' => 10,
-                        'minMessage' => "Le numéro de téléphone ne peut excéder 100 caractères",
-                        'max' => 10,
-                        'maxMessage' => "Le numéro de téléphone ne peut excéder 100 caractères",
-                        'exactMessage' => 'Le numéro de téléphone doit faire {{ limit }} caractères.'
-                    ]),
+                    new Phone()
                 ]
             ]);
     }
