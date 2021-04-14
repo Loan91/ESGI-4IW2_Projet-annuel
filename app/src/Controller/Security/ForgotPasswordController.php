@@ -5,6 +5,7 @@ namespace App\Controller\Security;
 
 
 use App\Entity\User;
+use App\Form\ForgotPasswordType;
 use App\Form\ResetPasswordType;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +31,7 @@ class ForgotPasswordController extends AbstractController
     ): Response
     {
         // On initialise le formulaire
-        $form = $this->createForm(ResetPasswordType::class);
+        $form = $this->createForm(ForgotPasswordType::class);
 
         // On traite le formulaire
         $form->handleRequest($request);
@@ -74,7 +75,7 @@ class ForgotPasswordController extends AbstractController
                 ->setFrom('votre@adresse.fr')
                 ->setTo($user->getEmail())
                 ->setBody(
-                    "Bonjour,<br><br>Une demande de réinitialisation de mot de passe a été effectuée. Veuillez cliquer sur le lien suivant : " . $url,
+                    "Bonjour,<br><br>Une demande de réinitialisation de mot de passe a été effectuée. Veuillez cliquer sur <a href=\".$url.\"> le lien suivant</a>",
                     'text/html'
                 );
 
@@ -113,13 +114,22 @@ class ForgotPasswordController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        // Si le formulaire est envoyé en méthode post
-        if ($request->isMethod('POST')) {
+        // On initialise le formulaire
+        $form = $this->createForm(ResetPasswordType::class);
+
+        // On traite le formulaire
+        $form->handleRequest($request);
+
+        // Si le formulaire est valide
+        if ($form->isSubmitted() && $form->isValid()) {
+            // On récupère les données
+            $formData = $form->getData();
+
             // On supprime le token
             $user->setForgotPasswordToken(null);
 
             // On chiffre le mot de passe
-            $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
+            $user->setPassword($passwordEncoder->encodePassword($user, $formData['password']));
 
             // On stocke
             $entityManager = $this->getDoctrine()->getManager();
@@ -131,10 +141,11 @@ class ForgotPasswordController extends AbstractController
 
             // On redirige vers la page de connexion
             return $this->redirectToRoute('app_login');
-        }else {
-            // Si on n'a pas reçu les données, on affiche le formulaire
-            return $this->render('security/forgotpassword/reset_password.html.twig', ['token' => $token]);
         }
-
+        
+        return $this->render('security/forgotpassword/reset_password.html.twig', [
+            'token' => $token,
+            'form' => $form->createView()
+        ]);
     }
 }
