@@ -11,6 +11,7 @@ namespace App\Data;
 class SearchData
 {
     public $type = '';
+    public $city = '';
     public $categories = [];
     public $minPrice;
     public $maxPrice;

@@ -17,11 +17,11 @@ class SearchType extends AbstractType
         $builder
             ->add('type', ChoiceType::class, [
                 'choices' => [
+                    'Tous' => 'all',
                     'Maison' => 'maison',
                     'Appartement' => 'appartement'
                 ],
                 'label' => false,
-                'required' => false,
                 'attr' => [
                     'placeholder' => 'Maison, Appart ...',
                 ]
