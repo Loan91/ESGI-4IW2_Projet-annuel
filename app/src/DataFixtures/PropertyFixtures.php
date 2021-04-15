@@ -68,6 +68,7 @@ class PropertyFixtures extends Fixture implements DependentFixtureInterface
       ->setGuarentee($faker->randomNumber(4, true))
       ->setFeesPrice($faker->randomNumber(2, true))
       ->setInventoryPrice($faker->randomNumber(2, true))
+      ->setPublished(true)
 
       ->setOwner($this->getReference(UserFixtures::USER_REFERENCE));
 

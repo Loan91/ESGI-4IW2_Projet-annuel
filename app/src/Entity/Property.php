@@ -221,6 +221,11 @@ class Property
      */
     private $favorites;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $published;
+
     public function __construct()
     {
         $this->contacts = new ArrayCollection();
@@ -732,6 +737,18 @@ class Property
                 $favorite->setProperty(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPublished(): ?bool
+    {
+        return $this->published;
+    }
+
+    public function setPublished(bool $published): self
+    {
+        $this->published = $published;
 
         return $this;
     }

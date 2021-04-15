@@ -226,6 +226,11 @@ class PropertyType extends AbstractType
                 'label' => 'Prix d\'une visite',
                 'empty_data' => 0,
                 'currency' => ''
+            ])
+            ->add('published', null, [
+                'label' => 'Rendre publique cette habitation?',
+                'empty_data' => false,
+                'data' => true
             ]);
     }
 
