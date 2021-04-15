@@ -6,11 +6,7 @@ use App\Repository\PictureRepository;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=PictureRepository::class)
- * @ORM\Table(schema="immo")
- */
-class Picture
+class PictureTest
 {
     /**
      * @ORM\Id
