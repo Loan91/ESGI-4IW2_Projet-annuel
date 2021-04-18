@@ -1,6 +1,6 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}Toutes nos annonces{% endblock %}
+{% block title %}{{ property.type | capitalize }} à {{ property.city | capitalize }}{% endblock %}
 
 {% block body %}
     <main class="max-w-7xl mx-auto px-4 sm:px-8 py-8">
@@ -73,6 +73,28 @@
 
                 <div class="my-6">
                     <p class="text-base leading-6 text-gray-700">{{ property.description }} Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis doloremque ex laborum magni quae quasi quibusdam, repudiandae! Ad consequuntur.</p>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-medium text-gray-900 tracking-wider mb-4">Qui contacter</h4>
+                    <div class="flex items-center space-x-4 lg:space-x-3">
+                        <img class="w-12 h-12 rounded-full lg:w-16 lg:h-16" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixqx=LRDGaNTXAY&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                        <div class="text-lg leading-6 space-y-0.5">
+                            <h3>Jane Doe</h3>
+                            <p class="text-indigo-900">Agent immobilière /</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4 mt-8 max-w-xl">
+                    <a href="#" class="block w-full bg-green-800 border border-transparent rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-green-900">
+                        Prendre rendez-vous
+                    </a>
+                    <a href="#" class="block flex items-center justify-center space-x-1 w-full bg-transparent border border-green-800 rounded-md py-2">
+                        <svg class="stroke-current w-4 h-4 text-green-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                        <div class="text-sm font-semibold text-green-800">Ajouter à mes favoris</div>
+                    </a>
                 </div>
             </div>
 
