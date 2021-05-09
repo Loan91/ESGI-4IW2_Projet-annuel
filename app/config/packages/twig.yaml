@@ -2,3 +2,4 @@ twig:
     default_path: '%kernel.project_dir%/templates'
     globals:
         appName: '%env(APP_NAME)%'
+        uploaded_property_path: '%app.path.property_images%'

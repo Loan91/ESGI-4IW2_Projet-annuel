@@ -34,6 +34,7 @@ class PropertyController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        // dd($request->request->all());
         $property = new Property();
         $property->setOwner($this->getUser());
         $form = $this->createForm(PropertyType::class, $property);

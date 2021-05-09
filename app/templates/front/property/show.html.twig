@@ -149,6 +149,20 @@
 				<th>Prix d'une visite</th>
 				<td>{{ property.inventoryPrice }}</td>
 			</tr>
+			<tr>
+				<th>Image</th>
+				{% if property.imageName is not null %}
+				<td>
+					<a href="{{ uploaded_property_path ~ '/' ~ property.imageName }}">
+						<img src="{{ uploaded_property_path ~ '/' ~ property.imageName }}" alt="{{ property.imageName }}" class="w-64">
+					</a>
+				</td>
+				{% else %}
+				<td>
+					<a href=""><img src="/images/maison-default.jpg" alt="Image du bien" class="w-64"></a>
+				</td>
+				{% endif %}
+			</tr>
 		</tbody>
 	</table>
 
