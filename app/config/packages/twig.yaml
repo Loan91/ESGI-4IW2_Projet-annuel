@@ -3,3 +3,4 @@ twig:
     globals:
         appName: '%env(APP_NAME)%'
         uploaded_property_path: '%app.path.property_images%'
+        uploaded_user_path: '%app.path.user_images%'

@@ -2,10 +2,11 @@
 
 namespace App\Controller\Front;
 
-
+use App\Entity\ProfilePicture;
 use App\Entity\User;
 use App\Form\EditPassType;
 use App\Form\EditProfileType;
+use phpDocumentor\Reflection\Types\Context;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -30,11 +31,11 @@ class ProfileUserController extends AbstractController
     public function editProfile(Request $request)
     {
         $user = $this->getUser();
-        $form = $this->createForm(EditProfileType::class, $user);
 
-        $form->handleRequest($request);
+        $userForm = $this->createForm(EditProfileType::class, $user);
+        $userForm->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if($userForm->isSubmitted() && $userForm->isValid()){
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
@@ -44,7 +45,7 @@ class ProfileUserController extends AbstractController
         }
 
         return $this->render('front/users/editprofile.html.twig', [
-            'form' => $form->createView(),
+            'form' => $userForm->createView(),
         ]);
     }
 
@@ -57,11 +58,11 @@ class ProfileUserController extends AbstractController
     public function editPass(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
 
-        $form = $this->createForm(EditPassType::class);
+        $userForm = $this->createForm(EditPassType::class);
 
-        $form->handleRequest($request);
+        $userForm->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if($userForm->isSubmitted() && $userForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $user = $this->getUser();
             $password = $request->request->get('edit_pass')['password']['first'];
@@ -73,7 +74,7 @@ class ProfileUserController extends AbstractController
         }
 
         return $this->render('front/users/editpass.html.twig', [
-            'form' => $form->createView()
+            'form' => $userForm->createView()
         ]);
     }
 

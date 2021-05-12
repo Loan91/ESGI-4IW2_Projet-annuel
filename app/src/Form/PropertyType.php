@@ -20,7 +20,6 @@ class PropertyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('imageFile', VichImageType::class)
             ->add('type', ChoiceType::class, [
                 'choices' => [
                     'Maison' => 'maison',
@@ -244,6 +243,10 @@ class PropertyType extends AbstractType
                 'empty_data' => false,
                 'required' => false,
                 'data' => true
+            ])
+            ->add('imageFile', VichImageType::class, [
+                'label' => 'Photo de votre bien',
+                'required' => false
             ]);
     }
 

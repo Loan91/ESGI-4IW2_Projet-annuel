@@ -5,3 +5,13 @@ vich_uploader:
        property_picture:
             uri_prefix:         '%app.path.property_images%'
             upload_destination: '%kernel.project_dir%/public%app.path.property_images%'
+            inject_on_load: false
+            delete_on_update: true
+            delete_on_remove: true
+            
+       user_picture:
+            uri_prefix:         '%app.path.user_images%'
+            upload_destination: '%kernel.project_dir%/public%app.path.user_images%'
+            inject_on_load: false
+            delete_on_update: true
+            delete_on_remove: true
