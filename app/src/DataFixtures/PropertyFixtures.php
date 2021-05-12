@@ -62,7 +62,6 @@ class PropertyFixtures extends Fixture implements DependentFixtureInterface
       ->setAddress($faker->streetAddress)
       ->setZipCode((int)$faker->postcode)
       ->setCity($faker->city)
-      ->setCountry($faker->country)
       ->setRentOrSale($faker->boolean() ? 'sale' : 'rent')
       ->setPrice($faker->randomNumber(6, true))
       ->setCharges($faker->randomNumber(3, true))

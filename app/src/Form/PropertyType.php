@@ -6,7 +6,6 @@ use App\Entity\Property;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -201,10 +200,6 @@ class PropertyType extends AbstractType
                         'maxMessage' => "La ville doit faire maximum {{ limit }} caractères.",
                     ]),
                 ]
-            ])
-            ->add('country', CountryType::class, [
-                'label' => 'Pays',
-                'data' => 'FR'
             ])
             ->add('rentOrSale', ChoiceType::class, [
                 'label' => 'Est-ce une vente ou une location?',
