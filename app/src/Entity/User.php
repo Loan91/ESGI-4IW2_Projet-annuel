@@ -5,14 +5,15 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Serializable;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use Symfony\Component\HttpFoundation\File\File;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="user_account", schema="immo")
  */
-class User implements UserInterface
+class User implements UserInterface, Serializable
 {
     /**
      * @ORM\Id
@@ -83,6 +84,11 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=10, nullable=true)
      */
     private $phone;
+
+    /**
+     * @ORM\OneToOne(targetEntity=ProfilePicture::class, cascade={"persist", "remove"})
+     */
+    private $profilePicture;
 
     public function getId(): ?int
     {
@@ -275,5 +281,59 @@ class User implements UserInterface
         $this->phone = $phone;
 
         return $this;
+    }
+
+    public function getProfilePicture(): ?ProfilePicture
+    {
+        return $this->profilePicture;
+    }
+
+    public function setProfilePicture(?ProfilePicture $profilePicture): self
+    {
+        $this->profilePicture = $profilePicture;
+
+        return $this;
+    }
+    
+    /**
+     * @see https://www.php.net/manual/en/serializable.serialize.php
+     * 
+     * Note: Don't pass the profilePicture property. Thhis property explain WHY i use this method
+     */
+    public function serialize()
+    {
+        return \serialize([
+            'id' => $this->id,
+            'email' => $this->email,
+            'roles' => $this->roles,
+            'password' => $this->password,
+            'token' => $this->token,
+            'forgotPasswordToken' => $this->forgotPasswordToken,
+            'Enabled' => $this->Enabled,
+            'firstname' => $this->firstname,
+            'lastname' => $this->lastname,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
+            'civility' => $this->civility,
+            'phone' => $this->phone
+        ]);
+    }
+
+    /**
+     * @see https://www.php.net/manual/en/serializable.unserialize.php
+     */
+    public function unserialize($serialized)
+    {
+        $unserialize = unserialize($serialized);
+
+        // Set id mannually
+        $this->id = $unserialize['id'];
+        unset($unserialize['id']);
+
+        // Set other properties by setters
+        foreach ($unserialize as $key => $value) {
+            $setter = 'set'.ucfirst($key);
+            $this->$setter($value);
+        }
     }
 }

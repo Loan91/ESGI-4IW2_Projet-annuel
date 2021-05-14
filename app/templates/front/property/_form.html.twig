@@ -2,7 +2,7 @@
 
 {{ form_start(form, {attr: {class: "inline"}} ) }}
 
-<div class="">
+<div>
 	<section class="sm:grid sm:grid-cols-2 gap-8">
 		<div class="shadow sm:rounded-md sm:overflow-hidden bg-gray-50 ">
 			<div class="px-4 py-5 space-y-6 sm:p-6">
@@ -24,12 +24,11 @@
 				<h3 class="text-xl font-medium leading-6 text-gray-900 mb-6">Localication et date</h3>
 
 				<div>
-					<div class="grid grid-cols-3 gap-6">
-						<div class="col-span-3">{{ form_row(form.address) }}</div>
+					<div class="grid grid-cols-2 gap-6">
+						<div class="col-span-2">{{ form_row(form.address) }}</div>
 						<div>{{ form_row(form.city) }}</div>
 						<div>{{ form_row(form.zipCode) }}</div>
-						<div>{{ form_row(form.country) }}</div>
-						<div class="col-span-3">{{ form_row(form.constructionDate) }}</div>
+						<div class="col-span-2">{{ form_row(form.constructionDate) }}</div>
 					</div>
 				</div>
 			</div>
@@ -54,7 +53,7 @@
 					<div class="grid grid-cols-2 gap-6">
 						<div>{{ form_row(form.isFurnished) }}</div>
 						<div>{{ form_row(form.containsStorage) }}</div>
-						<div >{{ form_row(form.ground) }}</div>
+						<div>{{ form_row(form.ground) }}</div>
 						<div>{{ form_row(form.heater) }}</div>
 						<div>{{ form_row(form.isKitchenSeparated) }}</div>
 						<div>{{ form_row(form.fireplace) }}</div>
@@ -89,24 +88,25 @@
 						<div>{{ form_row(form.inventoryPrice) }}</div>
 					</div>
 				</div>
+
+				<h3 class="text-xl font-medium leading-6 text-gray-900 mb-6">Publication</h3>
+
+				<div>
+					<div class="grid grid-cols-1 gap-6">
+						<div>{{ form_row(form.published) }}</div>
+						<div>{{ form_row(form.imageFile) }}</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</section>
 </div>
 
-{# <div class="flex mt-6">
-	<label class="flex items-center">
-		<input type="checkbox" class="form-checkbox">
-		<span class="ml-2">Je valide la <span class="underline">politique de confidentialitée</span></span>
-	</label>
-</div> #}
+<button type="submit" class="mt-8 focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg mr-2 mb-4">
+	{{ button_label|default('Ajouter ce bien') }}
+</button>
 
-
-	<button type="submit" class="mt-8 focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg mr-2 mb-4">
-		{{ button_label|default('Ajouter ce bien') }}
-	</button>
-
-	<a href="{{ path('front_property_index') }}" class="focus:outline-none text-white text-sm py-3 px-5 rounded-md bg-gray-500 hover:bg-gray-600 hover:shadow-lg  mr-2">Retour à la liste des biens</a>
+<a href="{{ path('front_property_index') }}" class="focus:outline-none text-white text-sm py-3 px-5 rounded-md bg-gray-500 hover:bg-gray-600 hover:shadow-lg  mr-2">Retour à la liste des biens</a>
 	
 {{ form_end(form) }}
 

@@ -7,6 +7,7 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Symfony\Component\HttpFoundation\File\File;
 
 class PropertyFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -61,15 +62,23 @@ class PropertyFixtures extends Fixture implements DependentFixtureInterface
       ->setAddress($faker->streetAddress)
       ->setZipCode((int)$faker->postcode)
       ->setCity($faker->city)
-      ->setCountry($faker->country)
       ->setRentOrSale($faker->boolean() ? 'sale' : 'rent')
       ->setPrice($faker->randomNumber(6, true))
       ->setCharges($faker->randomNumber(3, true))
       ->setGuarentee($faker->randomNumber(4, true))
       ->setFeesPrice($faker->randomNumber(2, true))
       ->setInventoryPrice($faker->randomNumber(2, true))
+      ->setPublished(true)
 
       ->setOwner($this->getReference(UserFixtures::USER_REFERENCE));
+
+    // 50% de chances d'avoir une image
+    // if($faker->boolean(50)) {
+    //   $image = new File(dirname(__DIR__, 2).'/public/images/maison-default.jpg');
+    //   $bien->setImageFile($image);
+    //   $bien->setImageName($image->getFilename());
+    //   $bien->setImageSize($image->getSize());
+    // }
 
     $manager->persist($bien);
 
