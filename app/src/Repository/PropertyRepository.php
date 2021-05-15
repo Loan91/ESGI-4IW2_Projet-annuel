@@ -32,8 +32,12 @@ class PropertyRepository extends ServiceEntityRepository
 
         $query = $this->createQueryBuilder('p');
 
-        if (!empty($searchData->type)) {
+        if (!empty($searchData->type) && $searchData->type !== 'all') {
             $query = $query->where('p.type = :type')->setParameter('type', $searchData->type);
+        }
+
+        if (!empty($searchData->city)) {
+          $query = $query->andWhere('p.city LIKE :city')->setParameter('city', '%'. $searchData->city . '%');
         }
 
         if (!empty($searchData->categories)) {

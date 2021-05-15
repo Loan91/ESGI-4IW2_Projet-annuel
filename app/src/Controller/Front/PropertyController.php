@@ -56,6 +56,8 @@ class PropertyController extends AbstractController
 
     /**
      * @Route("/{id}", name="property_show", methods={"GET"})
+     * @param Property $property
+     * @return Response
      */
     public function show(Property $property): Response
     {
