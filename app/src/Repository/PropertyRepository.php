@@ -27,9 +27,8 @@ class PropertyRepository extends ServiceEntityRepository
      * @param SearchData $searchData
      * @return Property[]
      */
-    public function findSearch(SearchData $searchData)
+    public function findSearch(SearchData $searchData): array
     {
-
         $query = $this->createQueryBuilder('p');
 
         if (!empty($searchData->type) && $searchData->type !== 'all') {

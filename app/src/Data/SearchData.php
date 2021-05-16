@@ -5,7 +5,7 @@ namespace App\Data;
 
 /**
  * Class SearchData
- * Réprensente les données liés à la recherche.
+ * Représente les données liés à la recherche.
  * @package App\Data
  */
 class SearchData
