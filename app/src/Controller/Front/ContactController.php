@@ -20,7 +20,7 @@ class ContactController extends AbstractController
     {
         $user = $this->getUser();
         return $this->render('front/contact/index.html.twig', [
-            'contacts' => [],
+            'contacts' => $contactRepository->getContactsOrdered($user->getId()),
         ]);
     }
 

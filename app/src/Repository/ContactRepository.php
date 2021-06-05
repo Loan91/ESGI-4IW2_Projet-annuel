@@ -33,6 +33,40 @@ class ContactRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * @return Contact[] Returns an array of Contact objects
+     */
+    public function getContactsOrdered($user)
+    {
+        $contacts = array();
+
+        $createdRDV = $this->createQueryBuilder('c')
+            ->leftJoin('c.property', 'property')
+            ->leftJoin('property.owner', 'owner')
+            ->where('owner = :user')
+            ->andWhere("c.status = 'RDV_CREE'")
+            ->setParameter('user', $user)
+            ->orderBy('c.desiredDate', 'asc')
+            ->getQuery()
+            ->getResult()
+            ;
+
+        $validatedRDV = $this->createQueryBuilder('c')
+            ->leftJoin('c.property', 'property')
+            ->leftJoin('property.owner', 'owner')
+            ->where('owner = :user')
+            ->andWhere("c.status = 'RDV_VALIDE'")
+            ->setParameter('user', $user)
+            ->orderBy('c.desiredDate', 'asc')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        array_push( $contacts, $createdRDV,$validatedRDV );
+
+        return $contacts;
+    }
+
     // /**
     //  * @return Contact[] Returns an array of Contact objects
     //  */
