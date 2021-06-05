@@ -1,0 +1,12 @@
+{# templates/bundles/TwigBundle/Exception/error404.html.twig #}
+{% extends 'base_front.html.twig' %}
+
+{% block body %}
+    <section class="mx-16 text-center">
+        <h1 class="mt-16 text-5xl font-bold text-gray-800">Erreur 404 - Page non trouvée</h1>
+
+        <p class="mt-16">
+            La page que vous recherchez n'a pas pu être trouvée. Vérifiez que vous n'avez pas mal orthographié l'URL ou retournez sur la <a href="{{ path('front_home') }}" class="text-blue-800 hover:text-blue-600">page d'accueil</a>
+        </p>
+    </section>
+{% endblock %}
