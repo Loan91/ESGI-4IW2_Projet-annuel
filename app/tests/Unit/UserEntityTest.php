@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Entity;
+namespace App\Tests\Unit;
 
 
 use App\Entity\User;
@@ -24,7 +24,7 @@ class UserEntityTest extends KernelTestCase
 
     private ValidatorInterface $validator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $kernel = self::bootKernel();
 
