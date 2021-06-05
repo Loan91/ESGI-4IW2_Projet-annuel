@@ -4,18 +4,8 @@
 
 {% block body %}
     <div class="grid grid-cols-1 w-3/5 mx-auto py-4">
-        <!-- Bouton d'accès aux rendez-vous de l'utilisateur -->
-        <div>
-            <a href="{{ path('front_contact_mycontacts') }}">
-                <button class="grid grid-cols-2 w-full rounded-lg shadow-md py-4">
-                    <div class="font-semibold text-lg text-gray-700 text-left px-4 tracking-wide">Mes demandes de rendez-vous</div>
-                    <div class="font-semibold text-lg text-gray-700 text-right px-4 tracking-wide">▷</div>
-                </button>
-            </a>
-        </div>
-
         <div class="w-full rounded-lg shadow-md py-4 mt-4">
-            <div class="font-semibold text-lg text-gray-700 text-left px-4 tracking-wide">Rendez-vous concernant vos biens <button>Planning</button></div>
+            <div class="font-semibold text-lg text-gray-700 text-left px-4 tracking-wide">Mes demandes de rendez-vous <button>Planning</button></div>
             {% if contacts is not empty %}
                 <div class="grid grid-cols-1">
                     {% for contact in contacts %}
@@ -32,7 +22,16 @@
                                 <br>
                                 Prospect : {{ contact.prospect.firstname | uppercaseFirst }} {{ contact.prospect.lastname | uppercaseFirst }}
                             </div>
-                            <div class="text-lg text-gray-700 text-center col-span-2 px-4 tracking-wide"><b>Status</b><br>{{ contact.status }}</div>
+                            <div class="text-lg text-gray-700 text-center col-span-2 px-4 tracking-wide">
+                                <b>Status</b><br>
+                                {% if contact.status == 'EN_ATTENTE' %}
+                                        En attente
+                                {% elseif contact.status == 'EN_COURS' %}
+                                    En cours
+                                {% elseif contact.status == 'TERMINE' %}
+                                    Terminé
+                                {% endif %}
+                            </div>
                         </div>
                     {% endfor %}
                 </div>

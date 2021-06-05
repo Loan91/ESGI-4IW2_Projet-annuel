@@ -1,0 +1,25 @@
+{% form_theme form 'themes/tailwindcss.html.twig' %}
+
+{{ form_start(form, {attr: {class: "inline"}} ) }}
+
+<div>
+	<section class="sm:grid sm:grid-cols-2 gap-8">
+		<div class="shadow sm:rounded-md sm:overflow-hidden bg-gray-50 ">
+			<div class="px-4 py-5 space-y-6 sm:p-6">
+				<div>
+					<div class="grid grid-cols-2 gap-6">
+						<div class="col-span-2">{{ form_row(form.desiredDate) }}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
+
+<button type="submit" class="mt-8 focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg mr-2 mb-4">
+	{{ button_label|default('Valider le rendez-vous') }}
+</button>
+
+<a href="{{ path('front_property_index') }}" class="focus:outline-none text-white text-sm py-3 px-5 rounded-md bg-gray-500 hover:bg-gray-600 hover:shadow-lg  mr-2">Retour à la liste des biens</a>
+	
+{{ form_end(form) }}

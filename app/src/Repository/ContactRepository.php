@@ -22,7 +22,7 @@ class ContactRepository extends ServiceEntityRepository
      /**
       * @return Contact[] Returns an array of Contact objects
       */
-    public function getContactsOrdered($user)
+    public function getMyContactsOrdered($user)
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.prospect = :user')
