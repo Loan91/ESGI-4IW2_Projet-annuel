@@ -15,7 +15,12 @@
             <!-- Profile Card -->
             <div class="bg-white p-3 border-t-4 border-green-400">
                 <div class="image overflow-hidden">
-                    <img class="h-auto w-full mx-auto rounded" src="https://previews.123rf.com/images/donets/donets1506/donets150600578/41663749-vector-user-icon.jpg" alt="">
+                    {% if app.user.profilePicture.imageName is not null %}
+                        <img src="{{ uploaded_user_path ~ '/' ~ app.user.profilePicture.imageName }}" alt="Image de profil" class="h-auto w-full mx-auto rounded">
+                    {% else %}
+                        <img src="/images/user_profile_default.png" alt="Image de profil" class="h-auto w-full mx-auto rounded">
+                    {% endif %}
+                    
                 </div>
                 <div class="text-center leading-3 my-4">
                     <h1 class="text-gray-900 tracking-wide font-bold text-xl mb-2">{{ userFullname(app.user) }}</h1>

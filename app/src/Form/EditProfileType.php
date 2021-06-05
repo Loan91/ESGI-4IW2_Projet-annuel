@@ -2,17 +2,22 @@
 
 namespace App\Form;
 
+use App\Entity\ProfilePicture;
 use App\Entity\User;
-
+use App\Validator\Phone;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class EditProfileType extends AbstractType
 {
@@ -73,21 +78,24 @@ class EditProfileType extends AbstractType
             ])
             ->add('phone', TextType::class, [
                 'label' => 'Téléphone',
-                'data' => '0601010101',
                 'empty_data' => '',
                 'constraints' => [
                     new Assert\NotBlank([
                         'message' => "Le numéro de téléphone ne peut pas être vide."
                     ]),
-                    new Assert\Length([
-                        'min' => 10,
-                        'minMessage' => "Le numéro de téléphone ne peut excéder 100 caractères",
-                        'max' => 10,
-                        'maxMessage' => "Le numéro de téléphone ne peut excéder 100 caractères",
-                        'exactMessage' => 'Le numéro de téléphone doit faire {{ limit }} caractères.'
-                    ]),
+                    new Phone()
                 ]
-            ]);
+            ])
+            ->add(
+                $builder->create('profilePicture', FormType::class, [
+                    'data_class' => ProfilePicture::class,
+                    'by_reference' => true
+                ])
+                ->add('imageFile', VichImageType::class, [
+                    'label' => 'Photo de profil',
+                    'required' => false
+                ])
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver)

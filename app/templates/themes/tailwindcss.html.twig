@@ -2,7 +2,6 @@
 
 {# Global row #}
 {% block form_row -%}
-    <div class="text-red-600 font-bold">{{ form_errors(form) }}</div>
     {%- if compound is defined and compound -%}
         {%- set element = 'fieldset' -%}
     {%- endif -%}
@@ -10,7 +9,9 @@
     {%- if help is not empty -%}
         {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
     {%- endif -%}
+    {%- set row_attr = row_attr|merge({class: label_attr.class|default('') ~ ' mb-2'|trim}) -%}
     <{{ element|default('div') }}{% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' fieldset-class')|trim})} %}{{ block('attributes') }}{% endwith %}>
+        <div class="text-red-600 font-bold">{{ form_errors(form) }}</div>
         {{- form_label(form) -}}
         {{- form_widget(form, widget_attr) -}}
         {{- form_help(form) -}}
@@ -44,21 +45,23 @@
 
 {# Checkbox and Radio #}
 {% block radio_widget -%}
-    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' ml-4 mr-1')|trim}) -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' ml-6 mr-1 form-radio h-5 w-5 text-blue-600 focus:ring border border-blue-300 focus:border-none')|trim}) -%}
     {{- parent() -}}
 {%- endblock radio_widget %}
 
 {% block checkbox_widget -%}
-    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' ml-4 mr-1 inline')|trim}) -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' ml-4 mr-1 form-checkbox h-5 w-5 text-blue-600 rounded focus:ring border border-blue-300 focus:border-none')|trim}) -%}
     {{- parent() -}}
 {%- endblock checkbox_widget %}
 
 {% block choice_widget_expanded -%}
-    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' inline')|trim}) -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' inline-flex justify-around flex-row')|trim}) -%}
     <div {{ block('widget_container_attributes') }}>
     {%- for child in form %}
-        {{- form_widget(child) -}}
-        {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
+        <div>
+            {{- form_widget(child) -}}
+            {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
+        </div>
     {% endfor -%}
     </div>
 {%- endblock choice_widget_expanded %}

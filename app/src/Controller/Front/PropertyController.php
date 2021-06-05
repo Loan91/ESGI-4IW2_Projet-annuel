@@ -34,6 +34,7 @@ class PropertyController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        // dd($request->request->all());
         $property = new Property();
         $property->setOwner($this->getUser());
         $form = $this->createForm(PropertyType::class, $property);
@@ -55,6 +56,8 @@ class PropertyController extends AbstractController
 
     /**
      * @Route("/{id}", name="property_show", methods={"GET"})
+     * @param Property $property
+     * @return Response
      */
     public function show(Property $property): Response
     {
