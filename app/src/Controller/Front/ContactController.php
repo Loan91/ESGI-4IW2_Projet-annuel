@@ -44,7 +44,7 @@ class ContactController extends AbstractController
         $contact = new Contact();
         $contact->setProspect($this->getUser());
         $contact->setProperty($property);
-        $contact->setStatus('EN_ATTENTE');
+        $contact->setStatus('RDV_CREE');
         $form = $this->createForm(ContactType::class, $contact);
         $form->handleRequest($request);
 
