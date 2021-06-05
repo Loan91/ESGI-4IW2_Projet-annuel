@@ -24,7 +24,7 @@ class UserEntityTest extends KernelTestCase
 
     private ValidatorInterface $validator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $kernel = self::bootKernel();
 

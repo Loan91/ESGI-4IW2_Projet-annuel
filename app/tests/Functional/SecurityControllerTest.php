@@ -9,13 +9,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class SecurityControllerTest extends WebTestCase
 {
     /** @var \Faker\Factory $faker A french faker */
-    private $faker = null;
-
-    /** @var User $fakeUser A user to perform tests */
-    protected $fakeUser = null;
-
-    /** @var string $userPassword The password of the user */
-    protected $userPassword = '';
+    protected $faker = null;
 
     /** @var UserPasswordEncoderInterface $passwordEncoder The symfony password encoder */
     protected $passwordEncoder = null;
@@ -31,26 +25,15 @@ class SecurityControllerTest extends WebTestCase
 
         // Gets services
         $this->passwordEncoder = self::$container->get(UserPasswordEncoderInterface::class);
-        $em = self::$container->get('doctrine.orm.default_entity_manager');
+        $this->em = self::$container->get('doctrine.orm.default_entity_manager');
+        $this->faker = \Faker\Factory::create('fr_FR');
+    }
 
-        // Init variables
-        $faker = \Faker\Factory::create('fr_FR');
-        $userPassword = $faker->password(8, 20);
-
-        // Create new user
-        $fakeUser = new User();
-        $fakeUser = $fakeUser
-            ->setEmail($faker->email)
-            ->setPassword($this->passwordEncoder->encodePassword($fakeUser, $userPassword))
-            ->setName($faker->name('M'));
-
-        // Add user in database
-        $em->persist($fakeUser);
-        $em->flush();
-
-        $this->faker = $faker;
-        $this->fakeUser = $fakeUser;
-        $this->userPassword = $userPassword;
+    public function recreateDatabase()
+    {
+        // Recreate the database
+        exec('bin/console d:s:d --force');
+        exec('bin/console d:s:u --force');
     }
 
     /**
@@ -58,6 +41,28 @@ class SecurityControllerTest extends WebTestCase
      */
     public function testConnexionForm()
     {
+        $this->recreateDatabase();
+        
+        /** @var $faker \Faker\Generator */
+        $faker = $this->faker;
+        $userPassword = $faker->password(8, 20);
+
+        // Create new user
+        $user = new User();
+        $user
+            ->setCivility($faker->boolean ? 'Monsieur' : 'Madame')
+            ->setEmail('admin@dev.com')
+            ->setPhone('0602030405')
+            ->setPassword($this->passwordEncoder->encodePassword($user, $userPassword))
+            ->setFirstname($faker->firstname)
+            ->setLastname($faker->lastname)
+            ->setRoles(['ROLE_ADMIN'])
+            ->setEnabled(true);
+
+        // Add user in database
+        $this->em->persist($user);
+        $this->em->flush();
+
         // On génère l'url menant au formulaire
         $url = self::$container->get('router')->generate('app_login', [], false);
 
@@ -69,11 +74,11 @@ class SecurityControllerTest extends WebTestCase
 
         // On va récupérer un utilisateur existant et l'utiliser pour se connecter
         $form->setValues([
-            'email' => $this->fakeUser->getEmail(),
-            'password' => $this->userPassword
+            'email' => $user->getEmail(),
+            'password' => $userPassword
         ]);
 
         $crawler = $this->client->submit($form);
-        $this->assertResponseIsSuccessful();
+        $this->assertResponseStatusCodeSame(302);
     }
 }

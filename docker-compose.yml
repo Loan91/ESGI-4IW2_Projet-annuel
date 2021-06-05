@@ -12,6 +12,10 @@ services:
         build: app/docker/php
         volumes:
             - './app:/usr/share/nginx/html'
+    phpunit:
+        build: app/docker/phpunit
+        volumes:
+            - './app:/usr/share/nginx/html'
     composer:
         image: 'composer:1.8'
         command: install
