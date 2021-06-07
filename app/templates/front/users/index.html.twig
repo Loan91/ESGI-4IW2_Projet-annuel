@@ -15,7 +15,7 @@
             <!-- Profile Card -->
             <div class="bg-white p-3 border-t-4 border-green-400">
                 <div class="image overflow-hidden">
-                    {% if app.user.profilePicture.imageName is not null %}
+                    {% if app.user.profilePicture is not null %}
                         <img src="{{ uploaded_user_path ~ '/' ~ app.user.profilePicture.imageName }}" alt="Image de profil" class="h-auto w-full mx-auto rounded">
                     {% else %}
                         <img src="/images/user_profile_default.png" alt="Image de profil" class="h-auto w-full mx-auto rounded">
