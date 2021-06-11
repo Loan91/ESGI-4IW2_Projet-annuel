@@ -32,6 +32,16 @@ class UserFixtures extends Fixture
             ->setRoles(['ROLE_ADMIN'])
             ->setEnabled(true);
 
+        $user
+            ->setCivility('Monsieur')
+            ->setEmail('jean@gmail.com')
+            ->setPhone('0602031575')
+            ->setPassword($this->passwordEncoder->encodePassword($user, 'password'))
+            ->setFirstname('Jean')
+            ->setLastname('Dautrui')
+            ->setRoles(['ROLE_USER'])
+            ->setEnabled(true);
+
         $manager->persist($user);
         $manager->flush();
 
