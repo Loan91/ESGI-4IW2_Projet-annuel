@@ -24,7 +24,7 @@
                             <svg class="flex-shrink-0 h-5 w-5 text-gray-500" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="map-marker-alt" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
                                 <path fill="currentColor" d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z"></path>
                             </svg>
-                            <span class="text-base text-gray-600">{{ property.address }}</span>
+                            <span class="text-base text-gray-600">{{ property.address }}  {{ property.zipCode }} - {{ property.city }}</span>
                         </li>
                     </ul>
                     <a href="{{ path('front_contact_create', { 'id' : property.id }) }}" class="mt-8 block w-full bg-green-800 border border-transparent rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-green-900">Reserver maintenant</a>
@@ -72,9 +72,45 @@
                 </div>
 
                 <div class="my-6">
-                    <p class="text-base leading-6 text-gray-700">{{ property.description }} Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis doloremque ex laborum magni quae quasi quibusdam, repudiandae! Ad consequuntur.</p>
+                    <p class="text-base leading-6 text-gray-700">{{ property.description }}</p>
                 </div>
+                <div id="map"></div>
+                {% block javascripts  %}
+                    <script type="text/javascript">
 
+                        var theUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyCXruICZrKAwmJiiPaTi7z6vG2LgxuFknU"
+                        var lng;
+                        var lat;
+                        var data;
+
+
+
+                        fetch(theUrl)
+                            .then(resp => resp.json())
+                            .then( data => {
+                                lng = data.results[0].geometry.location.lng;
+                                lat = data.results[0].geometry.location.lat;
+                            })
+                            .catch(function(error) {
+                                console.log(error);
+                            });
+
+                        function initMap(lat, lng) {
+                            const myLatLng = { lat: lat, lng: lng };
+                            const map = new google.maps.Map(document.getElementById("map"), {
+                                zoom: 4,
+                                center: myLatLng,
+                            });
+                            new google.maps.Marker({
+                                position: myLatLng,
+                                map,
+                                title: "Hello World!",
+                            });
+                        }
+
+                    </script>
+
+                {% endblock %}
                 <div>
                     <h4 class="text-lg font-medium text-gray-900 tracking-wider mb-4">Qui contacter</h4>
                     <div class="flex items-center space-x-4 lg:space-x-3">
