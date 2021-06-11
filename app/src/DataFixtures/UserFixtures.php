@@ -32,6 +32,9 @@ class UserFixtures extends Fixture
             ->setRoles(['ROLE_ADMIN'])
             ->setEnabled(true);
 
+        $manager->persist($user);
+
+        $user = new User();
         $user
             ->setCivility('Monsieur')
             ->setEmail('jean@gmail.com')
