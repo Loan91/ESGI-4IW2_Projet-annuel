@@ -7,76 +7,97 @@
     <h1 class="text-3xl font-semibold text-gray-900 tracking-wide mb-8">Toutes nos annonces</h1>
     <div class="">
         {{ form_start(form) }}
-            <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
-                <div class="">
-                    <label for="" class="block text-sm font-medium text-gray-700">Type de bien</label>
-                    <div class="mt-1">
-                        {{ form_row(form.type, { attr: { class: "shadow-sm border focus:outline-none block w-full sm:text-sm border-gray-300 rounded-md py-2 px-3" } }) }}
-                    </div>
-                </div>
-                <div>
-                    <label for="" class="block text-sm font-medium text-gray-700">Catégorie</label>
-                    <div class="mt-1">
-                        {{ form_row(form.categories, { attr: { class: "shadow-sm border focus:outline-none block w-full sm:text-sm border-gray-300 rounded-md py-2 px-3" } }) }}
-                    </div>
-                </div>
-                <div>
-                    <label for="" class="block text-sm font-medium text-gray-700">Prix minimum</label>
-                    <div class="mt-1">
-                        {{ form_row(form.minPrice, { attr: { class: "shadow-sm border focus:outline-none block w-full sm:text-sm border-gray-300 rounded-md py-2 px-3" } }) }}
-                    </div>
-                </div>
-                <div>
-                    <label for="" class="block text-sm font-medium text-gray-700">Prix maximum</label>
-                    <div class="mt-1">
-                        {{ form_row(form.maxPrice, { attr: { class: "shadow-sm border focus:outline-none block w-full sm:text-sm border-gray-300 rounded-md py-2 px-3" } }) }}
-                    </div>
-                </div>
-                <div class="w-full flex items-end">
-                    <button type="submit" class="inline-flex items-center px-8 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-white bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Filtrer
-                    </button>
+        <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
+            <div class="">
+                <label for="" class="block text-sm font-medium text-gray-700">Type de bien</label>
+                <div class="mt-1">
+                    {{ form_row(form.type, { attr: { class: "shadow-sm border focus:outline-none block w-full sm:text-sm
+                    border-gray-300 rounded-md py-2 px-3" } }) }}
                 </div>
             </div>
+            <div>
+                <label for="" class="block text-sm font-medium text-gray-700">Catégorie</label>
+                <div class="mt-1">
+                    {{ form_row(form.categories, { attr: { class: "shadow-sm border focus:outline-none block w-full
+                    sm:text-sm border-gray-300 rounded-md py-2 px-3" } }) }}
+                </div>
+            </div>
+            <div>
+                <label for="" class="block text-sm font-medium text-gray-700">Prix minimum</label>
+                <div class="mt-1">
+                    {{ form_row(form.minPrice, { attr: { class: "shadow-sm border focus:outline-none block w-full
+                    sm:text-sm border-gray-300 rounded-md py-2 px-3" } }) }}
+                </div>
+            </div>
+            <div>
+                <label for="" class="block text-sm font-medium text-gray-700">Prix maximum</label>
+                <div class="mt-1">
+                    {{ form_row(form.maxPrice, { attr: { class: "shadow-sm border focus:outline-none block w-full
+                    sm:text-sm border-gray-300 rounded-md py-2 px-3" } }) }}
+                </div>
+            </div>
+            <div class="w-full flex items-end">
+                <button type="submit"
+                    class="inline-flex items-center px-8 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-white bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Filtrer
+                </button>
+            </div>
+        </div>
         {{ form_end(form) }}
     </div>
 
-    <div class="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-4">
+    <div
+        class="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-4">
         {% for property in properties %}
-            <div class="border border-gray-200 rounded-lg shadow-sm divide-y divide-gray-200">
-                <a href="{{ path('front_annonce_show', { 'id': property.id }) }}">
-                    <img src="https://images.unsplash.com/photo-1593696140826-c58b021acf8b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cmVhbCUyMGVzdGF0ZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60" alt="Placeholder" class="rounded-t-lg object-cover h-48 w-full"/>
-                </a>
-                <div class="p-6">
-                    <h2 class="text-lg leading-6 font-medium text-gray-900">{{ property.type | capitalize }} à {{ property.city }}</h2>
-                    <p class="text-sm text-gray-500">{{ property.description }}</p>
-                    <p class="mt-2 w-full inline-flex items-end justify-between">
-                        <span class="block text-xl font-semibold text-gray-900 tracking-wide">{{ property.price | number_format(0, ',', ' ') }} €</span>
-                        <span class="block text-lg font-medium text-gray-500">{{ property.area }}m<sup>2</sup></span>
-                    </p>
-                </div>
+        <div class="border border-gray-200 rounded-lg shadow-sm divide-y divide-gray-200">
+            <a href="{{ path('front_annonce_show', { 'id': property.id }) }}">
+                {% if property.imageName is not null %}
+                <img src="{{ uploaded_property_path ~ '/' ~ property.imageName }}" alt="Image de profil"
+                    class="h-auto w-full mx-auto rounded">
+                {% else %}
+                <img src="https://images.unsplash.com/photo-1593696140826-c58b021acf8b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cmVhbCUyMGVzdGF0ZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+                    alt="Placeholder" class="rounded-t-lg object-cover h-48 w-full" />
+                {% endif %}
 
-                <div class="pt-2 pb-6 px-6">
-                    <ul class="mt-6 space-y-4">
-                        <li class="flex space-x-3">
-                            <!-- Heroicon name: solid/check -->
-                            <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                            </svg>
-                            <span class="text-sm text-gray-500">Ascenseur</span>
-                        </li>
-
-                        <li class="flex space-x-3">
-                            <!-- Heroicon name: solid/check -->
-                            <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                            </svg>
-                            <span class="text-sm text-gray-500">Espace de stockage</span>
-                        </li>
-
-                    </ul>
-                </div>
+            </a>
+            <div class="p-6">
+                <h2 class="text-lg leading-6 font-medium text-gray-900">{{ property.type | capitalize }} à {{
+                    property.city }}</h2>
+                <p class="text-sm text-gray-500">{{ property.description }}</p>
+                <p class="mt-2 w-full inline-flex items-end justify-between">
+                    <span class="block text-xl font-semibold text-gray-900 tracking-wide">{{ property.price |
+                        number_format(0, ',', ' ') }} €</span>
+                    <span class="block text-lg font-medium text-gray-500">{{ property.area }}m<sup>2</sup></span>
+                </p>
             </div>
+
+            <div class="pt-2 pb-6 px-6">
+                <ul class="mt-6 space-y-4">
+                    <li class="flex space-x-3">
+                        <!-- Heroicon name: solid/check -->
+                        <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-sm text-gray-500">Ascenseur</span>
+                    </li>
+
+                    <li class="flex space-x-3">
+                        <!-- Heroicon name: solid/check -->
+                        <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-sm text-gray-500">Espace de stockage</span>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
         {% endfor %}
     </div>
 </main>
