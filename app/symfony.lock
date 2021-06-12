@@ -111,6 +111,12 @@
     "jms/metadata": {
         "version": "2.5.0"
     },
+    "knplabs/knp-components": {
+        "version": "v3.0.2"
+    },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v5.5.1"
+    },
     "laminas/laminas-code": {
         "version": "3.5.1"
     },
