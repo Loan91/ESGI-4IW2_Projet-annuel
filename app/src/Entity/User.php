@@ -3,9 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Serializable;
+use App\Entity\Property;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\File;
@@ -89,6 +92,63 @@ class User implements UserInterface, Serializable
      * @ORM\OneToOne(targetEntity=ProfilePicture::class, cascade={"persist", "remove"})
      */
     private $profilePicture;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="owner", orphanRemoval=true, cascade={"persist", "remove"})
+     */
+    private $properties;
+
+    public function __construct()
+    {
+        $this->properties = new ArrayCollection();
+    }
+
+    /**
+     * @see https://www.php.net/manual/en/serializable.serialize.php
+     * 
+     * Note: Don't pass the profilePicture property. Thhis property explain WHY i use this method
+     */
+    public function serialize()
+    {
+        return \serialize([
+            'id' => $this->id,
+            'email' => $this->email,
+            'roles' => $this->roles,
+            'password' => $this->password,
+            'token' => $this->token,
+            'forgotPasswordToken' => $this->forgotPasswordToken,
+            'Enabled' => $this->Enabled,
+            'firstname' => $this->firstname,
+            'lastname' => $this->lastname,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
+            'civility' => $this->civility,
+            'phone' => $this->phone,
+            'properties' => $this->properties
+        ]);
+    }
+
+    /**
+     * @see https://www.php.net/manual/en/serializable.unserialize.php
+     */
+    public function unserialize($serialized)
+    {
+        $unserialized = unserialize($serialized);
+
+        // Set id mannually
+        $this->id = $unserialized['id'];
+        unset($unserialized['id']);
+        foreach ($unserialized['properties'] as $property) {
+            $this->addProperty($property);
+        }
+        unset($unserialized['properties']);
+
+        // Set other properties by setters
+        foreach ($unserialized as $key => $value) {
+            $setter = 'set'.ucfirst($key);
+            $this->$setter($value);
+        }
+    }
 
     public function getId(): ?int
     {
@@ -294,46 +354,34 @@ class User implements UserInterface, Serializable
 
         return $this;
     }
-    
+
     /**
-     * @see https://www.php.net/manual/en/serializable.serialize.php
-     * 
-     * Note: Don't pass the profilePicture property. Thhis property explain WHY i use this method
+     * @return Collection|Property[]
      */
-    public function serialize()
+    public function getProperties(): Collection
     {
-        return \serialize([
-            'id' => $this->id,
-            'email' => $this->email,
-            'roles' => $this->roles,
-            'password' => $this->password,
-            'token' => $this->token,
-            'forgotPasswordToken' => $this->forgotPasswordToken,
-            'Enabled' => $this->Enabled,
-            'firstname' => $this->firstname,
-            'lastname' => $this->lastname,
-            'createdAt' => $this->createdAt,
-            'updatedAt' => $this->updatedAt,
-            'civility' => $this->civility,
-            'phone' => $this->phone
-        ]);
+        return $this->properties;
     }
 
-    /**
-     * @see https://www.php.net/manual/en/serializable.unserialize.php
-     */
-    public function unserialize($serialized)
+    public function addProperty(Property $property): self
     {
-        $unserialize = unserialize($serialized);
-
-        // Set id mannually
-        $this->id = $unserialize['id'];
-        unset($unserialize['id']);
-
-        // Set other properties by setters
-        foreach ($unserialize as $key => $value) {
-            $setter = 'set'.ucfirst($key);
-            $this->$setter($value);
+        if (!$this->properties->contains($property)) {
+            $this->properties[] = $property;
+            $property->setOwner($this);
         }
+
+        return $this;
+    }
+
+    public function removeProperty(Property $property): self
+    {
+        if ($this->properties->removeElement($property)) {
+            // set the owning side to null (unless already changed)
+            if ($property->getOwner() === $this) {
+                $property->setOwner(null);
+            }
+        }
+
+        return $this;
     }
 }

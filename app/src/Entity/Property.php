@@ -192,12 +192,6 @@ class Property
     private $inventoryPrice;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="properties")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $owner;
-
-    /**
      * @ORM\OneToMany(targetEntity=Contact::class, mappedBy="property", orphanRemoval=true)
      */
     private $contacts;
@@ -246,6 +240,12 @@ class Property
      * @var int|null
      */
     private $imageSize;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="properties")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $owner;
 
     public function __construct()
     {
@@ -654,18 +654,6 @@ class Property
         return $this;
     }
 
-    public function getOwner(): ?User
-    {
-        return $this->owner;
-    }
-
-    public function setOwner(?User $owner): self
-    {
-        $this->owner = $owner;
-
-        return $this;
-    }
-
     /**
      * @return Collection|Contact[]
      */
@@ -805,5 +793,17 @@ class Property
     public function getImageSize(): ?int
     {
         return $this->imageSize;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): self
+    {
+        $this->owner = $owner;
+
+        return $this;
     }
 }
