@@ -32,17 +32,22 @@ class UserController extends AbstractController
      */
     public function deleteUser(User $user, EntityManagerInterface $em, Request $request)
     {
+        // Check if the user has the rights
         if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
             throw new AccessDeniedHttpException("Vous n'avez pas les droits pour supprimer un utilisateur");
         }
 
+        // Check the csrf token
         $submittedToken = $request->request->get('token');
         if (!$this->isCsrfTokenValid('delete-item', $submittedToken)) {
             throw new InvalidCsrfTokenException("Le token d'action est invalide");
         }
         
+        // Remove the user
         $em->remove($user);
         $em->flush();
+
+        // Redirect with success message
         $this->addFlash('success', "L'utilisateur " . $user->getEmail() . " a bien été supprimé");
         return $this->redirectToRoute('back_user_index');
     }
