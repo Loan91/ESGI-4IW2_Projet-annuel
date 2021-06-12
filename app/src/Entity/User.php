@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 use Serializable;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -76,12 +77,12 @@ class User implements UserInterface, Serializable
     private $updatedAt;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $civility;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=10)
      */
     private $phone;
 
@@ -89,6 +90,7 @@ class User implements UserInterface, Serializable
      * @ORM\OneToOne(targetEntity=ProfilePicture::class, cascade={"persist", "remove"})
      */
     private $profilePicture;
+
 
     public function getId(): ?int
     {
@@ -336,4 +338,5 @@ class User implements UserInterface, Serializable
             $this->$setter($value);
         }
     }
+
 }
