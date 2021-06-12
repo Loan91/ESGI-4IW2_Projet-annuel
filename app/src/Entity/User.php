@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Serializable;
@@ -89,6 +91,16 @@ class User implements UserInterface, Serializable
      * @ORM\OneToOne(targetEntity=ProfilePicture::class, cascade={"persist", "remove"})
      */
     private $profilePicture;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Search::class, mappedBy="searcher")
+     */
+    private $searches;
+
+    public function __construct()
+    {
+        $this->searches = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -335,5 +347,35 @@ class User implements UserInterface, Serializable
             $setter = 'set'.ucfirst($key);
             $this->$setter($value);
         }
+    }
+
+    /**
+     * @return Collection|Search[]
+     */
+    public function getSearches(): Collection
+    {
+        return $this->searches;
+    }
+
+    public function addSearch(Search $search): self
+    {
+        if (!$this->searches->contains($search)) {
+            $this->searches[] = $search;
+            $search->setSearcher($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSearch(Search $search): self
+    {
+        if ($this->searches->removeElement($search)) {
+            // set the owning side to null (unless already changed)
+            if ($search->getSearcher() === $this) {
+                $search->setSearcher(null);
+            }
+        }
+
+        return $this;
     }
 }
