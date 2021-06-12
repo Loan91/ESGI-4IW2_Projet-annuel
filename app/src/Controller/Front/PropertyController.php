@@ -3,6 +3,7 @@
 namespace App\Controller\Front;
 
 use App\Repository\PropertyRepository;
+use App\Repository\SearchRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\HttpFoundation\Request;
@@ -31,10 +32,12 @@ class PropertyController extends AbstractController
 
     /**
      * @Route("/new", name="property_new", methods={"GET","POST"})
+     * @param Request $request
+     * @param SearchRepository $searchRepository
+     * @return Response
      */
-    public function new(Request $request): Response
+    public function new(Request $request, SearchRepository $searchRepository): Response
     {
-        // dd($request->request->all());
         $property = new Property();
         $property->setOwner($this->getUser());
         $form = $this->createForm(PropertyType::class, $property);
@@ -44,6 +47,12 @@ class PropertyController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($property);
             $entityManager->flush();
+
+            // TODO : lancer le recherche lorsqu'un nouveau bien est créé.
+            $searchRepository->findInterestedUsers($property);
+            dd($searchRepository);
+
+            // TODO : Faire une Queue pour envoyer les mails de façon asynchrone aux utilisateurs.
 
             return $this->redirectToRoute('front_property_index');
         }
