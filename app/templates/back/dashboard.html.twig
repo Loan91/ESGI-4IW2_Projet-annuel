@@ -4,6 +4,58 @@
 {% endblock %}
 
 {% block body %}
-	<h1 class="text-4xl my-4">Dashboard</h1>
-	<p>Pour le moment, il n'y a pas grand chose ici...</p>
+<h1 class="text-4xl font-bold my-4 text-center">Dashboard</h1>
+
+<div class="mt-8 grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
+	<div class="p-5 bg-white rounded shadow-sm">
+		<div class="text-base text-gray-400 ">Nombre total d'utilisateurs</div>
+		<div class="flex items-center pt-1">
+			<div class="text-2xl font-bold text-gray-900 ">{{ userCount }}</div>
+			<span class="flex items-center px-2 py-0.5 mx-2 text-sm
+				{% if newUsersCount > 5 %}
+					text-green-600 bg-green-100
+				{% elseif newUsersCount > 0 and newUsersCount < 5 %}
+					text-yellow-600 bg-yellow-100
+				{% else %}
+					text-red-600 bg-red-100
+				{% endif %}
+			rounded-full">
+				<span>{{ newUsersCount > 0 ? '+' ~ newUsersCount : newUsersCount }} ce mois-ci</span>
+			</span>
+		</div>
+	</div>
+	<div class="p-5 bg-white rounded shadow-sm">
+		<div class="text-base text-gray-400 ">Biens créés</div>
+		<div class="flex items-center pt-1">
+			<div class="text-2xl font-bold text-gray-900 ">{{ propertyCount }}</div>
+			<span class="flex items-center px-2 py-0.5 mx-2 text-sm
+			{% if newPropertiesCount > 5 %}
+				text-green-600 bg-green-100
+			{% elseif newPropertiesCount > 0 and newPropertiesCount < 5 %}
+				text-yellow-600 bg-yellow-100
+			{% else %}
+				text-red-600 bg-red-100
+			{% endif %}
+			rounded-full">
+				{% if newPropertiesCount > 0 %}
+				<span>{{ '+' ~ newPropertiesCount }} ce mois-ci</span>
+				{% else %}
+				<span>{{ newPropertiesCount }} ce mois-ci</span>
+				{% endif %}
+			</span>
+		</div>
+	</div>
+	<div class="p-5 bg-white rounded shadow-sm">
+		<div class="text-base text-gray-400 ">Nombre de maisons</div>
+		<div class="flex items-center pt-1">
+			<div class="text-2xl font-bold text-gray-900 ">{{ maisonCount }}</div>
+		</div>
+	</div>
+	<div class="p-5 bg-white rounded shadow-sm">
+		<div class="text-base text-gray-400 ">Nombre d'appartements</div>
+		<div class="flex items-center pt-1">
+			<div class="text-2xl font-bold text-gray-900 ">{{ appartementCount }}</div>
+		</div>
+	</div>
+</div>
 {% endblock %}

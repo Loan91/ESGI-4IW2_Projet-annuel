@@ -63,4 +63,52 @@ class PropertyRepository extends ServiceEntityRepository
             ->orderBy('p.id')
             ->getQuery()->getResult();
     }
+
+    /**
+     * Returns the total count of users in database
+     * 
+     * @return int Total count of users
+     */
+    public function getTotalCount(): int
+    {
+        return $this->_em->createQueryBuilder()
+            ->select('count(p)')
+            ->from("App\Entity\Property", "p")
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Returns the count of new properties for this month
+     * 
+     * @return int Count of new properties
+     */
+    public function getPropertyCountRegisteredThisMonth(): int
+    {
+        $conn = $this->_em->getConnection();
+        $sql = "SELECT COUNT(*) FROM immo.property WHERE created_at > date_trunc('month', CURRENT_DATE)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchOne();
+    }
+
+    public function getMaisonCount(): int
+    {
+        return $this->_em->createQueryBuilder()
+            ->select('count(p)')
+            ->from("App\Entity\Property", "p")
+            ->where("p.type = 'maison'")
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getAppartementCount(): int
+    {
+        return $this->_em->createQueryBuilder()
+            ->select('count(p)')
+            ->from("App\Entity\Property", "p")
+            ->where("p.type = 'appartement'")
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
