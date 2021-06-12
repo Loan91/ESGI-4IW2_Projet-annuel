@@ -26,7 +26,7 @@ class UserController extends AbstractController
      */
     public function index(EntityManagerInterface $em, Request $request, PaginatorInterface $paginator): Response
     {
-        $query = $em->createQuery("SELECT u FROM App\Entity\User u");
+        $query = $em->createQuery("SELECT u FROM App\Entity\User u ORDER BY u.id");
         $pagination = $paginator->paginate(
             $query, /* query NOT result */
             $request->query->getInt('page', 1), /*page number*/
@@ -41,6 +41,35 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/{user}/status/toggle", name="status_toggle", methods={"PATCH"})
+     */
+    public function toggleStatus(User $user, EntityManagerInterface $em, Request $request)
+    {
+        // Check if the user has the rights
+        if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            throw new AccessDeniedHttpException("Vous n'avez pas les droits pour supprimer un utilisateur");
+        }
+
+        // Check the csrf token
+        $submittedToken = $request->request->get('token');
+        if (!$this->isCsrfTokenValid('toggle-user-status', $submittedToken)) {
+            throw new InvalidCsrfTokenException("Le token d'action est invalide");
+        }
+
+        // Toggle status
+        if ($user->isEnabled()) {
+            $user->disable();
+        } else {
+            $user->enable();
+        }
+        $em->flush();
+
+        // Redirect with success message
+        $this->addFlash('success', "L'utilisateur " . $user->getEmail() . " a bien été ". ($user->isEnabled() ? 'activé' : 'désactivé'));
+        return $this->redirectToRoute('back_user_index');
+    }
+
+    /**
      * @Route("/{user}/delete", name="delete", methods={"DELETE"})
      */
     public function deleteUser(User $user, EntityManagerInterface $em, Request $request)
@@ -52,10 +81,10 @@ class UserController extends AbstractController
 
         // Check the csrf token
         $submittedToken = $request->request->get('token');
-        if (!$this->isCsrfTokenValid('delete-item', $submittedToken)) {
+        if (!$this->isCsrfTokenValid('delete-user', $submittedToken)) {
             throw new InvalidCsrfTokenException("Le token d'action est invalide");
         }
-        
+
         // Remove the user
         $em->remove($user);
         $em->flush();

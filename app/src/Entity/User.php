@@ -275,6 +275,21 @@ class User implements UserInterface, Serializable
         return $this;
     }
 
+    public function isEnabled(): bool
+    {
+        return $this->Enabled;
+    }
+
+    public function enable(): void
+    {
+        $this->Enabled = true;
+    }
+
+    public function disable(): void
+    {
+        $this->Enabled = false;
+    }
+
     public function getFirstname(): ?string
     {
         return $this->firstname;
