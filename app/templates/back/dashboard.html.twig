@@ -1,10 +1,10 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Dashboard
+{% block title %}Tableau de bord
 {% endblock %}
 
 {% block body %}
-<h1 class="text-4xl font-bold my-4 text-center">Dashboard</h1>
+<h1 class="text-4xl font-bold my-4 text-center">Tableau de bord</h1>
 
 <div class="mt-8 grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
 	<div class="p-5 bg-white rounded shadow-sm">
@@ -59,10 +59,12 @@
 	</div>
 </div>
 
-<div class="mt-8 p-5 bg-white rounded shadow-sm lg:w-1/2 w-full">
-	<div class="text-base text-gray-400 ">Nombre d'inscrits dans l'année</div>
-	<div class="flex items-center pt-1">
-		{{ render_chart(chart) }}
+<section class="flex justify-center">
+	<div class="mt-8 p-5 bg-white rounded shadow-sm xl:w-1/2 w-full">
+		<div class="text-base text-gray-400 ">Nombre d'inscrits dans l'année</div>
+		<div class="flex items-center pt-1">
+			{{ render_chart(chart) }}
+		</div>
 	</div>
-</div>
+</section>
 {% endblock %}

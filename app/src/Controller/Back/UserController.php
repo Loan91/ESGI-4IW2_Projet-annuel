@@ -66,7 +66,7 @@ class UserController extends AbstractController
 
         // Redirect with success message
         $this->addFlash('success', "L'utilisateur " . $user->getEmail() . " a bien été ". ($user->isEnabled() ? 'activé' : 'désactivé'));
-        return $this->redirectToRoute('back_user_index');
+        return $this->redirect($previousPage = $request->headers->get('referer'));
     }
 
     /**
@@ -91,6 +91,6 @@ class UserController extends AbstractController
 
         // Redirect with success message
         $this->addFlash('success', "L'utilisateur " . $user->getEmail() . " a bien été supprimé");
-        return $this->redirectToRoute('back_user_index');
+        return $this->redirect($previousPage = $request->headers->get('referer'));
     }
 }
