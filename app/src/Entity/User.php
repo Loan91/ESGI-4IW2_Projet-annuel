@@ -95,7 +95,6 @@ class User implements UserInterface, Serializable
     private $profilePicture;
 
     /**
-<<<<<<< HEAD
      * @ORM\OneToMany(targetEntity=Property::class, mappedBy="owner", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $properties;
@@ -153,15 +152,6 @@ class User implements UserInterface, Serializable
             $setter = 'set' . ucfirst($key);
             $this->$setter($value);
         }
-=======
-     * @ORM\OneToMany(targetEntity=Search::class, mappedBy="searcher")
-     */
-    private $searches;
-
-    public function __construct()
-    {
-        $this->searches = new ArrayCollection();
->>>>>>> feature/search
     }
 
     public function getId(): ?int
