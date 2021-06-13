@@ -7,19 +7,30 @@
     <h1 class="text-3xl font-semibold text-gray-900 tracking-wide mb-8">Toutes nos annonces</h1>
     <div class="">
         {{ form_start(form) }}
-        <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
-            <div class="">
-                <label for="" class="block text-sm font-medium text-gray-700">Type de bien</label>
-                <div class="mt-1">
-                    {{ form_row(form.type, { attr: { class: "shadow-sm border focus:outline-none block w-full sm:text-sm
-                    border-gray-300 rounded-md py-2 px-3" } }) }}
+            <div class="grid grid-cols-1 sm:grid-cols-6 gap-2">
+                <div class="">
+                    <label for="" class="block text-sm font-medium text-gray-700">Type de bien</label>
+                    <div class="mt-1">
+                        {{ form_row(form.type, { attr: { class: "shadow-sm border focus:outline-none block w-full sm:text-sm border-gray-300 rounded-md py-2 px-3" } }) }}
+                    </div>
                 </div>
-            </div>
-            <div>
-                <label for="" class="block text-sm font-medium text-gray-700">Catégorie</label>
-                <div class="mt-1">
-                    {{ form_row(form.categories, { attr: { class: "shadow-sm border focus:outline-none block w-full
-                    sm:text-sm border-gray-300 rounded-md py-2 px-3" } }) }}
+                <div>
+                    <label for="" class="block text-sm font-medium text-gray-700">Catégorie</label>
+                    <div class="mt-1">
+                        {{ form_row(form.categories, { attr: { class: "shadow-sm border focus:outline-none block w-full sm:text-sm border-gray-300 rounded-md py-2 px-3" } }) }}
+                    </div>
+                </div>
+                <div>
+                    <label for="" class="block text-sm font-medium text-gray-700">Ville</label>
+                    <div class="mt-1">
+                        {{ form_row(form.city, { attr: { class: "shadow-sm border focus:outline-none block w-full sm:text-sm border-gray-300 rounded-md py-2 px-3" } }) }}
+                    </div>
+                </div>
+                <div>
+                    <label for="" class="block text-sm font-medium text-gray-700">Prix minimum</label>
+                    <div class="mt-1">
+                        {{ form_row(form.minPrice, { attr: { class: "shadow-sm border focus:outline-none block w-full sm:text-sm border-gray-300 rounded-md py-2 px-3" } }) }}
+                    </div>
                 </div>
             </div>
             <div>
@@ -28,12 +39,17 @@
                     {{ form_row(form.minPrice, { attr: { class: "shadow-sm border focus:outline-none block w-full
                     sm:text-sm border-gray-300 rounded-md py-2 px-3" } }) }}
                 </div>
-            </div>
-            <div>
-                <label for="" class="block text-sm font-medium text-gray-700">Prix maximum</label>
-                <div class="mt-1">
-                    {{ form_row(form.maxPrice, { attr: { class: "shadow-sm border focus:outline-none block w-full
-                    sm:text-sm border-gray-300 rounded-md py-2 px-3" } }) }}
+                <div class="w-full flex items-end space-x-1">
+                    <button type="submit" class="inline-flex items-center px-12 py-1.5 border border-gray-300 shadow-sm text-base tracking-wide font-medium rounded-md text-white bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Filtrer
+                    </button>
+                    {% if app.user and app.request.query.all is not empty %}
+                    <a href="{{ path('front_save_search', app.request.query.all)  }}" class="relative inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
+                        <svg class="stroke-current h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </a>
+                    {% endif %}
                 </div>
             </div>
             <div class="w-full flex items-end">
@@ -46,8 +62,14 @@
         {{ form_end(form) }}
     </div>
 
-    <div
-        class="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-4">
+    <!-- msg flash -->
+    <div class="">
+        {% for msg in app.flashes('success') %}
+            <p>{{ msg }}</p>
+        {% endfor %}
+    </div>
+
+    <div class="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-4">
         {% for property in properties %}
         <div class="border border-gray-200 rounded-lg shadow-sm divide-y divide-gray-200">
             <a href="{{ path('front_annonce_show', { 'id': property.id }) }}">

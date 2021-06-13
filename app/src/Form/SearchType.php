@@ -33,6 +33,10 @@ class SearchType extends AbstractType
                     'placeholder' => 'F1, F2, etc ...'
                 ]
             ])
+            ->add('city', TextType::class, [
+                'label' => false,
+                'required' => false,
+            ])
             ->add('minPrice', NumberType::class, [
                 'label' => false,
                 'required' => false,
@@ -59,7 +63,7 @@ class SearchType extends AbstractType
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return '';
     }

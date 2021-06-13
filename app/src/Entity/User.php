@@ -95,6 +95,7 @@ class User implements UserInterface, Serializable
     private $profilePicture;
 
     /**
+<<<<<<< HEAD
      * @ORM\OneToMany(targetEntity=Property::class, mappedBy="owner", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $properties;
@@ -152,6 +153,15 @@ class User implements UserInterface, Serializable
             $setter = 'set' . ucfirst($key);
             $this->$setter($value);
         }
+=======
+     * @ORM\OneToMany(targetEntity=Search::class, mappedBy="searcher")
+     */
+    private $searches;
+
+    public function __construct()
+    {
+        $this->searches = new ArrayCollection();
+>>>>>>> feature/search
     }
 
     public function getId(): ?int
@@ -398,6 +408,36 @@ class User implements UserInterface, Serializable
             // set the owning side to null (unless already changed)
             if ($property->getOwner() === $this) {
                 $property->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Search[]
+     */
+    public function getSearches(): Collection
+    {
+        return $this->searches;
+    }
+
+    public function addSearch(Search $search): self
+    {
+        if (!$this->searches->contains($search)) {
+            $this->searches[] = $search;
+            $search->setSearcher($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSearch(Search $search): self
+    {
+        if ($this->searches->removeElement($search)) {
+            // set the owning side to null (unless already changed)
+            if ($search->getSearcher() === $this) {
+                $search->setSearcher(null);
             }
         }
 
