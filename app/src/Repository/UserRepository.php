@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -68,6 +69,37 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchOne();
+    }
+
+    /**
+     * Return the count of user by month on a year
+     */
+    public function getUsersOnYearByMonths(string $year = 'CURRENT_YEAR')
+    {
+
+        if ($year == 'CURRENT_YEAR') {
+            $year = (new DateTime('now'))->format('Y');
+        }
+
+        /** @var int[] $userByMonths Nombre d'utilisateurs par mois allant de janvier à décembre */
+        $userByMonths = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+        $conn = $this->_em->getConnection();
+        $sql = "SELECT COUNT(*) as nb_users, EXTRACT(MONTH FROM created_at) as month
+            FROM immo.user_account
+            WHERE EXTRACT(YEAR FROM created_at) = '2021'
+            GROUP BY EXTRACT(MONTH FROM created_at)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAllAssociative();
+
+        // Remplit le tableau du nombre d'utilisateurs pour les mois en ayant (la bdd ne renvoi que les mois où il y en a minimum 1)
+        foreach ($result as $value) {
+            $index = (int) $value['month'] - 1;
+            $userByMonths[$index] = $value['nb_users'];
+        }
+
+        return $userByMonths;
     }
 
     // /**
