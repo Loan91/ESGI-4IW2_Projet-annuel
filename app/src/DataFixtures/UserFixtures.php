@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Generator as FakerGenerator;
@@ -75,6 +76,7 @@ class UserFixtures extends Fixture
             ->setFirstname($faker->firstName)
             ->setLastname($faker->lastName)
             ->setRoles(['ROLE_USER']) // Set role user to each members
-            ->setEnabled(true); // Enable each members
+            ->setEnabled(true) // Enable each members
+            ->setCreatedAt($faker->dateTimeBetween('-6 months', '+6 months')); 
     }
 }

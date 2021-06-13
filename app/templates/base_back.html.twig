@@ -10,7 +10,9 @@
 	{{ encore_entry_link_tags('tailwind') }}
 	{% endblock %}
 
+	{% block headJavascripts %}
 	<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer=""></script>
+    {% endblock %}
 </head>
 
 <body class="h-screen w-full flex  select-none bg-gray-200">
@@ -168,7 +170,9 @@
 		</section>
 	</main>
 
-	{% block javascripts %}{% endblock %}
+	{% block bodyJavascripts %}
+    {{ encore_entry_script_tags('app') }}
+    {% endblock %}
 </body>
 
 {#
