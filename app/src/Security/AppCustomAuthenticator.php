@@ -74,10 +74,6 @@ class AppCustomAuthenticator extends AbstractFormLoginAuthenticator implements P
             throw new CustomUserMessageAuthenticationException('Informations de compte invalides');
         }
 
-        if(!$user->isEnabled()) {
-            throw new CustomUserMessageAuthenticationException('Votre compte est désactivé');
-        }
-
         return $user;
     }
 
