@@ -64,9 +64,8 @@
                     class="hidden sm:block absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                     <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
                     {% if app.user %}
-                    <a href="{{ path('app_logout') }}"
-                        class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Déconnexion</a>
-
+                    <a href="{{ path('front_property_new') }}"
+                        class="mr-2 text-gray-300 bg-gray-900 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-md font-bold">Ajouter un bien</a>
                     <section x-data="{ open: false }" class="inline mx-auto md:items-center md:justify-between">
                         <span @click.away="open = false" class="relative" x-data="{ open: false }">
                             <button @click="open = !open"
@@ -147,6 +146,11 @@
                                             </div>
                                         </a>
                                         {% endif %}
+                                        <a href="{{ path('app_logout') }}" class="rounded-lg bg-transparent p-2 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline text-center">
+                                            <div class="text-center">
+                                                <p class="text-sm text-center">Se déconnecter</p>
+                                            </div>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
