@@ -82,7 +82,7 @@ class User implements UserInterface, Serializable
     private $civility;
 
     /**
-     * @ORM\Column(type="string", length=10)
+     * @ORM\Column(type="string", length=10, nullable=true)
      */
     private $phone;
 
