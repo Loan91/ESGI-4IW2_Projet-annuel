@@ -97,16 +97,20 @@
 						<div>{{ form_row(form.imageFile) }}</div>
 					</div>
 				</div>
+
+				<div>
+					<button type="submit" class=" focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg mr-2 ">
+						{{ button_label|default('Ajouter ce bien') }}
+					</button>
+					
+					<a href="{{ path('front_property_index') }}" class="focus:outline-none text-gray-600 text-sm py-2.5 px-5 rounded-md border border-gray-600 hover:bg-gray-50 mr-2">Accéder à la liste des biens</a>
+				</div>
 			</div>
 		</div>
 	</section>
 </div>
 
-<button type="submit" class="mt-8 focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg mr-2 mb-4">
-	{{ button_label|default('Ajouter ce bien') }}
-</button>
 
-<a href="{{ path('front_property_index') }}" class="focus:outline-none text-white text-sm py-3 px-5 rounded-md bg-gray-500 hover:bg-gray-600 hover:shadow-lg  mr-2">Retour à la liste des biens</a>
 	
 {{ form_end(form) }}
 

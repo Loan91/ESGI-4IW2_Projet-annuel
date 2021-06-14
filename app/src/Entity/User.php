@@ -12,6 +12,7 @@ use App\Entity\Property;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\File;
+
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="user_account", schema="immo")
@@ -144,9 +145,10 @@ class User implements UserInterface, Serializable
         // Set id mannually
         $this->id = $unserialized['id'];
         unset($unserialized['id']);
-        if($unserialized['properties'] !== null) {
+        if (!is_null($unserialized['properties'])) {
+
             foreach ($unserialized['properties'] as $property) {
-              $this->addProperty($property);
+                $this->addProperty($property);
             }
         }
 
@@ -154,7 +156,7 @@ class User implements UserInterface, Serializable
 
         // Set other properties by setters
         foreach ($unserialized as $key => $value) {
-            $setter = 'set'.ucfirst($key);
+            $setter = 'set' . ucfirst($key);
             $this->$setter($value);
         }
     }
@@ -278,6 +280,21 @@ class User implements UserInterface, Serializable
         $this->Enabled = $Enabled;
 
         return $this;
+    }
+
+    public function isEnabled(): bool
+    {
+        return $this->Enabled;
+    }
+
+    public function enable(): void
+    {
+        $this->Enabled = true;
+    }
+
+    public function disable(): void
+    {
+        $this->Enabled = false;
     }
 
     public function getFirstname(): ?string
