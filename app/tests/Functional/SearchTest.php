@@ -25,7 +25,7 @@ class SearchTest extends KernelTestCase
     {
         $property = new Property();
         $property->setType('all');
-        // $property->setCategory('f1');
+        $property->setCategory('f1');
         $property->setCity('Lombard');
         $property->setPrice(570000);
 
