@@ -126,7 +126,7 @@ class Property
     private $externalStorage;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="integer")
      */
     private $areaExternalStorage;
 
@@ -491,6 +491,11 @@ class Property
         return $this->externalStorage;
     }
 
+    public function hasExternalStorage(): ?bool
+    {
+        return (bool) $this->externalStorage;
+    }
+
     public function setExternalStorage(bool $externalStorage): self
     {
         $this->externalStorage = $externalStorage;
@@ -498,12 +503,12 @@ class Property
         return $this;
     }
 
-    public function getAreaExternalStorage(): ?bool
+    public function getAreaExternalStorage(): ?int
     {
         return $this->areaExternalStorage;
     }
 
-    public function setAreaExternalStorage(bool $areaExternalStorage): self
+    public function setAreaExternalStorage(int $areaExternalStorage): self
     {
         $this->areaExternalStorage = $areaExternalStorage;
 

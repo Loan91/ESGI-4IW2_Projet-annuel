@@ -10,6 +10,8 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Form\Type\VichImageType;
@@ -130,7 +132,6 @@ class PropertyType extends AbstractType
             ])
             ->add('areaExternalStorage', IntegerType::class, [
                 'label' => 'Quelle est la taille (m²) de cet espace?',
-                'data' => '1',
                 'empty_data' => 0,
                 'required' => false
             ])
@@ -234,7 +235,16 @@ class PropertyType extends AbstractType
             ->add('imageFile', VichImageType::class, [
                 'label' => 'Photo de votre bien',
                 'required' => false
-            ]);
+            ])
+            ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
+                $property = $event->getData();
+        
+                // Certifie que la taille de l'espace de stockage externe ne peut valoir plus de 0 (valeur vide)
+                // s'il n'est pas supposé en avoir
+                if (!$property->hasExternalStorage() && $property->getAreaExternalStorage() > 0) {
+                    $event->setData($property->setAreaExternalStorage(0));
+                }
+            });
     }
 
     public function configureOptions(OptionsResolver $resolver)
