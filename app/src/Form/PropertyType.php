@@ -20,12 +20,15 @@ class PropertyType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $types = [
+            'Maison' => 'maison',
+            'Appartement' => 'appartement'
+        ];
+
+
         $builder
             ->add('type', ChoiceType::class, [
-                'choices' => [
-                    'Maison' => 'maison',
-                    'Appartement' => 'appartement'
-                ],
+                'choices' => $types,
                 'label' => 'Type de bien'
             ])
             ->add('category', ChoiceType::class, [
@@ -236,13 +239,19 @@ class PropertyType extends AbstractType
                 'label' => 'Photo de votre bien',
                 'required' => false
             ])
-            ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
+            ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use($types) {
+                /** @var Property $property */
                 $property = $event->getData();
         
                 // Certifie que la taille de l'espace de stockage externe ne peut valoir plus de 0 (valeur vide)
                 // s'il n'est pas supposé en avoir
                 if (!$property->hasExternalStorage() && $property->getAreaExternalStorage() > 0) {
                     $event->setData($property->setAreaExternalStorage(0));
+                }
+
+                // Certifie que le nombre d'étages est forcé à 0 quand il s'agit d'une maison
+                if ($property->getType() == $types['Maison'] && $property->getFloor() > 0) {
+                    $event->setData($property->setFloor(0));
                 }
             });
     }
