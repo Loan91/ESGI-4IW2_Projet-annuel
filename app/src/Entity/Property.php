@@ -52,31 +52,37 @@ class Property
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\PositiveOrZero
      */
     private $floor;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\PositiveOrZero
      */
     private $floors;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Positive
      */
     private $rooms;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Positive
      */
     private $bedrooms;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Positive
      */
     private $bathrooms;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Positive
      */
     private $toilets;
 
@@ -127,6 +133,7 @@ class Property
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\PositiveOrZero
      */
     private $areaExternalStorage;
 
@@ -137,11 +144,13 @@ class Property
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Positive
      */
     private $energyConsumption;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Positive
      */
     private $gasEmissions;
 
@@ -168,26 +177,31 @@ class Property
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\Positive
      */
     private $price;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\PositiveOrZero
      */
     private $charges;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\PositiveOrZero
      */
     private $guarentee;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\PositiveOrZero
      */
     private $feesPrice;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\PositiveOrZero
      */
     private $inventoryPrice;
 
