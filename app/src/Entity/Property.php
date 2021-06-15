@@ -64,25 +64,25 @@ class Property
 
     /**
      * @ORM\Column(type="integer")
-     * @Assert\Positive
+     * @Assert\PositiveOrZero
      */
     private $rooms;
 
     /**
      * @ORM\Column(type="integer")
-     * @Assert\Positive
+     * @Assert\PositiveOrZero
      */
     private $bedrooms;
 
     /**
      * @ORM\Column(type="integer")
-     * @Assert\Positive
+     * @Assert\PositiveOrZero
      */
     private $bathrooms;
 
     /**
      * @ORM\Column(type="integer")
-     * @Assert\Positive
+     * @Assert\PositiveOrZero
      */
     private $toilets;
 
