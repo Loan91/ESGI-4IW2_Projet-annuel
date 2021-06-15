@@ -20,28 +20,14 @@ class PropertyType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $types = [
-            'Maison' => 'maison',
-            'Appartement' => 'appartement'
-        ];
-
-
         $builder
             ->add('type', ChoiceType::class, [
-                'choices' => $types,
+                'choices' => Property::TYPES,
                 'label' => 'Type de bien'
             ])
             ->add('category', ChoiceType::class, [
                 'label' => 'Catégorie',
-                'choices' => [
-                    'Studio' => 'studio'
-                ] + (function () {
-                    $data = [];
-                    for ($i = 0; $i < 15; $i++) {
-                        $data['f' . $i] = 'f' . $i;
-                    }
-                    return $data;
-                })()
+                'choices' => Property::CATEGORIES
             ])
             ->add('area', TextType::class, [
                 'label' => 'Aire en m²',
@@ -54,7 +40,6 @@ class PropertyType extends AbstractType
                 ]
             ])
             ->add('description', null, [
-                // 'help' => 'Décrivez votre bien',
                 'empty_data' => '',
                 'required' => false
             ])
@@ -239,7 +224,7 @@ class PropertyType extends AbstractType
                 'label' => 'Photo de votre bien',
                 'required' => false
             ])
-            ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use($types) {
+            ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
                 /** @var Property $property */
                 $property = $event->getData();
         
@@ -250,7 +235,7 @@ class PropertyType extends AbstractType
                 }
 
                 // Certifie que le nombre d'étages est forcé à 0 quand il s'agit d'une maison
-                if ($property->getType() == $types['Maison'] && $property->getFloor() > 0) {
+                if ($property->getType() == Property::TYPES['Maison'] && $property->getFloor() > 0) {
                     $event->setData($property->setFloor(0));
                 }
             });
