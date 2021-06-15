@@ -50,7 +50,6 @@ class PropertyController extends AbstractController
 
             // TODO : lancer le recherche lorsqu'un nouveau bien est créé.
             $searchRepository->findInterestedUsers($property);
-            dd($searchRepository);
 
             // TODO : Faire une Queue pour envoyer les mails de façon asynchrone aux utilisateurs.
 

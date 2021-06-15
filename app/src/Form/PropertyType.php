@@ -91,22 +91,18 @@ class PropertyType extends AbstractType
             ])
             ->add('isFurnished', CheckboxType::class, [
                 'label' => 'Le bien est-il meublé?',
-                'empty_data' => false,
                 'required' => false
             ])
             ->add('containsStorage', CheckboxType::class, [
                 'label' => 'Est-ce que le bien possède des éléments de stockage',
-                'empty_data' => false,
                 'required' => false
             ])
             ->add('isKitchenSeparated', CheckboxType::class, [
                 'label' => 'Est-ce que la cuisine est séparée de la salle à manger ?',
-                'empty_data' => false,
                 'required' => false
             ])
             ->add('containDiningRoom', CheckboxType::class, [
                 'label' => 'Le bien possède t-il une salle à manger?',
-                'empty_data' => false,
                 'required' => false
             ])
             ->add('ground', TextType::class, [
@@ -122,27 +118,24 @@ class PropertyType extends AbstractType
             ])
             ->add('fireplace', CheckboxType::class, [
                 'label' => 'Y a-t-il une cheminée?',
-                'empty_data' => false,
                 'required' => false
             ])
             ->add('elevator', CheckboxType::class, [
                 'label' => 'Y a-t-il un assenseur?',
-                'empty_data' => false,
                 'required' => false
             ])
             ->add('externalStorage', CheckboxType::class, [
                 'label' => 'Y a-t-il une pièce de stockage externe?',
-                'empty_data' => false,
                 'required' => false
             ])
-            ->add('areaExternalStorage', CheckboxType::class, [
-                'label' => 'Quelle est la taille de cet espace? (si stockage externe)',
-                'empty_data' => false,
+            ->add('areaExternalStorage', IntegerType::class, [
+                'label' => 'Quelle est la taille (m²) de cet espace?',
+                'data' => '1',
+                'empty_data' => 0,
                 'required' => false
             ])
             ->add('guarding', CheckboxType::class, [
                 'label' => 'Y a-t-il un système de sécurité?',
-                'empty_data' => false,
                 'required' => false
             ])
             ->add('energyConsumption', TextType::class, [
@@ -235,7 +228,6 @@ class PropertyType extends AbstractType
             ])
             ->add('published', CheckboxType::class, [
                 'label' => 'Rendre publique cette habitation?',
-                'empty_data' => false,
                 'required' => false,
                 'data' => true
             ])
