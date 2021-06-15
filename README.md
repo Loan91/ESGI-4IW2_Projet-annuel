@@ -3,7 +3,7 @@
 ![PHP](https://img.shields.io/badge/PHP-^7.4-informational)
 ![License](https://img.shields.io/badge/license-none-informational)
 
-## Description
+## Description
 
 Le projet annuel consiste à réaliser un site web sur la vente de biens immobiliers.
 
