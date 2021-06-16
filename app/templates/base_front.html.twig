@@ -41,19 +41,7 @@
 
                 <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
                     <div class="flex-shrink-0 flex items-center text-white">
-                        <svg class="fill-current w-5 h-5 mr-2" version="1.1" id="Capa_1"
-                            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-                            y="0px" viewBox="0 0 27.02 27.02" style="enable-background:new 0 0 27.02 27.02;"
-                            xml:space="preserve">
-                            <g>
-                                <path d="M3.674,24.876c0,0-0.024,0.604,0.566,0.604c0.734,0,6.811-0.008,6.811-0.008l0.01-5.581
-		c0,0-0.096-0.92,0.797-0.92h2.826c1.056,0,0.991,0.92,0.991,0.92l-0.012,5.563c0,0,5.762,0,6.667,0
-		c0.749,0,0.715-0.752,0.715-0.752V14.413l-9.396-8.358l-9.975,8.358C3.674,14.413,3.674,24.876,3.674,24.876z" />
-                                <path d="M0,13.635c0,0,0.847,1.561,2.694,0l11.038-9.338l10.349,9.28c2.138,1.542,2.939,0,2.939,0
-		L13.732,1.54L0,13.635z" />
-                                <polygon points="23.83,4.275 21.168,4.275 21.179,7.503 23.83,9.752 	" />
-                            </g>
-                        </svg>
+                        {% include "components/icons/home.svg" with {'class': 'fill-current w-5 h-5 mr-2'} %}
 
                         <a href="{{ path('front_home') }}"
                             class="inline-block text-2xl text-white font-medium tracking-wide px-3 py-1 -ml-3">Easy
@@ -65,7 +53,8 @@
                     <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
                     {% if app.user %}
                     <a href="{{ path('front_property_new') }}"
-                        class="mr-2 text-gray-300 bg-gray-900 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-md font-bold">Ajouter un bien</a>
+                        class="mr-2 text-gray-300 bg-gray-900 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-md font-bold">Ajouter
+                        un bien</a>
                     <section x-data="{ open: false }" class="inline mx-auto md:items-center md:justify-between">
                         <span @click.away="open = false" class="relative" x-data="{ open: false }">
                             <button @click="open = !open"
@@ -90,20 +79,34 @@
                                     class="px-2 pt-2 pb-4 bg-white rounded-md shadow-lg bg-gray-700 dark-mode:bg-gray-700 text-white">
                                     <div class="hidden sm:grid grid-cols-1 gap-y-4">
                                         <a class="flex flex row items-start rounded-lg bg-transparent p-2 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+                                            href="{{ path('front_property_index') }}">
+                                            <div class="bg-teal-500 rounded-lg p-3">
+                                                {% include "components/icons/home.svg" with {'class': 'fill-current
+                                                md:h-5 md:w-5 h-4 w-4'} %}
+                                            </div>
+                                            <div class="ml-3">
+                                                <p class="font-semibold text-sm">Voir mes biens</p>
+                                                <p class="text-xs">Consulter, modifier ses biens immobiliers</p>
+                                            </div>
+                                        </a>
+
+                                        <a class="flex flex row items-start rounded-lg bg-transparent p-2 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+                                            href="{{ path('front_contact_index') }}">
+                                            <div class="bg-teal-500 rounded-lg p-3">
+                                                {% include "components/icons/dialog.svg" with {'class': 'md:h-5 md:w-5
+                                                h-4 w-4'} %}
+                                            </div>
+                                            <div class="ml-3">
+                                                <p class="font-semibold text-sm">Mes rendez-vous</p>
+                                                <p class="text-xs">Consulter, modifier ses rendez-vous</p>
+                                            </div>
+                                        </a>
+
+                                        <a class="flex flex row items-start rounded-lg bg-transparent p-2 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
                                             href="{{ path('front_users') }}">
                                             <div class="bg-teal-500 rounded-lg p-3">
-                                                <svg class="fill-current md:h-5 md:w-5 h-4 w-4" version="1.1"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                                    viewBox="0 0 785.8159 1010"
-                                                    enable-background="new 0 0 785.8159 1010" xml:space="preserve">
-                                                    <g>
-                                                        <path
-                                                            d="M392.9692,0c135.251,0,244.8565,109.5234,244.8565,244.6914c0,135.312-109.6055,244.8145-244.8565,244.8145 c-135.1269,0-244.7734-109.5025-244.7734-244.8145C148.1958,109.5234,257.8423,0,392.9692,0z" />
-                                                        <path
-                                                            d="M785.8159,1010h-0.5762H0V876.8457c0-173.7793,109.3999-321.1318,261.9521-376.0586l131.0171,174.6016 l130.9756-174.6016c152.5938,54.9268,261.8711,202.2793,261.8711,376.0586V1010z" />
-                                                    </g>
-                                                </svg>
+                                                {% include "components/icons/user.svg" with {'class': 'fill-current
+                                                md:h-5 md:w-5 h-4 w-4'} %}
                                             </div>
                                             <div class="ml-3">
                                                 <p class="font-semibold text-sm">Gérer mon profil</p>
@@ -111,34 +114,12 @@
                                             </div>
                                         </a>
 
-                                        <a class="flex flex row items-start rounded-lg bg-transparent p-2 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
-                                            href="{{ path('front_contact_index') }}">
-                                            <div class="bg-teal-500 rounded-lg p-3">
-                                                <svg fill="none" stroke="currentColor" stroke-linecap="round"
-                                                    stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
-                                                    class="md:h-5 md:w-5 h-4 w-4">
-                                                    <path
-                                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
-                                                    </path>
-                                                </svg>
-                                            </div>
-                                            <div class="ml-3">
-                                                <p class="font-semibold text-sm">Mes rendez-vous</p>
-                                                <p class="text-xs">Consulter, modifier ses rendez-vous</p>
-                                            </div>
-                                        </a>
                                         {% if app.user and is_granted('ROLE_ADMIN') %}
                                         <a class="flex flex row items-start rounded-lg bg-transparent p-2 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
                                             href="{{ path('back_dashboard') }}">
                                             <div class="bg-teal-500 rounded-lg p-3">
-                                                <svg fill="none" stroke="currentColor" stroke-linecap="round"
-                                                    stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"
-                                                    class="md:h-5 md:w-5 h-4 w-4">
-                                                    <path d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z">
-                                                    </path>
-                                                    <path d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z">
-                                                    </path>
-                                                </svg>
+                                                {% include "components/icons/settings.svg" with {'class': 'fill-current
+                                                md:h-5 md:w-5 h-4 w-4'} %}
                                             </div>
                                             <div class="ml-3">
                                                 <p class="font-semibold text-sm">Tableau de bord</p>
@@ -146,7 +127,8 @@
                                             </div>
                                         </a>
                                         {% endif %}
-                                        <a href="{{ path('app_logout') }}" class="rounded-lg bg-transparent p-2 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline text-center">
+                                        <a href="{{ path('app_logout') }}"
+                                            class="rounded-lg bg-transparent p-2 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline text-center">
                                             <div class="text-center">
                                                 <p class="text-sm text-center">Se déconnecter</p>
                                             </div>
@@ -173,15 +155,16 @@
             <div class="px-2 pt-2 pb-3 sm:px-3">
                 <a href="{{ path('front_home') }}"
                     class="block px-3 py-2 rounded-md text-base font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Accueil</a>
+                {% if app.user is null %}
                 <a href="{{ path('app_register') }}"
                     class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">S'inscrire</a>
                 <a href="{{ path('app_login') }}"
                     class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Se
                     connecter</a>
-                {% if app.user %}
-                <a href="{{ path('front_users') }}"
-                    class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Mon
-                    profil</a>
+                {% else %}
+                <a href="{{ path('front_property_new') }}"
+                    class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Créer
+                    un bien</a>
                 <a href="{{ path('front_contact_index') }}"
                     class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Mes
                     rendez-vous</a>
@@ -205,13 +188,16 @@
                     </div>
                 </div>
                 <div class="mt-3 px-2 sm:px-3">
+                    <a href="{{ path('front_users') }}"
+                        class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Mon
+                        profil</a>
                     {% if is_granted('ROLE_ADMIN') %}
                     <a href="{{ path('back_dashboard') }}"
                         class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Tableau
                         de bord</a>
                     {% endif %}
                     <a href="{{ path('app_logout') }}"
-                        class="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Déconnexion</a>
+                        class="mt-4 block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Déconnexion</a>
                 </div>
             </div>
             {% endif %}

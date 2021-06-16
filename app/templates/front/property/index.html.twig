@@ -4,6 +4,8 @@
 <div class="mx-4">
 	<h1 class="text-5xl font-bold mt-8 mb-4 text-center">Liste de vos biens</h1>
 
+	{% include "components/alert.html.twig" %}
+
 	<!-- Add a property -->
 	<form action="{{ path('front_property_new') }}" class="mt-8 mb-4 text-center">
 		<button type="submit" class="px-24 focus:outline-none text-white text-xl py-3.5 px-6 rounded-md bg-green-500 hover:bg-green-600 hover:shadow-lg mb-4">Ajouter un bien</button>
@@ -108,7 +110,7 @@
 								0L436 82l58.1 58.1
 								30.9-30.9c4-4.2 4-10.8-.1-14.9z"></path>
 						</svg>
-						<span>Modifier le bien</span>
+						<span>Mettre à jour</span>
 					</a>
 
 				</div>

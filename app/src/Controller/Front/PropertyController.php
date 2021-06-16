@@ -6,7 +6,7 @@ use App\Repository\PropertyRepository;
 use App\Repository\SearchRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-    use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Property;
 use App\Form\PropertyType;
@@ -50,10 +50,9 @@ class PropertyController extends AbstractController
 
             // TODO : lancer le recherche lorsqu'un nouveau bien est créé.
             $searchRepository->findInterestedUsers($property);
-            dd($searchRepository);
 
             // TODO : Faire une Queue pour envoyer les mails de façon asynchrone aux utilisateurs.
-
+            $this->addFlash('success', 'Votre nouveau bien à ' . $property->getCity() . ' s\'est ajouté correctement');
             return $this->redirectToRoute('front_property_index');
         }
 
@@ -86,6 +85,7 @@ class PropertyController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
+            $this->addFlash('success', 'Le bien au dossier ' . $property->getId() . ' à ' . $property->getCity() . ' s\'est mis à jour correctement');
             return $this->redirectToRoute('front_property_index');
         }
 
@@ -106,6 +106,7 @@ class PropertyController extends AbstractController
             $entityManager->flush();
         }
 
+        $this->addFlash('success', 'Le bien qui se situait à ' . $property->getCity() . ' a été correctement supprimé');
         return $this->redirectToRoute('front_property_index');
     }
 }

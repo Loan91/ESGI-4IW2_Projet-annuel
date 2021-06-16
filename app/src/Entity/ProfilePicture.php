@@ -10,6 +10,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=ProfilePictureRepository::class)
+ * @ORM\Table(schema="immo")
  * @Vich\Uploadable
  */
 class ProfilePicture

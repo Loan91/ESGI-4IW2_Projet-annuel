@@ -86,7 +86,9 @@ class PropertyRepository extends ServiceEntityRepository
     public function getPropertyCountRegisteredThisMonth(): int
     {
         $conn = $this->_em->getConnection();
-        $sql = "SELECT COUNT(*) FROM immo.property WHERE created_at > date_trunc('month', CURRENT_DATE)";
+        $sql = "SELECT COUNT(*) FROM immo.property
+        WHERE created_at > date_trunc('month', CURRENT_DATE)
+            AND created_at < date_trunc('month', CURRENT_DATE + INTERVAL '1 month')";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchOne();

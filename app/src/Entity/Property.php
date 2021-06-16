@@ -52,31 +52,37 @@ class Property
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\PositiveOrZero
      */
     private $floor;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\PositiveOrZero
      */
     private $floors;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\PositiveOrZero
      */
     private $rooms;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\PositiveOrZero
      */
     private $bedrooms;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\PositiveOrZero
      */
     private $bathrooms;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\PositiveOrZero
      */
     private $toilets;
 
@@ -126,7 +132,8 @@ class Property
     private $externalStorage;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="integer")
+     * @Assert\PositiveOrZero
      */
     private $areaExternalStorage;
 
@@ -137,11 +144,13 @@ class Property
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Positive
      */
     private $energyConsumption;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Positive
      */
     private $gasEmissions;
 
@@ -168,26 +177,31 @@ class Property
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\Positive
      */
     private $price;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\PositiveOrZero
      */
     private $charges;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\PositiveOrZero
      */
     private $guarentee;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\PositiveOrZero
      */
     private $feesPrice;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\PositiveOrZero
      */
     private $inventoryPrice;
 
@@ -246,6 +260,30 @@ class Property
      * @ORM\JoinColumn(nullable=false)
      */
     private $owner;
+
+    const TYPES = [
+        'Maison' => 'maison',
+        'Appartement' => 'appartement'
+    ];
+
+    const CATEGORIES = [
+        'Studio' => 'studio',
+        'F1' => 'f1',
+        'F2' => 'f2',
+        'F3' => 'f3',
+        'F4' => 'f4',
+        'F5' => 'f5',
+        'F6' => 'f6',
+        'F7' => 'f7',
+        'F8' => 'f8',
+        'F9' => 'f9',
+        'F10' => 'f10',
+        'F11' => 'f11',
+        'F12' => 'f12',
+        'F13' => 'f13',
+        'F14' => 'f14',
+        'F15' => 'f15',
+    ];
 
     public function __construct()
     {
@@ -491,6 +529,11 @@ class Property
         return $this->externalStorage;
     }
 
+    public function hasExternalStorage(): ?bool
+    {
+        return (bool) $this->externalStorage;
+    }
+
     public function setExternalStorage(bool $externalStorage): self
     {
         $this->externalStorage = $externalStorage;
@@ -498,12 +541,12 @@ class Property
         return $this;
     }
 
-    public function getAreaExternalStorage(): ?bool
+    public function getAreaExternalStorage(): ?int
     {
         return $this->areaExternalStorage;
     }
 
-    public function setAreaExternalStorage(bool $areaExternalStorage): self
+    public function setAreaExternalStorage(int $areaExternalStorage): self
     {
         $this->areaExternalStorage = $areaExternalStorage;
 

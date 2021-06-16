@@ -65,7 +65,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function getUserCountRegisteredThisMonth(): int
     {
         $conn = $this->_em->getConnection();
-        $sql = "SELECT COUNT(*) FROM immo.user_account WHERE created_at > date_trunc('month', CURRENT_DATE)";
+        $sql = "SELECT COUNT(*) FROM immo.user_account
+        WHERE created_at > date_trunc('month', CURRENT_DATE)
+            AND created_at < date_trunc('month', CURRENT_DATE + INTERVAL '1 month')";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchOne();
