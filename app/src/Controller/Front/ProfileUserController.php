@@ -5,6 +5,7 @@ namespace App\Controller\Front;
 use App\Entity\ProfilePicture;
 use App\Entity\User;
 use App\Form\EditPassType;
+use App\Form\UpdateProfileGoogleType;
 use App\Form\EditProfileType;
 use phpDocumentor\Reflection\Types\Context;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

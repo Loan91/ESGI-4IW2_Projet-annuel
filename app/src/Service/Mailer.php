@@ -40,7 +40,7 @@ class Mailer {
     /**
      * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
      */
-    public function sendEmailWelcome($email, $token, $name, $password)
+    public function sendEmailWelcome($email, $token, $name)
     {
         $email = (new TemplatedEmail())
             ->from('vousloger@noreply.fr')
@@ -50,7 +50,6 @@ class Mailer {
             ->context([
                 'token' => $token,
                 'name' => $name,
-                'password' => $password
             ])
         ;
 

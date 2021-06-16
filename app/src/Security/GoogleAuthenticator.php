@@ -32,8 +32,10 @@ class GoogleAuthenticator extends SocialAuthenticator
      */
     private $em;
     private $urlGenerator;
-
-
+    /**
+     * @var Mailer
+     */
+    private $mailer;
 
 
     /**
@@ -91,13 +93,13 @@ class GoogleAuthenticator extends SocialAuthenticator
                 $user->setEnabled(1);
                 $user->setEmail($googleUser->getEmail());
                 $user->setRoles(["ROLE_USER"]);
-                $user->setPassword(md5(random_bytes(7)));
+                $user->setPassword(md5(random_bytes(20)));
                 $user->setFirstname($googleUser->getFirstName());
                 $user->setLastname($googleUser->getLastName());
                 $user->setCivility("Monsieur");
                 $this->em->persist($user);
                 $this->em->flush();
-                $this->mailer->sendEmailWelcome($user->getEmail(), $user->getToken(), $user->getFirstname() . ' ' . $user->getLastname(), $user->getPassword());
+                $this->mailer->sendEmailWelcome($user->getEmail(), $user->getToken(), $user->getFirstname() . ' ' . $user->getLastname());
 
             }
             return $user;
@@ -140,7 +142,7 @@ class GoogleAuthenticator extends SocialAuthenticator
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey)
     {
         $targetPath = $this->getTargetPath($request->getSession(), $providerKey);
-        return new RedirectResponse($targetPath ?: '/');
+        return new RedirectResponse($targetPath ?: '/google/inscription');
     }
 
 
