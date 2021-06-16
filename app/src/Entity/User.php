@@ -24,7 +24,7 @@ class User implements UserInterface, Serializable
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=180, unique=true, nullable=true)
      */
     private $email;
 

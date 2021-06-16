@@ -22,7 +22,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
-class UpdateProfileGoogleType extends AbstractType
+class UpdateProfileGFType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

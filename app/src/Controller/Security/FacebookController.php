@@ -2,19 +2,86 @@
 
 namespace App\Controller\Security;
 
+use App\Service\Mailer;
+use App\Form\UpdateProfileGFType;
+use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class FacebookController extends AbstractController
 {
     /**
-     * @Route("/security/facebook", name="security_facebook")
+     * @var Mailer
      */
-    public function index(): Response
+    private $mailer;
+
+    /**
+     * Link to this controller to start the "connect" process
+     * @param ClientRegistry $clientRegistry
+     *
+     * @Route("/connect/facebook", name="connect_facebook_start")
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function connectAction(ClientRegistry $clientRegistry)
     {
-        return $this->render('security/facebook/index.html.twig', [
-            'controller_name' => 'FacebookController',
+        return $clientRegistry
+            ->getClient('facebook')
+            ->redirect([
+                'public_profile', 'email' // the scopes you want to access
+            ]);
+    }
+
+    /**
+     * After going to Facebook, you're redirected back here
+     * because this is the "redirect_route" you configured
+     * in config/packages/knpu_oauth2_client.yaml
+     *
+     * @param Request $request
+     * @param ClientRegistry $clientRegistry
+     *
+     * @Route("/connect/facebook/check", name="connect_facebook_check")
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function connectCheckAction(Request $request, ClientRegistry $clientRegistry)
+    {
+        return $this->redirectToRoute('front_home');
+    }
+
+    /**
+     * @Route("/facebook/inscription", name="app_inscriptionfacebook")
+     * @param Request $request
+     */
+    public function updateProfile(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $user = $this->getUser();
+
+        $userForm = $this->createForm(UpdateProfileGFType::class, $user);
+        $userForm->handleRequest($request);
+
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $password = $userForm->get('password')->getData();
+            $user->setPassword($passwordEncoder->encodePassword($user, $password));
+            $em->persist($user);
+            $em->flush();
+
+            $this->addFlash('success', 'Inscription réussi');
+            return $this->redirectToRoute('front_users');
+        }
+
+        if($userForm->isSubmitted() && $userForm->isValid()){
+
+             $this->mailer->sendEmailWelcome($user->getEmail(), $user->getToken(), $user->getFirstname() . ' ' . $user->getLastname());
+
+             return $user;
+        }
+
+        return $this->render('security/facebook/updateprofilefacebook.html.twig', [
+            'form' => $userForm->createView(),
         ]);
     }
 }
