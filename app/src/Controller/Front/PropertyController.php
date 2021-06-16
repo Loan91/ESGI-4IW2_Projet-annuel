@@ -48,10 +48,11 @@ class PropertyController extends AbstractController
             $entityManager->persist($property);
             $entityManager->flush();
 
-            // TODO : lancer le recherche lorsqu'un nouveau bien est créé.
+            // TODO : lancer la recherche lorsqu'un nouveau bien est créé.
             $searchRepository->findInterestedUsers($property);
 
             // TODO : Faire une Queue pour envoyer les mails de façon asynchrone aux utilisateurs.
+
             $this->addFlash('success', 'Votre nouveau bien à ' . $property->getCity() . ' s\'est ajouté correctement');
             return $this->redirectToRoute('front_property_index');
         }
