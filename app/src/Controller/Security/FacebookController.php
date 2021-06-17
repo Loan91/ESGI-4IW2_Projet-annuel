@@ -14,10 +14,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class FacebookController extends AbstractController
 {
-    /**
-     * @var Mailer
-     */
-    private $mailer;
 
     /**
      * Link to this controller to start the "connect" process
@@ -64,29 +60,30 @@ class FacebookController extends AbstractController
     {
         $user = $this->getUser();
 
-        $userForm = $this->createForm(UpdateProfileGFType::class, $user);
-        $userForm->handleRequest($request);
+        $existingUser = $user->getEmail();
 
-        if ($userForm->isSubmitted() && $userForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $password = $userForm->get('password')->getData();
-            $user->setPassword($passwordEncoder->encodePassword($user, $password));
-            $em->persist($user);
-            $em->flush();
-
-            $this->addFlash('success', 'Inscription réussi');
+        if ($existingUser) {
             return $this->redirectToRoute('front_users');
+        } else {
+
+            $userForm = $this->createForm(UpdateProfileGFType::class, $user);
+            $userForm->handleRequest($request);
+
+            if ($userForm->isSubmitted() && $userForm->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $user->setFacebookId(md5(random_bytes(10)));
+                $password = $userForm->get('password')->getData();
+                $user->setPassword($passwordEncoder->encodePassword($user, $password));
+                $em->persist($user);
+                $em->flush();
+
+                $this->addFlash('success', 'Inscription réussi');
+                return $this->redirectToRoute('front_users');
+            }
+
+            return $this->render('security/facebook/updateprofilefacebook.html.twig', [
+                'form' => $userForm->createView(),
+            ]);
         }
-
-        if($userForm->isSubmitted() && $userForm->isValid()){
-
-             $this->mailer->sendEmailWelcome($user->getEmail(), $user->getToken(), $user->getFirstname() . ' ' . $user->getLastname());
-
-             return $user;
-        }
-
-        return $this->render('security/facebook/updateprofilefacebook.html.twig', [
-            'form' => $userForm->createView(),
-        ]);
     }
 }

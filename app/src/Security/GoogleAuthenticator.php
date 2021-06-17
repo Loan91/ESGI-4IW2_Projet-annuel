@@ -85,12 +85,6 @@ class GoogleAuthenticator extends SocialAuthenticator
 
         $email = $googleUser->getEmail();
 
-        $existingUser = $this->em->getRepository(User::class)
-            ->findOneBy(['googleId' => $googleUser->getId()]);
-        if ($existingUser) {
-            return $existingUser;
-        }
-
             $user = $this->em->getRepository(User::class)
                 ->findOneBy(['email' => $email]);
 

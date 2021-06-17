@@ -77,7 +77,7 @@ class GoogleController extends AbstractController
 
             if ($userForm->isSubmitted() && $userForm->isValid()) {
                 $em = $this->getDoctrine()->getManager();
-                $user->setGoogleId(md5($user->getId()));
+                $user->setGoogleId(md5(random_bytes(10)));
                 $password = $userForm->get('password')->getData();
                 $user->setPassword($passwordEncoder->encodePassword($user, $password));
                 $em->persist($user);
