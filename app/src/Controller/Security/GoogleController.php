@@ -68,7 +68,7 @@ class GoogleController extends AbstractController
         $user = $this->getUser();
 
         $existingUser = $user->getGoogleId();
-        if (!$existingUser) {
+        if ($existingUser) {
             return $this->redirectToRoute('front_users');
         } else {
 
@@ -77,7 +77,7 @@ class GoogleController extends AbstractController
 
             if ($userForm->isSubmitted() && $userForm->isValid()) {
                 $em = $this->getDoctrine()->getManager();
-                $user->setGoogleId($user->getId());
+                $user->setGoogleId(md5($user->getId()));
                 $password = $userForm->get('password')->getData();
                 $user->setPassword($passwordEncoder->encodePassword($user, $password));
                 $em->persist($user);
