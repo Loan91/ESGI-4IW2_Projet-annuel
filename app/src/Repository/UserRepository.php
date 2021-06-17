@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -24,13 +25,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         parent::__construct($registry, User::class);
     }
 
-  /**
-   * Used to upgrade (rehash) the user's password automatically over time.
-   * @param UserInterface $user
-   * @param string $newEncodedPassword
-   * @throws ORMException
-   * @throws OptimisticLockException
-   */
+    /**
+     * Used to upgrade (rehash) the user's password automatically over time.
+     * @param UserInterface $user
+     * @param string $newEncodedPassword
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
     {
         if (!$user instanceof User) {
@@ -40,6 +41,67 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newEncodedPassword);
         $this->_em->persist($user);
         $this->_em->flush();
+    }
+
+    /**
+     * Returns the total count of users in database
+     * 
+     * @return int Total count of users
+     */
+    public function getTotalCount(): int
+    {
+        return $this->_em->createQueryBuilder()
+            ->select('count(u)')
+            ->from("App\Entity\User", "u")
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Returns the count of new users for this month
+     * 
+     * @return int Count of new users
+     */
+    public function getUserCountRegisteredThisMonth(): int
+    {
+        $conn = $this->_em->getConnection();
+        $sql = "SELECT COUNT(*) FROM immo.user_account
+        WHERE created_at > date_trunc('month', CURRENT_DATE)
+            AND created_at < date_trunc('month', CURRENT_DATE + INTERVAL '1 month')";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchOne();
+    }
+
+    /**
+     * Return the count of user by month on a year
+     */
+    public function getUsersOnYearByMonths(string $year = 'CURRENT_YEAR')
+    {
+
+        if ($year == 'CURRENT_YEAR') {
+            $year = (new DateTime('now'))->format('Y');
+        }
+
+        /** @var int[] $userByMonths Nombre d'utilisateurs par mois allant de janvier à décembre */
+        $userByMonths = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+        $conn = $this->_em->getConnection();
+        $sql = "SELECT COUNT(*) as nb_users, EXTRACT(MONTH FROM created_at) as month
+            FROM immo.user_account
+            WHERE EXTRACT(YEAR FROM created_at) = '2021'
+            GROUP BY EXTRACT(MONTH FROM created_at)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAllAssociative();
+
+        // Remplit le tableau du nombre d'utilisateurs pour les mois en ayant (la bdd ne renvoi que les mois où il y en a minimum 1)
+        foreach ($result as $value) {
+            $index = (int) $value['month'] - 1;
+            $userByMonths[$index] = $value['nb_users'];
+        }
+
+        return $userByMonths;
     }
 
     // /**

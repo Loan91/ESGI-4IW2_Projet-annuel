@@ -3,13 +3,16 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
-use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 use Serializable;
+use App\Entity\Property;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\File;
+
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="user_account", schema="immo")
@@ -134,6 +137,67 @@ class User implements UserInterface, Serializable
      */
     private $profilePicture;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="owner", orphanRemoval=true, cascade={"persist", "remove"})
+     */
+    private $properties;
+
+    public function __construct()
+    {
+        $this->properties = new ArrayCollection();
+    }
+
+    /**
+     * @see https://www.php.net/manual/en/serializable.serialize.php
+     *
+     * Note: Don't pass the profilePicture property. Thhis property explain WHY i use this method
+     */
+    public function serialize()
+    {
+        return \serialize([
+            'id' => $this->id,
+            'email' => $this->email,
+            'roles' => $this->roles,
+            'password' => $this->password,
+            'token' => $this->token,
+            'forgotPasswordToken' => $this->forgotPasswordToken,
+            'Enabled' => $this->Enabled,
+            'firstname' => $this->firstname,
+            'lastname' => $this->lastname,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
+            'civility' => $this->civility,
+            'phone' => $this->phone,
+            'properties' => $this->properties,
+            'googleId' => $this->googleId,
+            'facebookId' => $this->facebookId
+        ]);
+    }
+
+    /**
+     * @see https://www.php.net/manual/en/serializable.unserialize.php
+     */
+    public function unserialize($serialized)
+    {
+        $unserialized = unserialize($serialized);
+
+        // Set id mannually
+        $this->id = $unserialized['id'];
+        unset($unserialized['id']);
+        if (!is_null($unserialized['properties'])) {
+
+            foreach ($unserialized['properties'] as $property) {
+                $this->addProperty($property);
+            }
+        }
+        unset($unserialized['properties']);
+
+        // Set other properties by setters
+        foreach ($unserialized as $key => $value) {
+            $setter = 'set' . ucfirst($key);
+            $this->$setter($value);
+        }
+    }
 
     public function getId(): ?int
     {
@@ -256,6 +320,21 @@ class User implements UserInterface, Serializable
         return $this;
     }
 
+    public function isEnabled(): bool
+    {
+        return $this->Enabled;
+    }
+
+    public function enable(): void
+    {
+        $this->Enabled = true;
+    }
+
+    public function disable(): void
+    {
+        $this->Enabled = false;
+    }
+
     public function getFirstname(): ?string
     {
         return $this->firstname;
@@ -339,49 +418,64 @@ class User implements UserInterface, Serializable
 
         return $this;
     }
-    
+
     /**
-     * @see https://www.php.net/manual/en/serializable.serialize.php
-     * 
-     * Note: Don't pass the profilePicture property. Thhis property explain WHY i use this method
+     * @return Collection|Property[]
      */
-    public function serialize()
+    public function getProperties(): Collection
     {
-        return \serialize([
-            'id' => $this->id,
-            'email' => $this->email,
-            'roles' => $this->roles,
-            'password' => $this->password,
-            'token' => $this->token,
-            'forgotPasswordToken' => $this->forgotPasswordToken,
-            'Enabled' => $this->Enabled,
-            'firstname' => $this->firstname,
-            'lastname' => $this->lastname,
-            'createdAt' => $this->createdAt,
-            'updatedAt' => $this->updatedAt,
-            'civility' => $this->civility,
-            'phone' => $this->phone,
-            'googleId' => $this->googleId,
-            'facebookId' => $this->facebookId
-        ]);
+        return $this->properties;
     }
 
-    /**
-     * @see https://www.php.net/manual/en/serializable.unserialize.php
-     */
-    public function unserialize($serialized)
+    public function addProperty(Property $property): self
     {
-        $unserialize = unserialize($serialized);
-
-        // Set id mannually
-        $this->id = $unserialize['id'];
-        unset($unserialize['id']);
-
-        // Set other properties by setters
-        foreach ($unserialize as $key => $value) {
-            $setter = 'set'.ucfirst($key);
-            $this->$setter($value);
+        if (!$this->properties->contains($property)) {
+            $this->properties[] = $property;
+            $property->setOwner($this);
         }
+
+        return $this;
     }
 
+    public function removeProperty(Property $property): self
+    {
+        if ($this->properties->removeElement($property)) {
+            // set the owning side to null (unless already changed)
+            if ($property->getOwner() === $this) {
+                $property->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Search[]
+     */
+    public function getSearches(): Collection
+    {
+        return $this->searches;
+    }
+
+    public function addSearch(Search $search): self
+    {
+        if (!$this->searches->contains($search)) {
+            $this->searches[] = $search;
+            $search->setSearcher($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSearch(Search $search): self
+    {
+        if ($this->searches->removeElement($search)) {
+            // set the owning side to null (unless already changed)
+            if ($search->getSearcher() === $this) {
+                $search->setSearcher(null);
+            }
+        }
+
+        return $this;
+    }
 }
