@@ -72,6 +72,7 @@ class GoogleController extends AbstractController
             return $this->redirectToRoute('front_users');
         } else {
 
+
             $userForm = $this->createForm(UpdateProfileGFType::class, $user);
             $userForm->handleRequest($request);
 

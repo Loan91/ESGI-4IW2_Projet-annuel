@@ -62,7 +62,7 @@ class User implements UserInterface, Serializable
     /**
      * @return mixed
      */
-    public function getGoogleId()
+    public function getGoogleId(): ?string
     {
         return $this->googleId;
     }
@@ -79,7 +79,7 @@ class User implements UserInterface, Serializable
     /**
      * @return mixed
      */
-    public function getFacebookId()
+    public function getFacebookId(): ?string
     {
         return $this->facebookId;
     }
@@ -360,7 +360,9 @@ class User implements UserInterface, Serializable
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
             'civility' => $this->civility,
-            'phone' => $this->phone
+            'phone' => $this->phone,
+            'googleId' => $this->googleId,
+            'facebookId' => $this->facebookId
         ]);
     }
 
