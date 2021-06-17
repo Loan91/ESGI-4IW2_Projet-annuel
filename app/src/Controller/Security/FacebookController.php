@@ -7,6 +7,7 @@ use App\Form\UpdateProfileGFType;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -48,8 +49,12 @@ class FacebookController extends AbstractController
      */
     public function connectCheckAction(Request $request, ClientRegistry $clientRegistry)
     {
+        if (!$this->getUser()) {
+            return new JsonResponse(array('status' => false, 'message' => "Utilisateur non trouver !"));
+        } else {
         return $this->redirectToRoute('front_home');
     }
+        }
 
     /**
      * @Route("/facebook/inscription", name="app_inscriptionfacebook")

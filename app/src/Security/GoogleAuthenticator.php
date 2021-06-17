@@ -85,23 +85,30 @@ class GoogleAuthenticator extends SocialAuthenticator
 
         $email = $googleUser->getEmail();
 
-        $user = $this->em->getRepository(User::class)
-            ->findOneBy(['email' => $email]);
+        $existingUser = $this->em->getRepository(User::class)
+            ->findOneBy(['googleId' => $googleUser->getId()]);
+        if ($existingUser) {
+            return $existingUser;
+        }
+
+            $user = $this->em->getRepository(User::class)
+                ->findOneBy(['email' => $email]);
 
             if (!$user) {
                 $user = new User();
                 $user->setEnabled(1);
                 $user->setEmail($googleUser->getEmail());
                 $user->setRoles(["ROLE_USER"]);
-                $user->setPassword(md5(random_bytes(20)));
+                $user->setPassword("");
                 $user->setFirstname($googleUser->getFirstName());
                 $user->setLastname($googleUser->getLastName());
-                $user->setCivility("Monsieur");
+                $user->setCivility("");
                 $this->em->persist($user);
                 $this->em->flush();
                 $this->mailer->sendEmailWelcome($user->getEmail(), $user->getToken(), $user->getFirstname() . ' ' . $user->getLastname());
 
-            }
+
+        }
             return $user;
 
     }

@@ -50,6 +50,49 @@ class User implements UserInterface, Serializable
     private $token;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $facebookId;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $googleId;
+
+    /**
+     * @return mixed
+     */
+    public function getGoogleId()
+    {
+        return $this->googleId;
+    }
+
+    /**
+     * @param mixed $googleId
+     */
+    public function setGoogleId($googleId): void
+    {
+        $this->googleId = $googleId;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getFacebookId()
+    {
+        return $this->facebookId;
+    }
+
+    /**
+     * @param mixed $facebookId
+     */
+    public function setFacebookId($facebookId): void
+    {
+        $this->facebookId = $facebookId;
+    }
+
+    /**
      * @ORM\Column(type="boolean", options={"default": false})
      */
     private $Enabled;

@@ -80,13 +80,19 @@ class FacebookAuthenticator extends SocialAuthenticator
 
         $email = $facebookUser->getEmail();
 
+        $existingUser = $this->em->getRepository(User::class)
+            ->findOneBy(['facebookId' => $facebookUser->getId()]);
+        if ($existingUser) {
+            return $existingUser;
+        }else {
 
-        $user = $this->em->getRepository(User::class)
-            ->findOneBy(['email' => $email]);
+            $user = $this->em->getRepository(User::class)
+                ->findOneBy(['email' => $email]);
 
 
             if (!$user) {
                 $user = new User();
+                $user->setFacebookId($facebookUser->getId());
                 $user->setEnabled(1);
                 $user->setEmail("");
                 $user->setRoles(["ROLE_USER"]);
@@ -97,6 +103,8 @@ class FacebookAuthenticator extends SocialAuthenticator
                 $this->em->persist($user);
                 $this->em->flush();
             }
+        }
+
         return $user;
 
     }
