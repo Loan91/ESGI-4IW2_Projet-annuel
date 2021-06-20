@@ -45,13 +45,28 @@
 								<a href="{{ path('app_register') }}" class="ml-2 italic">
 									Créer un compte</a>
 
-								<a href="{{ path('connect_google_start') }}">
-									Se connecter avec Google
-								</a><br>
+								<div class="flex justify-between items-center mt-1">
+									<hr class="w-full border-gray-300"> <span class="p-2 text-gray-400 text-xs">OR</span>
+									<hr class="w-full border-gray-300">
+								</div>
 
-								<a href="{{ path('connect_facebook_start') }}">
-									Se connecter avec Facebook
+								<div class="pt-2">
+									<p class="text-gray-700 font-bold pb-2 pl-1" style="font-size: 12px;">Vous pouvez vous connecter avec :</p>
+									<div class="flex items-left">
+									<div class="mt-5">
+								<a class="w-1/4 mx-1 p-2 font-bold text-white bg-red-600 rounded focus:outline-none hover:bg-red-800" href="{{ path('connect_google_start') }}">
+									Google
 								</a>
+
+
+
+								<a class="w-1/4 mx-1 p-2 font-bold text-white bg-blue-800 rounded focus:outline-none hover:bg-blue-900" href="{{ path('connect_facebook_start') }}">
+									Facebook
+								</a>
+										</div>
+							</div>
+								</div>
+
 							</div>
 						</div>
 
