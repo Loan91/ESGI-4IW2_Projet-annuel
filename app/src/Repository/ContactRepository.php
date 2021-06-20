@@ -45,6 +45,7 @@ class ContactRepository extends ServiceEntityRepository
             ->leftJoin('property.owner', 'owner')
             ->where('owner = :user')
             ->andWhere("c.status = 'RDV_CREE'")
+            ->orWhere("c.status = 'RDV_NOUVELLE_DATE'")
             ->setParameter('user', $user)
             ->orderBy('c.desiredDate', 'asc')
             ->getQuery()
@@ -62,7 +63,19 @@ class ContactRepository extends ServiceEntityRepository
             ->getResult()
         ;
 
-        array_push( $contacts, $createdRDV,$validatedRDV );
+        $terminatedRDV = $this->createQueryBuilder('c')
+            ->leftJoin('c.property', 'property')
+            ->leftJoin('property.owner', 'owner')
+            ->where('owner = :user')
+            ->andWhere("c.status = 'RDV_TERMINE'")
+            ->orWhere("c.status = 'RDV_FERME'")
+            ->setParameter('user', $user)
+            ->orderBy('c.desiredDate', 'asc')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        array_push( $contacts, $createdRDV,$validatedRDV,$terminatedRDV );
 
         return $contacts;
     }

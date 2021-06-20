@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ContactController extends AbstractController
 {
     /**
-     * @Route("/compte/rendez-vous", name="contact_index", methods={"GET"})
+     * @Route("/account/contacts", name="contact_index", methods={"GET"})
      */
     public function index(ContactRepository $contactRepository): Response
     {
@@ -25,7 +25,7 @@ class ContactController extends AbstractController
     }
 
     /**
-     * @Route("/compte/rendez-vous/demandes", name="contact_mycontacts", methods={"GET"})
+     * @Route("/account/my-contacts", name="contact_mycontacts", methods={"GET"})
      */
     public function getMyContacts(ContactRepository $contactRepository): Response
     {
@@ -36,7 +36,7 @@ class ContactController extends AbstractController
     }
 
     /**
-     * @Route("/compte/rendez-vous/nouveau/{id}", name="contact_create", methods={"GET","POST"})
+     * @Route("/contact/new/{id}", name="contact_create", methods={"GET","POST"})
      * @param Property $property Property for the contact
      */
     public function new(Request $request, Property $property): Response
@@ -53,6 +53,7 @@ class ContactController extends AbstractController
             $entityManager->persist($contact);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Votre demande de RDV a été envoyé !');
             return $this->redirectToRoute('front_contact_mycontacts');
         }
 
@@ -60,5 +61,50 @@ class ContactController extends AbstractController
             'contact' => $contact,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/contact/accept/{id}", name="contact_acceptDate", methods={"GET"})
+     * @param Contact $contact Contact to accept
+     */
+    public function acceptDate(Contact $contact): Response
+    {
+        $contact->setStatus('RDV_VALIDE');
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($contact);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Date de RDV accepté !');
+        return $this->redirectToRoute('front_contact_index');
+    }
+
+    /**
+     * @Route("/contact/another/{id}", name="contact_anotherDate", methods={"GET"})
+     * @param Contact $contact Contact to ask another date
+     */
+    public function anotherDate(Contact $contact): Response
+    {
+        $contact->setStatus('RDV_NOUVELLE_DATE');
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($contact);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Demande de nouvelle date de RDV envoyée !');
+        return $this->redirectToRoute('front_contact_index');
+    }
+
+    /**
+     * @Route("/contact/decline/{id}", name="contact_decline", methods={"GET"})
+     * @param Contact $contact Contact to decline
+     */
+    public function decline(Contact $contact): Response
+    {
+        $contact->setStatus('RDV_FERME');
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($contact);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'RDV fermé !');
+        return $this->redirectToRoute('front_contact_index');
     }
 }
