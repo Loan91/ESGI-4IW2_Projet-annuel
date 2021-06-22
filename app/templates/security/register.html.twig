@@ -5,54 +5,88 @@
 {% endblock %}
 
 {% block body %}
-<div class="lg:w-1/3 mx-auto lg:pt-16 pt-8 px-4">
-	<h1 class="text-4xl text-center text-gray-900 mb-4 font-bold">Création de compte</h1>
+<main class="mx-auto lg:pt-10 pt-8 px-4">
 
 	{% include "components/alert.html.twig" %}
 
-	<div class="shadow sm:rounded-md px-4 pt-2">
-		{% form_theme registrationForm 'themes/tailwindcss.html.twig' %}
-		{{ form_start(registrationForm) }}
+	<section class="flex justify-around flex-col lg:flex-row" id="main-container">
+		<section class="shadow sm:rounded-md px-4 pt-2 text-sm font-semibold" id="register-form">
+			<h1 class="text-4xl text-center text-gray-900 mb-4 font-bold mb-6">Création de compte</h1>
 
-		<div class="w-full">
-			<div class="">
+
+			{% form_theme registrationForm 'themes/tailwindcss.html.twig' %}
+			{{ form_start(registrationForm) }}
+
+			<div class="flex justify-center">
 				{{ form_row(registrationForm.civility) }}
 			</div>
-		</div>
 
-		<div class="grid grid-cols-4 gap-4">
-			<div class="col-span-2">
-				{{ form_row(registrationForm.firstname) }}
+			<div class="grid grid-cols-4 gap-4">
+				<div class="col-span-2">
+					{{ form_row(registrationForm.firstname) }}
+				</div>
+
+				<div class="col-span-2">
+					{{ form_row(registrationForm.lastname) }}
+				</div>
 			</div>
 
-			<div class="col-span-2">
-				{{ form_row(registrationForm.lastname) }}
-			</div>
-		</div>
 
+			{{ form_row(registrationForm.email) }}
 
-		{{ form_row(registrationForm.email) }}
+			{{ form_row(registrationForm.password) }}
 
-		{{ form_row(registrationForm.password) }}
-
-		<div class="mt-6">
-			<div class="mt-3">
-				<p>
-					Déjà inscrit ?
-					<a href="{{ path('app_login') }}" class="ml-2 italic">
-						Se connecter</a>
-				</p>
-			</div>
-
-			<!-- Validation -->
-			<div class="py-3 bg-gray-50 text-right">
+			<section class="my-4 bg-gray-50 text-right">
+				<!-- Validation -->
 				<button type="submit" z
-					class="w-full focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg">
-					Valider
+					class="focus:outline-none text-white text-sm font-semibold py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg w-full">
+					S'inscrire
 				</button>
+			</section>
+			{{ form_end(registrationForm) }}
+		</section>
+
+
+		<section class="shadow shadow sm:rounded-md px-4 pt-2 text-sm font-semibold flex flex-col justify-center"
+			id="another-action">
+
+			<section id="login-section" class="flex justify-center mt-2">
+				<div
+					class="transition duration-200 px-5 py-3 cursor-pointer font-normal text-sm rounded-lg text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-200 focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 ring-inset text-center">
+					<a href="{{ path('app_login') }}">
+
+						<span>Déjà un compte?</span>
+
+						<span class="font-bold">Se connecter</span>
+					</a>
+				</div>
+
+			</section>
+
+			<div class="flex justify-between items-center mt-1">
+				<hr class="w-full border-gray-300"> <span class="p-2 text-gray-400 text-xs">OU</span>
+				<hr class="w-full border-gray-300">
 			</div>
-		</div>
-		{{ form_end(registrationForm) }}
-	</div>
-</div>
+
+			<aside id="social-network" class="pt-2 mb-4">
+				<p class="text-gray-700 text-xs font-bold text-center">Vous pouvez vous inscrire avec</p>
+
+				<div class="flex flex-col mt-4">
+					<a class="w-full flex flex-row items-center justify-center px-4 py-2 text-white bg-red-600 rounded focus:outline-none hover:bg-red-800"
+						href="{{ path('connect_google_start') }}">
+						{% include "components/icons/google.svg" with {class: "w-5 h-5 inline bg-gray-100 rounded-full"}
+						%}
+						<span class="ml-1 text-lg font-semibold">Google</span>
+					</a>
+
+					<a class="mt-3 w-full flex flex-row items-center justify-center px-4 py-2 text-white bg-blue-800 rounded focus:outline-none hover:bg-blue-900 text-center"
+						href="{{ path('connect_facebook_start') }}">
+						{% include "components/icons/facebook.svg" with {class: "w-5 h-5 inline"} %}
+						<span class="ml-1 text-lg font-semibold">Facebook</span>
+					</a>
+				</div>
+			</aside>
+		</section>
+	</section>
+</main>
 {% endblock %}

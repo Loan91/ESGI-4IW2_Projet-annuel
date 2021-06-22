@@ -144,9 +144,6 @@
     "laminas/laminas-code": {
         "version": "3.5.1"
     },
-    "lcobucci/jwt": {
-        "version": "3.4.5"
-    },
     "league/oauth2-client": {
         "version": "2.6.0"
     },
@@ -164,9 +161,6 @@
     },
     "nikic/php-parser": {
         "version": "v4.10.3"
-    },
-    "paragonie/constant_time_encoding": {
-        "version": "v2.4.0"
     },
     "paragonie/random_compat": {
         "version": "v9.99.100"
@@ -304,9 +298,6 @@
         "files": [
             "config/packages/sensio_framework_extra.yaml"
         ]
-    },
-    "spomky-labs/otphp": {
-        "version": "v10.0.1"
     },
     "stof/doctrine-extensions-bundle": {
         "version": "1.2",
@@ -740,9 +731,6 @@
     },
     "symfony/yaml": {
         "version": "v5.2.0"
-    },
-    "thecodingmachine/safe": {
-        "version": "v1.3.3"
     },
     "theseer/tokenizer": {
         "version": "1.2.0"

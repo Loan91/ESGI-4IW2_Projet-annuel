@@ -4,83 +4,95 @@
 {% endblock %}
 
 {% block body %}
-<div class="lg:w-1/3 mx-auto lg:pt-40 pt-10 px-4">
+<div class="lg:w-1/3 mx-auto lg:pt-18 pt-10 px-4">
 	<h1 class="text-4xl text-center text-gray-900 mb-4 font-bold">Identifiez vous</h1>
-		<form action="#" method="POST" id="login-form">
-			{% if error %}
-				<div class="bg-red-200 px-6 py-4 mx-2 my-4 rounded-md text-lg flex items-center mx-auto">
-				<svg viewBox="0 0 24 24" class="text-red-600 w-5 h-5 sm:w-5 sm:h-5 mr-3">
-				<path fill="currentColor" d="M11.983,0a12.206,12.206,0,0,0-8.51,3.653A11.8,11.8,0,0,0,0,12.207,11.779,11.779,0,0,0,11.8,24h.214A12.111,12.111,0,0,0,24,11.791h0A11.766,11.766,0,0,0,11.983,0ZM10.5,16.542a1.476,1.476,0,0,1,1.449-1.53h.027a1.527,1.527,0,0,1,1.523,1.47,1.475,1.475,0,0,1-1.449,1.53h-.027A1.529,1.529,0,0,1,10.5,16.542ZM11,12.5v-6a1,1,0,0,1,2,0v6a1,1,0,1,1-2,0Z"></path>
-				</svg>
-				<span class="text-red-800">{{ error.messageKey|trans(error.messageData, 'security') }}</span>
-			</div>
-			{% endif %}
+	<form action="#" method="POST" id="login-form">
+		{% if error %}
+		<header class="bg-red-200 px-6 py-4 mx-2 my-4 rounded-md text-lg flex items-center mx-auto">
+			<svg viewBox="0 0 24 24" class="text-red-600 w-5 h-5 sm:w-5 sm:h-5 mr-3">
+				<path fill="currentColor"
+					d="M11.983,0a12.206,12.206,0,0,0-8.51,3.653A11.8,11.8,0,0,0,0,12.207,11.779,11.779,0,0,0,11.8,24h.214A12.111,12.111,0,0,0,24,11.791h0A11.766,11.766,0,0,0,11.983,0ZM10.5,16.542a1.476,1.476,0,0,1,1.449-1.53h.027a1.527,1.527,0,0,1,1.523,1.47,1.475,1.475,0,0,1-1.449,1.53h-.027A1.529,1.529,0,0,1,10.5,16.542ZM11,12.5v-6a1,1,0,0,1,2,0v6a1,1,0,1,1-2,0Z">
+				</path>
+			</svg>
+			<span class="text-red-800">{{ error.messageKey|trans(error.messageData, 'security') }}</span>
+		</header>
+		{% endif %}
 
 
-			{% include "components/alert.html.twig" %}
+		{% include "components/alert.html.twig" %}
 
-			<div class="shadow overflow-hidden sm:rounded-md">
-				<div class="px-4 py-5 bg-white sm:p-6">
-					<div class="">
-						<!-- Email -->
-						<div class="col-span-6 sm:col-span-4 mb-2">
-							<label for="inputEmail" class="block text-sm font-medium text-gray-900">Email</label>
-							<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="mt-1 w-full shadow-sm border focus:outline-none sm:text-sm border-gray-300 rounded-md py-2 px-3 mt-2" required autofocus>
-						</div>
-
-						<!-- Mot de passe -->
-						<div class="col-span-6 sm:col-span-4 mb-2">
-							<label for="inputPassword" class="block text-sm font-medium text-gray-900">Mot de passe</label>
-							<input type="password" name="password" id="inputPassword" class="mt-1 w-full shadow-sm border focus:outline-none sm:text-sm border-gray-300 rounded-md py-2 px-3 mt-2" required>
-						</div>
-
-						{# See https://symfony.com/doc/current/security/remember_me.html #}
-						<div class="mb-3">
-							<a href="{{ path('app_forgotten_password') }}" class="text-red text-xs italic">Mot de passe oublié ?</a>
-						</div>
-						
-						<div class="">
-							<div class="text-red text-xs">
-								Pas encore inscrit ?
-								<a href="{{ path('app_register') }}" class="ml-2 italic">
-									Créer un compte</a>
-
-								<div class="flex justify-between items-center mt-1">
-									<hr class="w-full border-gray-300"> <span class="p-2 text-gray-400 text-xs">OR</span>
-									<hr class="w-full border-gray-300">
-								</div>
-
-								<div class="pt-2">
-									<p class="text-gray-700 font-bold pb-2 pl-1" style="font-size: 12px;">Vous pouvez vous connecter avec :</p>
-									<div class="flex items-left">
-									<div class="mt-5">
-								<a class="w-1/4 mx-1 p-2 font-bold text-white bg-red-600 rounded focus:outline-none hover:bg-red-800" href="{{ path('connect_google_start') }}">
-									Google
-								</a>
-
-
-
-								<a class="w-1/4 mx-1 p-2 font-bold text-white bg-blue-800 rounded focus:outline-none hover:bg-blue-900" href="{{ path('connect_facebook_start') }}">
-									Facebook
-								</a>
-										</div>
-							</div>
-								</div>
-
-							</div>
-						</div>
-
-						<!-- Validation -->
-						<div class="py-3 bg-gray-50 text-right">
-							<button type="submit" z class="focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg w-full">
-								Valider
-							</button>
-						</div>
-					</div>
-					<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+		<main class="shadow overflow-hidden sm:rounded-md">
+			<div class="px-4 py-5 bg-white sm:p-6">
+				<!-- Email -->
+				<div class="col-span-6 sm:col-span-4 mb-2">
+					<label for="inputEmail" class="block text-sm font-semibold text-gray-900">Email</label>
+					<input type="email" value="{{ last_username }}" name="email" id="inputEmail"
+						class="mt-1 w-full shadow-sm border focus:outline-none sm:text-sm border-gray-300 rounded-md py-2 px-3 mt-2"
+						required autofocus>
 				</div>
+
+				<!-- Mot de passe -->
+				<div class="col-span-6 sm:col-span-4 mb-2">
+					<label for="inputPassword" class="block text-sm font-semibold text-gray-900">Mot de
+						passe</label>
+					<input type="password" name="password" id="inputPassword"
+						class="mt-1 w-full shadow-sm border focus:outline-none sm:text-sm border-gray-300 rounded-md py-2 px-3 mt-2"
+						required>
+				</div>
+
+				<section id="another-action" class="flex justify-between mt-4 mb-2">
+					<a href="{{ path('app_forgotten_password') }}"
+						class="transition duration-200 px-5 py-3 cursor-pointer font-normal text-sm rounded-lg text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-200 focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 ring-inset inline-block">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+							class="w-4 h-4 inline-block align-text-top">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+								d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z">
+							</path>
+						</svg>
+						<span class="inline-block ml-1">Mot de passe oublié</span>
+					</a>
+
+					<a href="{{ path('app_register') }}"
+						class="w-2/5 transition duration-200 px-5 py-3 cursor-pointer font-normal text-sm rounded-lg text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-200 focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 ring-inset text-center">
+
+						<span class="inline-block">S'inscrire</span>
+					</a>
+				</section>
+
+				<!-- Validation -->
+				<section class="py-3 bg-gray-50 text-right">
+					<button type="submit"
+						class="focus:outline-none text-white text-sm font-semibold py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg w-full">
+						Se connecter
+					</button>
+				</section>
+
+				<div class="flex justify-between items-center mt-1">
+					<hr class="w-full border-gray-300"> <span class="p-2 text-gray-400 text-xs">OU</span>
+					<hr class="w-full border-gray-300">
+				</div>
+
+				<aside id="social-network" class="pt-2">
+					<p class="text-gray-700 text-xs font-bold text-center">Vous pouvez vous connecter avec</p>
+					<div class="mt-4 flex justify-around items-center">
+						<a class="w-full flex flex-row items-center justify-center px-4 py-2 text-white bg-red-600 rounded focus:outline-none hover:bg-red-800"
+							href="{{ path('connect_google_start') }}">
+							{% include "components/icons/google.svg" with {class: "w-5 h-5 inline bg-gray-100 rounded-full"} %}
+							<span class="ml-1 text-lg font-semibold">Google</span>
+						</a>
+						
+						<a class="w-full flex flex-row items-center justify-center ml-4 px-4 py-2 text-white bg-blue-800 rounded focus:outline-none hover:bg-blue-900 text-center"
+							href="{{ path('connect_facebook_start') }}">
+							{% include "components/icons/facebook.svg" with {class: "w-5 h-5 inline"} %}
+							<span class="ml-1 text-lg font-semibold">Facebook</span>
+						</a>
+					</div>
+				</aside>
 			</div>
-		</div>
+			{# See https://symfony.com/doc/current/security/remember_me.html #}
+
+			<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+		</main>
 	</form>
 </div>
 {% endblock %}
