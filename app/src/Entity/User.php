@@ -150,7 +150,7 @@ class User implements UserInterface, Serializable
     /**
      * @see https://www.php.net/manual/en/serializable.serialize.php
      *
-     * Note: Don't pass the profilePicture property. Thhis property explain WHY i use this method
+     * Note: Don't pass the profilePicture property. This property explain WHY i use this method
      */
     public function serialize()
     {
@@ -174,12 +174,7 @@ class User implements UserInterface, Serializable
         $this->id = (int) $unserialized['id'];
         unset($unserialized['id']);
 
-        // Set property mannualy (because its a manyToMany property)
-        if (!is_null($unserialized['properties'])) {
-            foreach ($unserialized['properties'] as $property) {
-                $this->addProperty($property);
-            }
-        }
+        // Do not set properties (because its a manyToMany property)
         unset($unserialized['properties']);
 
         // Set other properties by setters
