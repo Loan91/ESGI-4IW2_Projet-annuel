@@ -5,6 +5,7 @@ namespace App\Controller\Front;
 use App\Entity\ProfilePicture;
 use App\Entity\User;
 use App\Form\EditPassType;
+use App\Form\UpdateProfileGFType;
 use App\Form\EditProfileType;
 use phpDocumentor\Reflection\Types\Context;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -95,6 +96,6 @@ class ProfileUserController extends AbstractController
             $session->invalidate();
         }
 
-        return $this->redirectToRoute('front_default_index');
+        return $this->redirectToRoute('front_home');
     }
 }
