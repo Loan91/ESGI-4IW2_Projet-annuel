@@ -154,24 +154,13 @@ class User implements UserInterface, Serializable
      */
     public function serialize()
     {
-        return \serialize([
-            'id' => $this->id,
-            'email' => $this->email,
-            'roles' => $this->roles,
-            'password' => $this->password,
-            'token' => $this->token,
-            'forgotPasswordToken' => $this->forgotPasswordToken,
-            'Enabled' => $this->Enabled,
-            'firstname' => $this->firstname,
-            'lastname' => $this->lastname,
-            'createdAt' => $this->createdAt,
-            'updatedAt' => $this->updatedAt,
-            'civility' => $this->civility,
-            'phone' => $this->phone,
-            'properties' => $this->properties,
-            'googleId' => $this->googleId,
-            'facebookId' => $this->facebookId
-        ]);
+        $objectData = [];
+        foreach (get_object_vars($this) as $propertyName => $value) {
+            if($propertyName != 'profilePicture') {
+                $objectData[$propertyName] = $value;
+            }
+        }
+        return \serialize($objectData);
     }
 
     /**
@@ -182,10 +171,11 @@ class User implements UserInterface, Serializable
         $unserialized = unserialize($serialized);
 
         // Set id mannually
-        $this->id = $unserialized['id'];
+        $this->id = (int) $unserialized['id'];
         unset($unserialized['id']);
-        if (!is_null($unserialized['properties'])) {
 
+        // Set property mannualy (because its a manyToMany property)
+        if (!is_null($unserialized['properties'])) {
             foreach ($unserialized['properties'] as $property) {
                 $this->addProperty($property);
             }
