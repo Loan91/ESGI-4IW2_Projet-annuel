@@ -34,8 +34,9 @@
 
 				<div class="flex flex-col ml-6">
 					<span class="text-lg font-bold"><span class="capitalize">{{ property.type }}</span> à <span
-							class="capitalize">{{ property.city }}</span> ({{ property.rentOrSale == 'sale' ? 'Vente' :
-						'Location' }} pour {{ property.price }} €)</span>
+							class="capitalize">{{ property.city }}</span></span>
+					<div class="text-md text-gray-700">En {{ property.rentOrSale == 'sale' ? 'vente' :
+						'location' }} pour {{ property.price }} €</div>
 					<div class="mt-4 flex">
 						<div class="flex">
 							<svg class="h-5 w-5 fill-current
