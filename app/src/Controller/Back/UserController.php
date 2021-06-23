@@ -33,8 +33,6 @@ class UserController extends AbstractController
             6 /*limit per page*/
         );
 
-        // dd($pagination);
-
         return $this->render('back/user/index.html.twig', [
             'pagination' => $pagination
         ]);

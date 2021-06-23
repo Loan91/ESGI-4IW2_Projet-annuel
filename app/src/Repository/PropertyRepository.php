@@ -6,7 +6,10 @@ use App\Data\SearchData;
 use App\Entity\Property;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @method Property|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,9 +20,10 @@ use Doctrine\Persistence\ManagerRegistry;
 class PropertyRepository extends ServiceEntityRepository
 {
 
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
         {
             parent::__construct($registry, Property::class);
+            $this->paginator = $paginator;
         }
 
 
@@ -113,4 +117,20 @@ class PropertyRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function getPropertiesPaginationForUser(User $user, Request $request, int $limitPerPage = 6, string $pageName = 'page')
+    {
+        $builder = $this->_em->createQueryBuilder()
+        ->select('p')
+        ->from('App\Entity\Property', 'p')
+        ->innerJoin('App\Entity\User', 'u', Join::WITH, 'p.owner = :userId');
+        $builder->setParameter(':userId', $user->getId());
+        
+        return $this->paginator->paginate(
+            $builder,
+            $request->query->getInt($pageName, 1), /*page number*/
+            $limitPerPage
+        );
+    }
+
 }
