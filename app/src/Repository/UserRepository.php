@@ -8,6 +8,8 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -20,9 +22,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {
         parent::__construct($registry, User::class);
+        $this->paginator = $paginator;
     }
 
     /**
@@ -102,6 +105,19 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
 
         return $userByMonths;
+    }
+
+    public function getUsersPaginated(Request $request, int $limitPerPage = 6, string $pageName = 'page')
+    {
+        $builder = $this->_em->createQueryBuilder()
+            ->select('u')
+            ->from('App\Entity\User', 'u')
+            ->orderBy('u.id');
+        return $this->paginator->paginate(
+            $builder, /* query NOT result */
+            $request->query->getInt($pageName, 1), /*page number*/
+            $limitPerPage
+        );
     }
 
     // /**

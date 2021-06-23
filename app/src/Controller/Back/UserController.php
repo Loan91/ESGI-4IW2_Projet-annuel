@@ -24,17 +24,10 @@ class UserController extends AbstractController
     /**
      * @Route("", name="index", methods={"GET"})
      */
-    public function index(EntityManagerInterface $em, Request $request, PaginatorInterface $paginator): Response
+    public function index(Request $request, UserRepository $userRepository): Response
     {
-        $query = $em->createQuery("SELECT u FROM App\Entity\User u ORDER BY u.id");
-        $pagination = $paginator->paginate(
-            $query, /* query NOT result */
-            $request->query->getInt('page', 1), /*page number*/
-            6 /*limit per page*/
-        );
-
         return $this->render('back/user/index.html.twig', [
-            'pagination' => $pagination
+            'paginator' => $userRepository->getUsersPaginated($request, 6)
         ]);
     }
 

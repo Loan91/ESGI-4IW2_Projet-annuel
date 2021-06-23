@@ -25,10 +25,8 @@ class PropertyController extends AbstractController
      */
     public function index(Request $request, PropertyRepository $propertyRepository): Response
     {
-        $paginator = $propertyRepository->getPropertiesPaginationForUser($this->getUser(), $request, 4);
-
         return $this->render('front/property/index.html.twig', [
-            'paginator' => $paginator
+            'paginator' => $propertyRepository->getPropertiesPaginationForUser($this->getUser(), $request, 4)
         ]);
     }
 
