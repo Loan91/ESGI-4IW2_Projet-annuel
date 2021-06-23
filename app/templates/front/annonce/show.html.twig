@@ -10,9 +10,13 @@
 
     <section class="sm:grid sm:grid-cols-4 sm:gap-6">
         <div class="col-span-3">
-            <img class="object-cover w-full h-96 rounded-md shadow"
-                src="https://images.unsplash.com/photo-1593696140826-c58b021acf8b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cmVhbCUyMGVzdGF0ZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
-                alt="Phot du bien {{ property.type | capitalize }} à {{ property.city | capitalize }}">
+            {% if property.imageName is not null %}
+                <img class="object-cover w-full h-96 rounded-md shadow"
+                    src="{{ uploaded_property_path ~ '/' ~ property.imageName }}" alt="image du bien">
+                {% else %}
+                <img class="object-cover w-full h-96 rounded-md shadow"
+                    src="{{ asset('images/maison-default.jpg') }}" alt="image du bien">
+                {% endif %}
         </div>
         <div class="border border-gray-200 rounded-lg shadow-sm divide-y divide-gray-200">
             <div class="p-6">
@@ -45,8 +49,9 @@
     <section class="my-12 sm:grid sm:grid-cols-3 sm:gap-6">
         <div class="col-span-2">
             <h3 class="text-2xl font-medium text-gray-600 tracking-wider">Details</h3>
-            <div class="space-y-4 sm:mt-4 sm:grid sm:grid-cols-4 sm:gap-4 xl:mx-0 xl:grid-cols-4">
-                <div class="border shadow-sm rounded-md px-6 py-5 flex flex-col space-y-4">
+
+            <section class="space-y-4 sm:space-y-0 sm:mt-4 sm:grid sm:grid-cols-4 sm:gap-4 xl:mx-0 xl:grid-cols-4">
+                <article class="border shadow-sm rounded-md px-6 py-5 flex flex-col space-y-4">
                     <svg class="stroke-current text-gray-400 w-8 h-8" aria-hidden="true" focusable="false"
                         data-prefix="fas" data-icon="vector-square" role="img" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 512 512">
@@ -57,8 +62,8 @@
                     <div class="text-base font-medium text-gray-700">
                         {{ property.area }} m<sup>2</sup>
                     </div>
-                </div>
-                <div class="border shadow-sm rounded-md px-6 py-5 flex flex-col space-y-4">
+                </article>
+                <article class="border shadow-sm rounded-md px-6 py-5 flex flex-col space-y-4">
                     <svg class="stroke-current text-gray-400 w-8 h-8" aria-hidden="true" focusable="false"
                         data-prefix="fas" data-icon="person-booth" role="img" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 576 512">
@@ -69,8 +74,8 @@
                     <div class="text-base font-medium text-gray-700">
                         {{ property.rooms }} Chambres
                     </div>
-                </div>
-                <div class="border shadow-sm rounded-md px-6 py-5 flex flex-col space-y-4">
+                </article>
+                <article class="border shadow-sm rounded-md px-6 py-5 flex flex-col space-y-4">
                     <svg class="stroke-current text-gray-400 w-8 h-8" aria-hidden="true" focusable="false"
                         data-prefix="fas" data-icon="shower" role="img" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 512 512">
@@ -81,8 +86,8 @@
                     <div class="text-base font-medium text-gray-700">
                         {{ property.bathrooms }} Salles de bains
                     </div>
-                </div>
-                <div class="border shadow-sm rounded-md px-6 py-5 flex flex-col space-y-4">
+                </article>
+                <article class="border shadow-sm rounded-md px-6 py-5 flex flex-col space-y-4">
                     <svg class="stroke-current text-gray-400 w-8 h-8" aria-hidden="true" focusable="false"
                         data-prefix="fas" data-icon="utensils" role="img" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 416 512">
@@ -93,8 +98,8 @@
                     <div class="text-base font-medium text-gray-700">
                         {{ property.bathrooms }} Salles à manger
                     </div>
-                </div>
-            </div>
+                </article>
+            </section>
 
             <div class="my-6">
                 <p class="text-base leading-6 text-gray-700">{{ property.description }} Lorem ipsum dolor sit amet,
@@ -109,11 +114,11 @@
                     <img src="{{ uploaded_user_path ~ '/' ~ app.user.profilePicture.imageName }}" alt="Image de profil"
                         class="w-12 h-12 rounded-full lg:w-16 lg:h-16">
                     {% else %}
-                    <img src="/images/user_profile_default.png" alt="Image de profil"
+                    <img src="{{ asset('images/user_profile_default.png') }}" alt="Image de profil"
                         class="w-12 h-12 rounded-full lg:w-16 lg:h-16">
                     {% endif %}
                     <div class="text-lg leading-6 space-y-0.5">
-                        <h3>Jane Doe</h3>
+                        <h3>{{ userFullname(app.user) }}</h3>
                         <p class="text-indigo-900">Agent immobilière /</p>
                     </div>
                 </div>
