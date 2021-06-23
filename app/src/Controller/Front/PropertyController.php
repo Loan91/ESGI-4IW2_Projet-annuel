@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Property;
 use App\Form\PropertyType;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -20,10 +23,12 @@ class PropertyController extends AbstractController
     /**
      * @Route("/", name="property_index", methods={"GET"})
      */
-    public function index(PropertyRepository $propertyRepository, TokenStorageInterface $tokenStorage): Response
+    public function index(Request $request, PropertyRepository $propertyRepository): Response
     {
+        $paginator = $propertyRepository->getPropertiesPaginationForUser($this->getUser(), $request, 4);
+
         return $this->render('front/property/index.html.twig', [
-            'properties' => $this->getUser()->getProperties()
+            'paginator' => $paginator
         ]);
     }
 
