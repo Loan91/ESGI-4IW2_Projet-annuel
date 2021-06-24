@@ -5,7 +5,7 @@
     {% if first is defined and current != first %}
     <div>
         <a href="{{ path(route, query|merge({(pageParameterName): first})) }}"
-            class="inline-flex items-center justify-center text mr-1 border border-gray-300 rounded-full bg-white text-xs leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150" style="width: 40px; height: 40px;"
+            class="inline-flex items-center justify-center text mr-1 border border-gray-300 rounded-full bg-white text-xs leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-gray-300 focus:shadow-outline-gray active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150" style="width: 40px; height: 40px;"
             aria-label="First">
             <span class="font-bold">Début</span>
         </a>
@@ -16,7 +16,7 @@
     {% if previous is defined %}
     <div>
         <a rel="prev" href="{{ path(route, query|merge({(pageParameterName): previous})) }}"
-            class="inline-flex items-center justify-center mr-1 border border-gray-300 rounded-full bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150"
+            class="inline-flex items-center justify-center mr-1 border border-gray-300 rounded-full bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-gray-300 focus:shadow-outline-gray active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150"
             aria-label="Previous" style="width: 40px; height: 40px;">
             <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd"
@@ -31,11 +31,11 @@
     <div>
         {% for page in pagesInRange %}
         {% if page != current %}
-        <a class="inline-flex items-center justify-center border border-gray-300 rounded-full bg-white text-sm leading-5 font-medium text-gray-700 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary" style="width: 40px; height: 40px;"
+        <a class="inline-flex items-center justify-center border border-gray-300 rounded-full bg-white text-sm leading-5 font-medium text-gray-700 focus:z-10 focus:outline-none focus:border-gray-400 focus:shadow-outline-gray active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:text-gray-400" style="width: 40px; height: 40px;"
             href="{{ path(route, query|merge({(pageParameterName): page})) }}">{{ page }}</a>
         {% else %}
         <a
-            class="inline-flex items-center justify-center rounded-full bg-gray-700 text-sm leading-5 font-medium text-white focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary" style="width: 40px; height: 40px;">{{
+            class="inline-flex items-center justify-center rounded-full bg-gray-700 text-sm leading-5 font-medium text-white focus:z-10 focus:outline-none focus:border-gray-300 focus:shadow-outline-gray active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary" style="width: 40px; height: 40px;">{{
             page }}</a>
         {% endif %}
         {% endfor %}
@@ -45,7 +45,7 @@
     {% if next is defined %}
     <div>
         <a rel="next" href="{{ path(route, query|merge({(pageParameterName): next})) }}"
-            class="inline-flex items-center justify-center ml-1 border border-gray-300 rounded-full bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150" style="width: 40px; height: 40px;"
+            class="inline-flex items-center justify-center ml-1 border border-gray-300 rounded-full bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-gray-300 focus:shadow-outline-gray active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150" style="width: 40px; height: 40px;"
             aria-label="Next">
             <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd"
@@ -60,7 +60,7 @@
     {% if last is defined and current != last %}
     <div>
         <a href="{{ path(route, query|merge({(pageParameterName): last})) }}"
-            class="inline-flex items-center justify-center ml-1 border border-gray-300 rounded-full bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150" style="width: 40px; height: 40px;"
+            class="inline-flex items-center justify-center ml-1 border border-gray-300 rounded-full bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-gray-300 focus:shadow-outline-gray active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150" style="width: 40px; height: 40px;"
             aria-label="Next">
             <span class="font-bold">Fin</span>
         </a>

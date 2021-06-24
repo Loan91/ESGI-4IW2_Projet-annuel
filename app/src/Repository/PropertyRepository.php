@@ -133,4 +133,21 @@ class PropertyRepository extends ServiceEntityRepository
         );
     }
 
+    public function getPropertiesPaginationForUserByCity(User $user, Request $request, string $city, int $limitPerPage = 6, string $pageName = 'page')
+    {
+        $builder = $this->_em->createQueryBuilder()
+        ->select('p')
+        ->from('App\Entity\Property', 'p')
+        ->innerJoin('App\Entity\User', 'u', Join::WITH, 'p.owner = :userId')
+        ->andWhere('LOWER(p.city) LIKE :city');
+        $builder->setParameter(':userId', $user->getId());
+        $builder->setParameter(':city', "%".strtolower($city)."%");
+        
+        return $this->paginator->paginate(
+            $builder,
+            $request->query->getInt($pageName, 1), /*page number*/
+            $limitPerPage
+        );
+    }
+
 }

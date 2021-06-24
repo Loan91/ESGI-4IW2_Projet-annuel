@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Property;
+use App\Form\OwnedPropertiesSearchType;
 use App\Form\PropertyType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,8 +26,20 @@ class PropertyController extends AbstractController
      */
     public function index(Request $request, PropertyRepository $propertyRepository): Response
     {
+        $form = $this->createForm(OwnedPropertiesSearchType::class);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $paginator = $propertyRepository->getPropertiesPaginationForUserByCity($this->getUser(), $request, $formData['city'], 4);
+        } else {
+            $paginator = $propertyRepository->getPropertiesPaginationForUser($this->getUser(), $request, 4);
+        }
+
         return $this->render('front/property/index.html.twig', [
-            'paginator' => $propertyRepository->getPropertiesPaginationForUser($this->getUser(), $request, 4)
+            'paginator' => $paginator,
+            'searchForm' => $form->createView()
         ]);
     }
 

@@ -2,19 +2,44 @@
 
 {% block body %}
 <main class="mx-4 mb-4">
-	<header class="flex flex-col sm:flex-row items-center justify-center mt-4 mb-8">
-		<h1 class="text-5xl font-bold text-center">Liste de vos biens</h1>
-		<a href="{{ path('front_property_new') }}"
-			class="ml-3 flex flex-row items-center text-xl font-semibold rounded-full px-4 mr-2 bg-green-500 hover:bg-green-600 text-white p-2 rounded  leading-none">
-			{% include "components/icons/plus-add.svg" with {class: "mr-1 w-5 h-5"} %}
-			Ajouter
-		</a>
+	<header class="mt-4 mb-6">
+		<section class="flex flex-col sm:flex-row items-center justify-center">
+			<h1 class="text-5xl font-bold text-center">Liste de vos biens</h1>
+			<a href="{{ path('front_property_new') }}"
+				class="ml-3 flex flex-row items-center text-xl font-semibold rounded-full px-4 mr-2 bg-green-500 hover:bg-green-600 text-white p-2 rounded  leading-none">
+				{% include "components/icons/plus-add.svg" with {class: "mr-1 w-5 h-5"} %}
+				Ajouter
+			</a>
+		</section>
+
+		<section class="mt-2">
+			{% form_theme searchForm 'themes/tailwindcss.html.twig' %}
+			{{ form_start(searchForm, {attr: {
+			class: "w-full flex flex-col sm:flex-row items-center justify-center"}
+			}) }}
+			{{ form_widget(searchForm.city, {attr: {
+			class: "w-full sm:w-1/2 lg:w-1/3 shadow-sm border focus:outline-none sm:text-sm border-gray-300 rounded-md
+			py-3 px-3",
+			placeholder: "Recherche par ville"
+			}}) }}
+			<button type="submit"
+				class="ml-3 rounded-md border border-transparent px-4 py-4 bg-gray-900 text-base font-medium text-white shadow hover:bg-gray-700 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-200 ease-in-out">
+				{% include "components/icons/loupe.svg" with {class: "w-4 h-4 fill-current"} %}
+			</button>
+			{# </form> #}
+			{{ form_end(searchForm) }}
+			{# <form method="GET" class="">
+				<input type="text" name="city"
+					class="ml-2 w-full sm:w-1/2 lg:w-1/3 shadow-sm border focus:outline-none sm:text-sm border-gray-300 rounded-md py-3 px-3"
+					placeholder="Recherche par ville"> #}
+
+		</section>
 	</header>
 
 	{% include "components/alert.html.twig" %}
 
 	{% if paginator is empty %}
-	<div class="mt-4">Vous n'avez pas encore renseignés de biens</div>
+	<div class="mt-4">Aucun bien n'a été trouvé.</div>
 	{% endif %}
 
 	<section class="grid grid-cols-1 lg:grid-cols-2 gap-5">
@@ -27,8 +52,7 @@
 				<img class="h-12 w-12 rounded-full object-cover"
 					src="{{ uploaded_property_path ~ '/' ~ property.imageName }}" alt="image du bien">
 				{% else %}
-				<img class="h-12 w-12 rounded-full object-cover"
-					src="{{ asset('images/maison-default.jpg') }}"
+				<img class="h-12 w-12 rounded-full object-cover" src="{{ asset('images/maison-default.jpg') }}"
 					alt="image du bien">
 				{% endif %}
 
@@ -174,8 +198,7 @@
 		{% endfor %}
 	</section>
 
-	<aside
-		class="sm:flex-1 flex items-center justify-center mt-4 work-sans">
+	<aside class="sm:flex-1 flex items-center justify-center mt-4 work-sans">
 		<div>
 			{{ knp_pagination_render(paginator) }}
 		</div>
