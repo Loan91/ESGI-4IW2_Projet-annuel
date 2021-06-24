@@ -6,7 +6,7 @@
 		<section class="flex flex-col sm:flex-row items-center justify-center">
 			<h1 class="text-5xl font-bold text-center">Liste de vos biens</h1>
 			<a href="{{ path('front_property_new') }}"
-				class="ml-3 flex flex-row items-center text-xl font-semibold rounded-full px-4 mr-2 bg-green-500 hover:bg-green-600 text-white p-2 rounded  leading-none">
+				class="ml-3 flex flex-row items-center text-xl font-semibold rounded-full px-4 py-2 mr-2 bg-green-500 hover:bg-green-600 text-white rounded  leading-none">
 				{% include "components/icons/plus-add.svg" with {class: "mr-1 w-5 h-5"} %}
 				Ajouter
 			</a>
@@ -26,20 +26,34 @@
 				class="ml-3 rounded-md border border-transparent px-4 py-4 bg-gray-900 text-base font-medium text-white shadow hover:bg-gray-700 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-200 ease-in-out">
 				{% include "components/icons/loupe.svg" with {class: "w-4 h-4 fill-current"} %}
 			</button>
-			{# </form> #}
 			{{ form_end(searchForm) }}
-			{# <form method="GET" class="">
-				<input type="text" name="city"
-					class="ml-2 w-full sm:w-1/2 lg:w-1/3 shadow-sm border focus:outline-none sm:text-sm border-gray-300 rounded-md py-3 px-3"
-					placeholder="Recherche par ville"> #}
-
 		</section>
 	</header>
 
 	{% include "components/alert.html.twig" %}
 
 	{% if paginator is empty %}
-	<div class="mt-4">Aucun bien n'a été trouvé.</div>
+	<section class="flex flex-col lg:flex-row mx-auto items-center justify-around bg-gray-100 rounded
+	dark:bg-gray-800 px-8 py-6 mb-6 w-1/2 text-center">
+		<div>
+			<div>Aucun bien n'a été trouvé.</div>
+			{% if searchForm.city.vars.value is not empty %}
+			<div>Relancez une autre recherche.</div>
+			{% endif %}
+		</div>
+		{% if searchForm.city.vars.value is not empty %}
+		<div>
+			<span class="p-2 text-gray-700 text-xs">OU</span>
+		</div>
+		{% endif %}
+		<div>Peut-être souhaiteriez vous
+			<a href="{{ path('front_property_new') }}"
+				class="flex items-center text-xl font-semibold mt-1 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded">
+				{% include "components/icons/plus-add.svg" with {class: "mr-2 w-6 h-6 inline"} %}
+				Ajouter un bien
+			</a>
+		</div>
+	</section>
 	{% endif %}
 
 	<section class="grid grid-cols-1 lg:grid-cols-2 gap-5">
