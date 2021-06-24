@@ -463,4 +463,9 @@ class User implements UserInterface, Serializable
 
         return $this;
     }
+
+    public function encodePassord()
+    {
+        return $this;
+    }
 }

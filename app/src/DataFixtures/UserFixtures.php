@@ -71,7 +71,7 @@ class UserFixtures extends Fixture
         return $user
             ->setCivility($faker->boolean ? 'Monsieur' : 'Madame')
             ->setEmail($faker->email)
-            ->setPhone(mb_strcut($faker->phoneNumber, 0, 10))
+            ->setPhone('0602030405')
             ->setPassword($this->passwordEncoder->encodePassword($user, 'memberpassword'))
             ->setFirstname($faker->firstName)
             ->setLastname($faker->lastName)

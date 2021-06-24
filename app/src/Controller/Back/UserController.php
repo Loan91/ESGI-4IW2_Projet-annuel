@@ -3,6 +3,7 @@
 namespace App\Controller\Back;
 
 use App\Entity\User;
+use App\Form\ManageUserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 
 /**
@@ -83,5 +85,30 @@ class UserController extends AbstractController
         // Redirect with success message
         $this->addFlash('success', "L'utilisateur " . $user->getEmail() . " a bien été supprimé");
         return $this->redirect($previousPage = $request->headers->get('referer'));
+    }
+
+    /**
+     * @Route("/create", name="create", methods={"GET", "POST"})
+     */
+    public function create(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $em)
+    {
+        $userForm = $this->createForm(ManageUserType::class);
+
+        $userForm->handleRequest($request);
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
+            $user = $userForm->getData();
+            $user = $user
+                ->setPassword($passwordEncoder->encodePassword($user, $user->getPassword()))
+                ->setRoles(["ROLE_USER"]);
+
+            $em->persist($user);
+            $em->flush();
+            $this->addFlash('success', 'L\'utilisateur a bien été créé');
+            return $this->redirectToRoute('back_user_index');
+        }
+
+        return $this->render('back/user/create.html.twig', [
+            'userForm' => $userForm->createView()
+        ]);
     }
 }
