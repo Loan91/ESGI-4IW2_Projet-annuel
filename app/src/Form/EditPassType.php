@@ -39,7 +39,7 @@ class EditPassType extends AbstractType
                         'max' => 100,
                         'minMessage' => "Le nom de famille ne peut excéder 100 caractères"
                     ]),
-                    new ValidPassword(['min' => 8])
+                    new ValidPassword(['minSize' => 8, 'maxSize' => 20])
                 ]
                 ]
             );

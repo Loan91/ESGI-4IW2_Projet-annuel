@@ -93,18 +93,20 @@
 								if user.enabled %}Désactiver{% else %}Réactiver{% endif %}
 								le compte</button>
 						</form>
+						<a href="{{ path('back_user_edit', {user: user.id}) }}" class="ml-2	">
+							<button type="button"
+								onclick="this.parentNode.submit()"
+								class="px-2 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-600 hover:text-white focus:outline-none">
+								{% include "components/icons/settings.svg" with {class: "fill-current w-5 h-5"} %}
+							</button>
+						</a>
 						<form action="{{ path('back_user_delete', {user: user.id}) }}" method="POST" class="ml-2">
 							<input type="hidden" name="token" value="{{ csrf_token('delete-user') }}" />
 							<input type="hidden" name="_method" value="DELETE">
 							<button type="button"
 								onclick="confirm('Confirmer la suppression?') ? this.parentNode.submit() : ''"
 								class="px-2 py-2 border-red-500 border text-red-500 rounded transition duration-300 hover:bg-red-600 hover:text-white focus:outline-none">
-								<svg class="current-color w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none"
-									viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-										d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-									</path>
-								</svg>
+								{% include "components/icons/delete.svg" with {class: "w-5 h-5"} %}
 							</button>
 						</form>
 					</section>

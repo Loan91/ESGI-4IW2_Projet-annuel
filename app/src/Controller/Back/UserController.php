@@ -3,11 +3,9 @@
 namespace App\Controller\Back;
 
 use App\Entity\User;
-use App\Form\ManageUserType;
+use App\Form\Back\ManageUserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\Pagination\Paginator;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,7 +56,7 @@ class UserController extends AbstractController
         $em->flush();
 
         // Redirect with success message
-        $this->addFlash('success', "L'utilisateur " . $user->getEmail() . " a bien été ". ($user->isEnabled() ? 'activé' : 'désactivé'));
+        $this->addFlash('success', "L'utilisateur " . $user->getEmail() . " a bien été " . ($user->isEnabled() ? 'activé' : 'désactivé'));
         return $this->redirect($previousPage = $request->headers->get('referer'));
     }
 
@@ -108,6 +106,26 @@ class UserController extends AbstractController
         }
 
         return $this->render('back/user/create.html.twig', [
+            'userForm' => $userForm->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/edit/{user}", name="edit", methods={"GET", "PATCH"})
+     */
+    public function edit(Request $request, User $user, EntityManagerInterface $em)
+    {
+        $userForm = $this->createForm(ManageUserType::class, $user, ['method' => 'PATCH']);
+
+        $userForm->handleRequest($request);
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
+            $user = $userForm->getData();
+            $em->flush();
+            $this->addFlash('success', 'L\'utilisateur ' . $user->getEmail() . ' a bien été mis à jour');
+            return $this->redirectToRoute('back_user_index');
+        }
+
+        return $this->render('back/user/edit.html.twig', [
             'userForm' => $userForm->createView()
         ]);
     }
