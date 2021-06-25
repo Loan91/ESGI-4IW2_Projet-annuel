@@ -97,7 +97,7 @@ class ManageUserType extends AbstractType
                         'max' => 100,
                         'minMessage' => "Le nom de famille ne peut excéder 100 caractères"
                     ]),
-                    // new ValidPassword(['minSize' => 8, 'maxSize' => 20])
+                    new ValidPassword(['minSize' => 8, 'maxSize' => 20])
                 ]
             ])
             ->add('enabled', ChoiceType::class, [

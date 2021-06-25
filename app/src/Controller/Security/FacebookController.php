@@ -63,7 +63,7 @@ class FacebookController extends AbstractController
         $existingUser = $user->getEmail();
 
         if ($existingUser) {
-            return $this->redirectToRoute('front_users');
+            return $this->redirectToRoute('front_profil_index');
         } else {
 
             $userForm = $this->createForm(UpdateProfileGFType::class, $user);
@@ -78,7 +78,7 @@ class FacebookController extends AbstractController
                 $em->flush();
 
                 $this->addFlash('success', 'Inscription réussi');
-                return $this->redirectToRoute('front_users');
+                return $this->redirectToRoute('front_profil_index');
             }
 
             return $this->render('security/facebook/updateprofilefacebook.html.twig', [

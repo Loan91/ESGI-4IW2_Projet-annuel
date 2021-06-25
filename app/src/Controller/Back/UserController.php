@@ -27,10 +27,14 @@ class UserController extends AbstractController
      */
     public function index(Request $request, UserRepository $userRepository): Response
     {
-        $this->denyAccessUnlessGranted(ManageUserVoter::VIEW, User::class);
+        $paginator = $userRepository->getUsersPaginated($request, 6);
+
+        foreach ($paginator as $user) {
+            $this->denyAccessUnlessGranted(ManageUserVoter::VIEW, $user);            
+        }
 
         return $this->render('back/user/index.html.twig', [
-            'paginator' => $userRepository->getUsersPaginated($request, 6)
+            'paginator' => $paginator
         ]);
     }
 
@@ -106,7 +110,7 @@ class UserController extends AbstractController
      */
     public function toggleStatus(User $user, EntityManagerInterface $em, Request $request)
     {
-        $this->denyAccessUnlessGranted(ManageUserVoter::TOGGLE_ENABLED, $user);
+        $this->denyAccessUnlessGranted(ManageUserVoter::TOGGLE_STATUS, $user);
 
         // Check the csrf token
         $submittedToken = $request->request->get('token');

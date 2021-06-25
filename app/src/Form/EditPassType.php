@@ -29,8 +29,8 @@ class EditPassType extends AbstractType
                 'invalid_message' => 'Les deux mot de passe doivent correspondre.',
                 'options' => ['attr' => ['class' => '']],
                 'required' => true,
-                'first_options'  => ['label' => 'Mot de passe', 'attr' => ['class' => 'mb-2']],
-                'second_options' => ['label' => 'Répéter le mot de passe'],
+                'first_options'  => ['label' => 'Nouveau mot-de-passe', 'attr' => ['class' => 'mb-2']],
+                'second_options' => ['label' => 'Répéter le mot-de-passe'],
                 'constraints' => [
                     new Assert\NotBlank([
                         'message' => "Le mot de passe ne peut pas être vide."
@@ -49,6 +49,7 @@ class EditPassType extends AbstractType
     {
         $resolver->setDefaults([
             // Configure your form options here
+            'method' => 'PATCH'
         ]);
     }
 }

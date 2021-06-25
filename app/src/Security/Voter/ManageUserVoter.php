@@ -8,18 +8,18 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class ManageUserVoter extends Voter
 {
-    const VIEW = 'view';
-    const CREATE = 'create';
-    const UPDATE = 'update';
-    const DELETE = 'delete';
-    const TOGGLE_ENABLED = 'toggleEnabled';
+    const VIEW = 'view_user';
+    const CREATE = 'create_user';
+    const UPDATE = 'update_user';
+    const DELETE = 'delete_user';
+    const TOGGLE_STATUS = 'toggle_status_user';
 
     protected function supports(string $attribute, $subject): bool
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return (in_array($attribute, [self::VIEW, self::CREATE]) && $subject == \App\Entity\User::class)
-            || (in_array($attribute, [self::UPDATE, self::DELETE, self::TOGGLE_ENABLED]) && $subject instanceof \App\Entity\User);
+        return (in_array($attribute, [self::CREATE]) && $subject == \App\Entity\User::class)
+            || (in_array($attribute, [self::VIEW, self::UPDATE, self::DELETE, self::TOGGLE_STATUS]) && $subject instanceof \App\Entity\User);
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
@@ -38,12 +38,13 @@ class ManageUserVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
+            // Can see your own account or create a new one
             case self::VIEW:
             case self::CREATE:
                 return true;
             case self::UPDATE:
             case self::DELETE:
-            case self::TOGGLE_ENABLED:
+            case self::TOGGLE_STATUS:
                 // Cannot delete/update your own account
                 if ($subject->getId() === $user->getId()) {
                     return false;

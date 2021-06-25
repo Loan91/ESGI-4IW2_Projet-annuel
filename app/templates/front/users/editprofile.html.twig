@@ -30,7 +30,7 @@
                         Valider les modifications
                     </button>
                 
-                    <a href="{{ path('front_users') }}" class="focus:outline-none text-gray-600 text-sm py-2.5 px-5 rounded-md border border-gray-600 hover:bg-gray-50 mr-2">Retour sur le profil</a>
+                    <a href="{{ path('front_profil_index') }}" class="focus:outline-none text-gray-600 text-sm py-2.5 px-5 rounded-md border border-gray-600 hover:bg-gray-50 mr-2">Retour sur le profil</a>
                 {{ form_end(form) }}
                 
                 {% if not is_granted('ROLE_ADMIN') %}
