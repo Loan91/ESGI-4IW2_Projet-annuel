@@ -224,6 +224,16 @@ class User implements UserInterface, Serializable
         return array_unique($roles);
     }
 
+    public function hasRole(string $role)
+    {
+        return in_array($role, $this->roles);
+    }
+
+    public function hasNotRole(string $role)
+    {
+        return !in_array($role, $this->roles);
+    }
+
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;

@@ -5,6 +5,7 @@ namespace App\Controller\Back;
 use App\Entity\User;
 use App\Form\Back\ManageUserType;
 use App\Repository\UserRepository;
+use App\Security\Voter\ManageUserVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,49 +27,19 @@ class UserController extends AbstractController
      */
     public function index(Request $request, UserRepository $userRepository): Response
     {
+        $this->denyAccessUnlessGranted(ManageUserVoter::VIEW, User::class);
+
         return $this->render('back/user/index.html.twig', [
             'paginator' => $userRepository->getUsersPaginated($request, 6)
         ]);
     }
 
     /**
-     * @Route("/{user}/status/toggle", name="status_toggle", methods={"PATCH"})
-     */
-    public function toggleStatus(User $user, EntityManagerInterface $em, Request $request)
-    {
-        // Check if the user has the rights
-        if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
-            throw new AccessDeniedHttpException("Vous n'avez pas les droits pour supprimer un utilisateur");
-        }
-
-        // Check the csrf token
-        $submittedToken = $request->request->get('token');
-        if (!$this->isCsrfTokenValid('toggle-user-status', $submittedToken)) {
-            throw new InvalidCsrfTokenException("Le token d'action est invalide");
-        }
-
-        // Toggle status
-        if ($user->isEnabled()) {
-            $user->disable();
-        } else {
-            $user->enable();
-        }
-        $em->flush();
-
-        // Redirect with success message
-        $this->addFlash('success', "L'utilisateur " . $user->getEmail() . " a bien été " . ($user->isEnabled() ? 'activé' : 'désactivé'));
-        return $this->redirect($previousPage = $request->headers->get('referer'));
-    }
-
-    /**
      * @Route("/{user}/delete", name="delete", methods={"DELETE"})
      */
-    public function deleteUser(User $user, EntityManagerInterface $em, Request $request)
+    public function delete(User $user, EntityManagerInterface $em, Request $request)
     {
-        // Check if the user has the rights
-        if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
-            throw new AccessDeniedHttpException("Vous n'avez pas les droits pour supprimer un utilisateur");
-        }
+        $this->denyAccessUnlessGranted(ManageUserVoter::DELETE, $user);
 
         // Check the csrf token
         $submittedToken = $request->request->get('token');
@@ -88,8 +59,10 @@ class UserController extends AbstractController
     /**
      * @Route("/create", name="create", methods={"GET", "POST"})
      */
-    public function create(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $em)
+    public function create(Request $request, EntityManagerInterface $em)
     {
+        $this->denyAccessUnlessGranted(ManageUserVoter::CREATE, User::class);
+
         $userForm = $this->createForm(ManageUserType::class);
 
         $userForm->handleRequest($request);
@@ -111,6 +84,8 @@ class UserController extends AbstractController
      */
     public function edit(Request $request, User $user, EntityManagerInterface $em)
     {
+        $this->denyAccessUnlessGranted(ManageUserVoter::UPDATE, $user);
+
         $userForm = $this->createForm(ManageUserType::class, $user, ['method' => 'PATCH']);
 
         $userForm->handleRequest($request);
@@ -125,4 +100,31 @@ class UserController extends AbstractController
             'userForm' => $userForm->createView()
         ]);
     }
+
+        /**
+     * @Route("/{user}/status/toggle", name="status_toggle", methods={"PATCH"})
+     */
+    public function toggleStatus(User $user, EntityManagerInterface $em, Request $request)
+    {
+        $this->denyAccessUnlessGranted(ManageUserVoter::TOGGLE_ENABLED, $user);
+
+        // Check the csrf token
+        $submittedToken = $request->request->get('token');
+        if (!$this->isCsrfTokenValid('toggle-user-status', $submittedToken)) {
+            throw new InvalidCsrfTokenException("Le token d'action est invalide");
+        }
+
+        // Toggle status
+        if ($user->isEnabled()) {
+            $user->disable();
+        } else {
+            $user->enable();
+        }
+        $em->flush();
+
+        // Redirect with success message
+        $this->addFlash('success', "L'utilisateur " . $user->getEmail() . " a bien été " . ($user->isEnabled() ? 'activé' : 'désactivé'));
+        return $this->redirect($previousPage = $request->headers->get('referer'));
+    }
+
 }
