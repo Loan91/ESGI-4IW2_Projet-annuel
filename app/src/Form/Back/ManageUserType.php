@@ -100,10 +100,10 @@ class ManageUserType extends AbstractType
                     'data_class' => ProfilePicture::class,
                     'by_reference' => true
                 ])
-                ->add('imageFile', VichImageType::class, [
-                    'label' => 'Photo de profil',
-                    'required' => false
-                ])
+                    ->add('imageFile', VichImageType::class, [
+                        'label' => 'Photo de profil',
+                        'required' => false
+                    ])
             )
             // Set le champ mpt-de-passe différemmement selon que ce soit une création ou un update
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
@@ -147,7 +147,6 @@ class ManageUserType extends AbstractType
                     ]);
                 }
             })
-            // Retire le mot de passe de la modification si le champ est vide OU enregistre le besoin de l'encoder après le check des constraints.
             // Le choix de PRE_SUBMIT se justifie car les données n'ont pas encore étés insérés dans l'objet user. Egalement, les contraintes ne sont pas encore vérifiés.
             ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) use ($options) {
                 if (strtoupper($options['method']) === 'PATCH') {
@@ -157,7 +156,7 @@ class ManageUserType extends AbstractType
                     if (!$user) {
                         return;
                     }
-
+                    // Retire le mot de passe de la modification si le champ est vide OU enregistre le besoin de l'encoder après le check des constraints.
                     if (empty($userData['password']['first'])) {
                         // Le champ du mot-de-passe est vide
                         unset($userData['password']);
@@ -165,6 +164,12 @@ class ManageUserType extends AbstractType
                     } else {
                         // Le mot-de-passe a changé
                         $this->passwordChanged = true;
+                    }
+
+                    // Désactive l'utilisateur si enabled est décoché
+                    if(!isset($userData['enabled'])) {
+                        $userData['enabled'] = false;
+                        $event->setData($userData);
                     }
                 }
             })
