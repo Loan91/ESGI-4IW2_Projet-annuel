@@ -81,9 +81,13 @@ class ManageUserType extends AbstractType
                     ])
                 ]
             ])
-            ->add('enabled', CheckboxType::class, [
+            ->add('enabled', ChoiceType::class, [
                 'label' => 'Activer ce compte?',
-                'required' => false
+                'choices' => [
+                    'Désactivé' => false,
+                    'Activé' => true
+                ],
+                'empty_data' => 'Activé'
             ])
             ->add('phone', TextType::class, [
                 'label' => 'Téléphone',
