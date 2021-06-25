@@ -8,6 +8,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -78,11 +79,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     /**
      * Return the count of user by month on a year
+     * 
+     * @param string $year You can select a year or let the default current year value
      */
-    public function getUsersOnYearByMonths(string $year = 'CURRENT_YEAR')
+    public function getUsersOnYearByMonths(string $year = 'CURRENT_YEAR'): array
     {
-
-        if ($year == 'CURRENT_YEAR') {
+        if ($year == 'CURRENT_YEAR') {  
             $year = (new DateTime('now'))->format('Y');
         }
 
@@ -107,7 +109,16 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $userByMonths;
     }
 
-    public function getUsersPaginated(Request $request, int $limitPerPage = 6, string $pageName = 'page')
+    /**
+     * Get a paginator to show progressively all the users
+     * 
+     * @param Request $request The current http request
+     * @param int $limitPerPage The limit of element per page
+     * @param string $pageName The name of the get argument which set the current page
+     * 
+     * @return SlidingPagination
+     */
+    public function getUsersPaginated(Request $request, int $limitPerPage = 6, string $pageName = 'page'): SlidingPagination
     {
         $builder = $this->_em->createQueryBuilder()
             ->select('u')
@@ -119,33 +130,4 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             $limitPerPage
         );
     }
-
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
