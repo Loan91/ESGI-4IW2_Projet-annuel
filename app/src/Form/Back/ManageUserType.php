@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Validator\Phone;
 use App\Validator\ValidPassword;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -26,8 +27,8 @@ class ManageUserType extends AbstractType
     /** @var UserPasswordEncoderInterface $passwordEncoder L'encodeur de mot-de-passe */
     private $passwordEncoder = null;
 
-    /** @var bool $passwordChanged Exprime si durant le déroulement du formulaire le mot-de-passe doit être encodé */
-    private $passwordChanged = false;
+    /** @var bool $needToEncodePassword Exprime si durant le déroulement du formulaire le mot-de-passe doit être encodé */
+    private $needToEncodePassword = false;
 
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -81,6 +82,24 @@ class ManageUserType extends AbstractType
                     ])
                 ]
             ])
+            ->add('password', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'invalid_message' => 'Les deux mot de passe doivent correspondre.',
+                'options' => ['attr' => ['class' => '']],
+                'required' => true,
+                'first_options'  => ['label' => 'Mot de passe', 'attr' => ['class' => 'mb-2'], 'empty_data' => ''],
+                'second_options' => ['label' => 'Répéter le mot de passe', 'empty_data' => ''],
+                'constraints' => [
+                    new Assert\NotBlank([
+                        'message' => "Le mot de passe ne peut pas être vide."
+                    ]),
+                    new Assert\Length([
+                        'max' => 100,
+                        'minMessage' => "Le nom de famille ne peut excéder 100 caractères"
+                    ]),
+                    // new ValidPassword(['minSize' => 8, 'maxSize' => 20])
+                ]
+            ])
             ->add('enabled', ChoiceType::class, [
                 'label' => 'Activer ce compte?',
                 'choices' => [
@@ -109,84 +128,78 @@ class ManageUserType extends AbstractType
                         'required' => false
                     ])
             )
-            // Set le champ mpt-de-passe différemmement selon que ce soit une création ou un update
-            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
-                if (strtoupper($options['method']) === 'POST') {
-                    $event->getForm()->add('password', RepeatedType::class, [
-                        'type' => PasswordType::class,
-                        'invalid_message' => 'Les deux mot de passe doivent correspondre.',
-                        'options' => ['attr' => ['class' => '']],
-                        'required' => true,
-                        'first_options'  => ['label' => 'Mot de passe', 'attr' => ['class' => 'mb-2'], 'empty_data' => ''],
-                        'second_options' => ['label' => 'Répéter le mot de passe', 'empty_data' => ''],
-                        'constraints' => [
-                            new Assert\NotBlank([
-                                'message' => "Le mot de passe ne peut pas être vide."
-                            ]),
-                            new Assert\Length([
-                                'max' => 100,
-                                'minMessage' => "Le nom de famille ne peut excéder 100 caractères"
-                            ]),
-                            new ValidPassword()
-                        ]
-                    ]);
-                } elseif (strtoupper($options['method']) === 'PATCH') {
-                    $event->getForm()->add('password', RepeatedType::class, [
-                        'type' => PasswordType::class,
-                        'invalid_message' => 'Les deux mot de passe doivent correspondre.',
-                        'options' => ['attr' => ['class' => '']],
-                        'required' => false,
-                        'first_options'  => ['label' => 'Mot de passe', 'attr' => ['class' => 'mb-2'], 'empty_data' => ''],
-                        'second_options' => ['label' => 'Répéter le mot de passe', 'empty_data' => ''],
-                        'constraints' => [
-                            new Assert\NotBlank([
-                                'message' => "Le mot de passe ne peut pas être vide."
-                            ]),
-                            new Assert\Length([
-                                'max' => 100,
-                                'minMessage' => "Le nom de famille ne peut excéder 100 caractères"
-                            ]),
-                            new ValidPassword(['minSize' => 8, 'maxSize' => 20])
-                        ]
-                    ]);
-                }
-            })
-            // Le choix de PRE_SUBMIT se justifie car les données n'ont pas encore étés insérés dans l'objet user. Egalement, les contraintes ne sont pas encore vérifiés.
-            ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) use ($options) {
-                if (strtoupper($options['method']) === 'PATCH') {
-                    $userData = $event->getData();
-                    $user = $event->getForm()->getNormData();
+            ->add('roles', ChoiceType::class, [
+                'label' => 'Rôles',
+                'choices' => [
+                    'Admin' => 'ROLE_ADMIN',
+                    'Membre' => 'ROLE_USER'
+                ],
+            ]);
 
-                    if (!$user) {
-                        return;
-                    }
-                    // Retire le mot de passe de la modification si le champ est vide OU enregistre le besoin de l'encoder après le check des constraints.
-                    if (empty($userData['password']['first'])) {
-                        // Le champ du mot-de-passe est vide
-                        unset($userData['password']);
-                        $event->setData($userData);
-                    } else {
-                        // Le mot-de-passe a changé
-                        $this->passwordChanged = true;
-                    }
-
-                    // Désactive l'utilisateur si enabled est décoché
-                    if(!isset($userData['enabled'])) {
-                        $userData['enabled'] = false;
-                        $event->setData($userData);
-                    }
+        // Transforme la données rôle d'un array vers un string pour le ChoiceType
+        $builder->get('roles')->addModelTransformer(new CallbackTransformer(
+            function ($roleAsArray) {
+                // Quand on créer un utilisateur
+                if (is_null($roleAsArray)) {
+                    return null;
                 }
-            })
-            // Toutes les contraintes sont passées, si besoin est nous pouvons maintenant encoder le mot de passe
+                // Quand on met à jour un utilisateur
+                return $roleAsArray[array_key_first($roleAsArray)];
+            },
+            function ($roleAsString) {
+                return [$roleAsString];
+            }
+        ));
+
+        // On edit, the password is not required
+        if ($this->isMethod('PATCH', $options)) {
+            $builder->get('password')->setRequired(false);
+        }
+
+        // Les données n'ont pas encore étés insérés dans l'objet user et les contraintes ne sont pas encore vérifiés.
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) use ($options) {
+            if ($this->isMethod('PATCH', $options)) {
+                $userData = $event->getData();
+                $user = $event->getForm()->getNormData();
+
+                if (!$user) {
+                    return;
+                }
+                // Gère si le mot-de-passe doit être modifié ou non selon si le champ est vide
+                if (empty($userData['password']['first'])) {
+                    // Le champ du mot-de-passe est vide
+                    $this->needToEncodePassword = false;
+                    unset($userData['password']);
+                    $event->setData($userData);
+                } else {
+                    // Le mot-de-passe a changé
+                    $this->needToEncodePassword = true;
+                }
+
+                // Désactive l'utilisateur si enabled est décoché
+                if (!isset($userData['enabled'])) {
+                    $userData['enabled'] = false;
+                    $event->setData($userData);
+                }
+            }
+        })
+            // Toutes les contraintes sont passées et les données insérés dans l'objet user.
+            // Nous pouvons encoder le mot de passe s'il est ajouté ou modifié
             ->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) use ($options) {
-                if ($this->passwordChanged) {
+                if ($this->isMethod('PATCH', $options) && $this->needToEncodePassword) {
                     $user = $event->getData();
+
                     // Comparaison de l'ancien et du nouveau mot de passe pour savoir s'il faut le changer
                     $oldPassword = $options['data']->getPassword();
                     $newPassword = $this->passwordEncoder->encodePassword($user, $user->getPassword());
                     if ($oldPassword !== $newPassword) {
                         $event->setData($user->setPassword($newPassword));
                     }
+                }
+
+                if ($this->isMethod('POST', $options)) {
+                    $newPassword = $this->passwordEncoder->encodePassword($user, $user->getPassword());
+                    $event->setData($user->setPassword($newPassword));
                 }
             });
     }
@@ -196,5 +209,10 @@ class ManageUserType extends AbstractType
         $resolver->setDefaults([
             'data_class' => User::class,
         ]);
+    }
+
+    private function isMethod(string $method, array $options)
+    {
+        return strtoupper($options['method']) === strtoupper($method);
     }
 }

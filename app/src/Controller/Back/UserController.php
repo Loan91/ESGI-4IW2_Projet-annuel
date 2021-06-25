@@ -95,10 +95,6 @@ class UserController extends AbstractController
         $userForm->handleRequest($request);
         if ($userForm->isSubmitted() && $userForm->isValid()) {
             $user = $userForm->getData();
-            $user = $user
-                ->setPassword($passwordEncoder->encodePassword($user, $user->getPassword()))
-                ->setRoles(["ROLE_USER"]);
-
             $em->persist($user);
             $em->flush();
             $this->addFlash('success', 'L\'utilisateur a bien été créé');

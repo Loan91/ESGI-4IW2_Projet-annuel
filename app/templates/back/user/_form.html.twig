@@ -21,9 +21,12 @@
             {{ form_row(userForm.phone) }}
         </article>
 
-        <article class="grid grid-cols-2 gap-4">
+        <article class="grid grid-cols-4 gap-4">
             {{ form_row(userForm.enabled) }}
-            {{ form_row(userForm.profilePicture.imageFile) }}
+            {{ form_row(userForm.roles) }}
+            <div class="col-span-2">
+                {{ form_row(userForm.profilePicture.imageFile) }}
+            </div>
         </article>
     </section>
 
