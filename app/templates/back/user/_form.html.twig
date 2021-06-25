@@ -5,24 +5,26 @@
     <section class="flex flex-col space-y-3">
         {{ form_row(userForm.civility) }}
 
-
-        <div class="grid grid-cols-2 gap-4">
+        <article class="grid grid-cols-2 gap-4">
             {{ form_row(userForm.firstname) }}
             {{ form_row(userForm.lastname) }}
-        </div>
+        </article>
 
 
-        <div class="grid grid-cols-2 gap-4">
+        <article class="grid grid-cols-2 gap-4">
             {{ form_row(userForm.password) }}
-        </div>
+        </article>
 
 
-        <div class="grid grid-cols-2 gap-4">
+        <article class="grid grid-cols-2 gap-4">
             {{ form_row(userForm.email) }}
             {{ form_row(userForm.phone) }}
-        </div>
+        </article>
 
-        {{ form_row(userForm.enabled) }}
+        <article class="grid grid-cols-2 gap-4">
+            {{ form_row(userForm.enabled) }}
+            {{ form_row(userForm.profilePicture.imageFile) }}
+        </article>
     </section>
 
     <section class="flex justify-center mt-4">

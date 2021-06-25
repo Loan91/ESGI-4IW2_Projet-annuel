@@ -2,12 +2,14 @@
 
 namespace App\Form\Back;
 
+use App\Entity\ProfilePicture;
 use App\Entity\User;
 use App\Validator\Phone;
 use App\Validator\ValidPassword;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -17,7 +19,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class ManageUserType extends AbstractType
 {
@@ -93,6 +95,16 @@ class ManageUserType extends AbstractType
                     new Phone()
                 ]
             ])
+            ->add(
+                $builder->create('profilePicture', FormType::class, [
+                    'data_class' => ProfilePicture::class,
+                    'by_reference' => true
+                ])
+                ->add('imageFile', VichImageType::class, [
+                    'label' => 'Photo de profil',
+                    'required' => false
+                ])
+            )
             // Set le champ mpt-de-passe différemmement selon que ce soit une création ou un update
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
                 if (strtoupper($options['method']) === 'POST') {
