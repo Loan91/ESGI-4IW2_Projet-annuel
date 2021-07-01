@@ -35,7 +35,7 @@
                                 d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z">
                             </path>
                         </svg>
-                        <span class="text-base text-gray-600">{{ property.address }}</span>
+                        <span id="adressToMap" class="text-base text-gray-600">{{ property.address }} {{ property.zipCode }}  {{ property.city }}</span>
                     </li>
                 </ul>
                 <a href="{{ path('front_contact_create', { 'id' : property.id }) }}"
@@ -100,12 +100,17 @@
                     </div>
                 </article>
             </section>
-
             <div class="my-6">
                 <p class="text-base leading-6 text-gray-700">{{ property.description }} Lorem ipsum dolor sit amet,
                     consectetur adipisicing elit. Blanditiis doloremque ex laborum magni quae quasi quibusdam,
                     repudiandae! Ad consequuntur.</p>
             </div>
+            <div id="mapid" style="width: 600px; height: 400px;"></div>
+
+            {% block javascripts  %}
+                {{ parent() }}
+                {{ encore_entry_script_tags('map') }}
+            {% endblock %}
 
             <div>
                 <h4 class="text-lg font-medium text-gray-900 tracking-wider mb-4">Qui contacter</h4>
