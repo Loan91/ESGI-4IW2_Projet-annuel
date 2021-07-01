@@ -24,7 +24,7 @@
                             <svg class="flex-shrink-0 h-5 w-5 text-gray-500" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="map-marker-alt" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
                                 <path fill="currentColor" d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z"></path>
                             </svg>
-                            <span class="text-base text-gray-600">{{ property.address }}  {{ property.zipCode }} - {{ property.city }}</span>
+                            <span id="adressToMap" class="text-base text-gray-600">{{ property.address }} </span><span id="zipCodeToMap" class="text-base text-gray-600">{{ property.zipCode }}</span>  - <span id="cityToMap" class="text-base text-gray-600">{{ property.city }}</span>
                         </li>
                     </ul>
                     <a href="{{ path('front_contact_create', { 'id' : property.id }) }}" class="mt-8 block w-full bg-green-800 border border-transparent rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-green-900">Reserver maintenant</a>
@@ -74,44 +74,13 @@
                 <div class="my-6">
                     <p class="text-base leading-6 text-gray-700">{{ property.description }}</p>
                 </div>
-                <div id="map"></div>
+                <div id="mapid" style="width: 600px; height: 400px;"></div>
+
                 {% block javascripts  %}
-                    <script type="text/javascript">
-
-                        var theUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyCXruICZrKAwmJiiPaTi7z6vG2LgxuFknU"
-                        var lng;
-                        var lat;
-                        var data;
-
-
-
-                        fetch(theUrl)
-                            .then(resp => resp.json())
-                            .then( data => {
-                                lng = data.results[0].geometry.location.lng;
-                                lat = data.results[0].geometry.location.lat;
-                            })
-                            .catch(function(error) {
-                                console.log(error);
-                            });
-
-                        function initMap(lat, lng) {
-                            const myLatLng = { lat: lat, lng: lng };
-                            const map = new google.maps.Map(document.getElementById("map"), {
-                                zoom: 4,
-                                center: myLatLng,
-                            });
-                            new google.maps.Marker({
-                                position: myLatLng,
-                                map,
-                                title: "Hello World!",
-                            });
-                        }
-
-                    </script>
-
+                    {{ parent() }}
+                    {{ encore_entry_script_tags('map') }}
                 {% endblock %}
-                <div>
+                <div class="mt-1.5">
                     <h4 class="text-lg font-medium text-gray-900 tracking-wider mb-4">Qui contacter</h4>
                     <div class="flex items-center space-x-4 lg:space-x-3">
                         <img class="w-12 h-12 rounded-full lg:w-16 lg:h-16" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixqx=LRDGaNTXAY&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
