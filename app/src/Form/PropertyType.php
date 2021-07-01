@@ -10,6 +10,8 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Form\Type\VichImageType;
@@ -20,23 +22,12 @@ class PropertyType extends AbstractType
     {
         $builder
             ->add('type', ChoiceType::class, [
-                'choices' => [
-                    'Maison' => 'maison',
-                    'Appartement' => 'appartement'
-                ],
+                'choices' => Property::TYPES,
                 'label' => 'Type de bien'
             ])
             ->add('category', ChoiceType::class, [
                 'label' => 'Catégorie',
-                'choices' => [
-                    'Studio' => 'studio'
-                ] + (function () {
-                    $data = [];
-                    for ($i = 0; $i < 15; $i++) {
-                        $data['f' . $i] = 'f' . $i;
-                    }
-                    return $data;
-                })()
+                'choices' => Property::CATEGORIES
             ])
             ->add('area', TextType::class, [
                 'label' => 'Aire en m²',
@@ -49,7 +40,6 @@ class PropertyType extends AbstractType
                 ]
             ])
             ->add('description', null, [
-                // 'help' => 'Décrivez votre bien',
                 'empty_data' => '',
                 'required' => false
             ])
@@ -91,22 +81,18 @@ class PropertyType extends AbstractType
             ])
             ->add('isFurnished', CheckboxType::class, [
                 'label' => 'Le bien est-il meublé?',
-                'empty_data' => false,
                 'required' => false
             ])
             ->add('containsStorage', CheckboxType::class, [
                 'label' => 'Est-ce que le bien possède des éléments de stockage',
-                'empty_data' => false,
                 'required' => false
             ])
             ->add('isKitchenSeparated', CheckboxType::class, [
                 'label' => 'Est-ce que la cuisine est séparée de la salle à manger ?',
-                'empty_data' => false,
                 'required' => false
             ])
             ->add('containDiningRoom', CheckboxType::class, [
                 'label' => 'Le bien possède t-il une salle à manger?',
-                'empty_data' => false,
                 'required' => false
             ])
             ->add('ground', TextType::class, [
@@ -122,27 +108,23 @@ class PropertyType extends AbstractType
             ])
             ->add('fireplace', CheckboxType::class, [
                 'label' => 'Y a-t-il une cheminée?',
-                'empty_data' => false,
                 'required' => false
             ])
             ->add('elevator', CheckboxType::class, [
                 'label' => 'Y a-t-il un assenseur?',
-                'empty_data' => false,
                 'required' => false
             ])
             ->add('externalStorage', CheckboxType::class, [
                 'label' => 'Y a-t-il une pièce de stockage externe?',
-                'empty_data' => false,
                 'required' => false
             ])
-            ->add('areaExternalStorage', CheckboxType::class, [
-                'label' => 'Quelle est la taille de cet espace? (si stockage externe)',
-                'empty_data' => false,
+            ->add('areaExternalStorage', IntegerType::class, [
+                'label' => 'Quelle est la taille (m²) de cet espace?',
+                'empty_data' => 0,
                 'required' => false
             ])
             ->add('guarding', CheckboxType::class, [
                 'label' => 'Y a-t-il un système de sécurité?',
-                'empty_data' => false,
                 'required' => false
             ])
             ->add('energyConsumption', TextType::class, [
@@ -235,14 +217,28 @@ class PropertyType extends AbstractType
             ])
             ->add('published', CheckboxType::class, [
                 'label' => 'Rendre publique cette habitation?',
-                'empty_data' => false,
                 'required' => false,
                 'data' => true
             ])
             ->add('imageFile', VichImageType::class, [
                 'label' => 'Photo de votre bien',
                 'required' => false
-            ]);
+            ])
+            ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
+                /** @var Property $property */
+                $property = $event->getData();
+        
+                // Certifie que la taille de l'espace de stockage externe ne peut valoir plus de 0 (valeur vide)
+                // s'il n'est pas supposé en avoir
+                if (!$property->hasExternalStorage() && $property->getAreaExternalStorage() > 0) {
+                    $event->setData($property->setAreaExternalStorage(0));
+                }
+
+                // Certifie que le nombre d'étages est forcé à 0 quand il s'agit d'une maison
+                if ($property->getType() == Property::TYPES['Maison'] && $property->getFloor() > 0) {
+                    $event->setData($property->setFloor(0));
+                }
+            });
     }
 
     public function configureOptions(OptionsResolver $resolver)

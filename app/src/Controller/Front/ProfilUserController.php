@@ -5,43 +5,56 @@ namespace App\Controller\Front;
 use App\Entity\ProfilePicture;
 use App\Entity\User;
 use App\Form\EditPassType;
+use App\Form\UpdateProfileGFType;
 use App\Form\EditProfileType;
+use App\Security\Voter\ProfilVoter;
 use phpDocumentor\Reflection\Types\Context;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 
-class ProfileUserController extends AbstractController
+/**
+ * @Route("/profil", name="profil_")
+ */
+class ProfilUserController extends AbstractController
 {
 
     /**
-     * @Route("/users", name="users")
+     * @Route("", name="index", methods={"GET"})
      */
     public function index()
     {
-        return $this->render('front/users/index.html.twig');
+        $this->denyAccessUnlessGranted(ProfilVoter::VIEW, $this->getUser());
+        return $this->render('front/users/index.html.twig', [
+            $this->getUser()
+        ]);
     }
 
     /**
-     * @Route("/users/profile/modifier", name="user_profil_modifier")
+     * @Route("/edit", name="edit", methods={"GET", "PATCH"})
      * @param Request $request
      */
-    public function editProfile(Request $request)
+    public function editProfil(Request $request)
     {
         $user = $this->getUser();
+        $this->denyAccessUnlessGranted(ProfilVoter::UPDATE, $user);
 
         $userForm = $this->createForm(EditProfileType::class, $user);
         $userForm->handleRequest($request);
 
-        if($userForm->isSubmitted() && $userForm->isValid()){
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
 
             $this->addFlash('success', 'Profil mis à jour');
-            return $this->redirectToRoute('front_users');
+            return $this->redirectToRoute('front_profil_index');
         }
 
         return $this->render('front/users/editprofile.html.twig', [
@@ -50,19 +63,19 @@ class ProfileUserController extends AbstractController
     }
 
     /**
-     * @Route("/users/pass/modifier", name="user_pass_modifier")
+     * @Route("/edit-password", name="edit_password", methods={"GET", "PATCH"})
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function editPass(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
+        $this->denyAccessUnlessGranted(ProfilVoter::UPDATE, $this->getUser());
 
         $userForm = $this->createForm(EditPassType::class);
-
         $userForm->handleRequest($request);
 
-        if($userForm->isSubmitted() && $userForm->isValid()) {
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $user = $this->getUser();
             $password = $request->request->get('edit_pass')['password']['first'];
@@ -70,7 +83,7 @@ class ProfileUserController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Le mot de passe a été mis à jour avec succès');
-            return $this->redirectToRoute('front_users');
+            return $this->redirectToRoute('front_user_index');
         }
 
         return $this->render('front/users/editpass.html.twig', [
@@ -79,22 +92,26 @@ class ProfileUserController extends AbstractController
     }
 
     /**
-     * @Route("/users/profile/delete/{id}", name="user_pass_delete", methods={"DELETE"})
+     * @Route("/delete", name="delete", methods={"DELETE"})
      * @param Request $request
      * @param User $user
      */
-    public function delete(Request $request, User $user)
+    public function delete(Request $request, TokenStorageInterface $tokenStorage, SessionInterface $session)
     {
-        $session = new Session();
+        /** @var User $user */
+        $user = $this->getUser();
+        $this->denyAccessUnlessGranted(ProfilVoter::DELETE, $user);
 
-
-        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($user);
-            $entityManager->flush();
-            $session->invalidate();
+        if (!$this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
+            throw new InvalidCsrfTokenException('The csrf token is invalid');
         }
 
-        return $this->redirectToRoute('front_default_index');
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($user);
+        $entityManager->flush();
+        $tokenStorage->setToken(null);
+        $session->invalidate();
+
+        return $this->redirectToRoute('front_home');
     }
 }

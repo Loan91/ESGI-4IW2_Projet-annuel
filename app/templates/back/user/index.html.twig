@@ -1,0 +1,136 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Gestion utilisateur
+{% endblock %}
+
+{% block body %}
+<section class="flex flex-col sm:flex-row items-center justify-center">
+    <h1 class="text-4xl font-bold my-4 text-center">Gestion des utilisateurs</h1>
+    <a href="{{ path('back_user_create') }}"
+        class="ml-3 flex flex-row items-center text-xl font-semibold rounded-full px-4 py-2 mr-2 bg-green-500 hover:bg-green-600 text-white rounded  leading-none">
+        {% include "components/icons/plus-add.svg" with {class: "mr-1 w-5 h-5"} %}
+        Ajouter
+    </a>
+</section>
+
+{% include "components/alert.html.twig" %}
+<section
+	class="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard mt-4 py-3 px-4 rounded-bl-lg rounded-br-lg">
+	<table class="min-w-full">
+		<thead>
+			<tr>
+				<th class="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider">ID
+				</th>
+				<th
+					class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">
+					Nom complet</th>
+				<th
+					class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">
+					Email</th>
+				<th
+					class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider text-center">
+					Status</th>
+				<th class="px-6 py-3 border-b-2 border-gray-300"></th>
+			</tr>
+		</thead>
+		<tbody class="bg-white">
+			{% for user in paginator %}
+			<tr>
+				<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+					<div class="flex items-center">
+						<div>
+							<div class="text-sm leading-5 text-gray-800">{{ user.id }}</div>
+						</div>
+					</div>
+				</td>
+				<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+					<div class="text-sm leading-5 text-blue-900">{{ user.firstname ~ ' ' ~ user.lastname }}</div>
+
+				</td>
+				<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+					<span class="text-sm leading-5 text-blue-900">{{ user.email }}</dispanv>
+				</td>
+				<td
+					class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5 text-center">
+					{% if app.user.id != user.id %}
+					<form action="{{ path('back_user_status_toggle', {user: user.id}) }}" method="POST">
+						<input type="hidden" name="token" value="{{ csrf_token('toggle-user-status') }}" />
+						<input type="hidden" name="_method" value="PATCH">
+						{% if user.enabled %}
+						<button class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+							<span aria-hidden="" class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
+							<span class="relative text-xs">Actif</span>
+						</button>
+						{% else %}
+						<button class="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
+							<span aria-hidden="" class="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
+							<span class="relative text-xs">Désactivé</span>
+						</button>
+						{% endif %}
+					</form>
+					{% else %}
+					{% if user.enabled %}
+					<span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+						<span aria-hidden="" class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
+						<span class="relative text-xs">Actif</span>
+					</span>
+					{% else %}
+					<span class="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
+						<span aria-hidden="" class="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
+						<span class="relative text-xs">Désactivé</span>
+					</span>
+					{% endif %}
+					{% endif %}
+				</td>
+				<td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-500 text-sm leading-5">
+					{% if app.user.id != user.id %}
+					<section class="flex flex-row justify-end items-center">
+						<form action="{{ path('back_user_status_toggle', {user: user.id}) }}" method="POST">
+							<input type="hidden" name="token" value="{{ csrf_token('toggle-user-status') }}" />
+							<input type="hidden" name="_method" value="PATCH">
+							<button
+								class="px-5 py-2 border-yellow-500 border text-yellow-500 rounded transition duration-300 hover:bg-yellow-600 hover:text-white focus:outline-none">{%
+								if user.enabled %}Désactiver{% else %}Réactiver{% endif %}
+								le compte</button>
+						</form>
+						<a href="{{ path('back_user_edit', {user: user.id}) }}" class="ml-2	">
+							<button type="button"
+								onclick="this.parentNode.submit()"
+								class="px-2 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-600 hover:text-white focus:outline-none">
+								{% include "components/icons/settings.svg" with {class: "fill-current w-5 h-5"} %}
+							</button>
+						</a>
+						<form action="{{ path('back_user_delete', {user: user.id}) }}" method="POST" class="ml-2">
+							<input type="hidden" name="token" value="{{ csrf_token('delete-user') }}" />
+							<input type="hidden" name="_method" value="DELETE">
+							<button type="button"
+								onclick="confirm('Confirmer la suppression?') ? this.parentNode.submit() : ''"
+								class="px-2 py-2 border-red-500 border text-red-500 rounded transition duration-300 hover:bg-red-600 hover:text-white focus:outline-none">
+								{% include "components/icons/delete.svg" with {class: "w-5 h-5"} %}
+							</button>
+						</form>
+					</section>
+					{% endif %}
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<aside
+		class="sm:flex-1 flex flex-col sm:flex-row items-start sm:items-center justify-center sm:justify-between mt-4 work-sans">
+		<p class="text-sm leading-5 text-blue-700">
+			Affichage des éléments
+			<span class="font-medium">{{ (paginator.getItemNumberPerPage * paginator.getCurrentPageNumber) -
+				paginator.getItemNumberPerPage + 1 }}</span>
+			à
+			<span class="font-medium">{{ paginator.getItemNumberPerPage * paginator.getCurrentPageNumber }}</span>
+			sur un total de
+			<span class="font-medium">{{ paginator.getTotalItemCount }}</span>
+			résultats
+		</p>
+		<div>
+			{{ knp_pagination_render(paginator, 'components/pagination/dashboard.html.twig') }}
+		</div>
+	</aside>
+</section>
+{% endblock %}
