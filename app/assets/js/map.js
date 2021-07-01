@@ -3,8 +3,6 @@ var lat;
 
 var adress = document.querySelector('#adressToMap').textContent;
 var theUrl = "https://api-adresse.data.gouv.fr/search/?q="+adress+"&type=street&autocomplete=0";
-console.log(theUrl);
-
 fetch(theUrl)
     .then(resp => resp.json())
     .then( data => {
