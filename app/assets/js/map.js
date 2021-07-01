@@ -2,10 +2,9 @@ var lng;
 var lat;
 
 var adress = document.querySelector('#adressToMap').textContent;
-var zipCode = document.querySelector('#zipCodeToMap').textContent;
-var city = document.querySelector('#cityToMap').textContent;
-var formatedAdress = adress.replace(' ', '%20');
-var theUrl = "https://api-adresse.data.gouv.fr/search/?q="+formatedAdress+"%20"+zipCode+"%20"+city+"&type=street&autocomplete=0"
+var theUrl = "https://api-adresse.data.gouv.fr/search/?q="+adress+"&type=street&autocomplete=0";
+console.log(theUrl);
+
 fetch(theUrl)
     .then(resp => resp.json())
     .then( data => {
@@ -27,7 +26,7 @@ function myMap(lng, lat){
         color: 'red',
         fillColor: '#f03',
         fillOpacity: 0.5,
-        radius: 50
+        radius: 30
     }).addTo(mymap);
 
 }
