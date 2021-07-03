@@ -7,7 +7,7 @@
     <h1 class="text-3xl font-semibold text-gray-900 tracking-wide mb-8">Toutes nos annonces</h1>
     <div class="">
         {{ form_start(form) }}
-        <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-6 gap-2">
             <div class="">
                 <label for="" class="block text-sm font-medium text-gray-700">Type de bien</label>
                 <div class="mt-1">
@@ -23,6 +23,13 @@
                 </div>
             </div>
             <div>
+                <label for="" class="block text-sm font-medium text-gray-700">Ville</label>
+                <div class="mt-1">
+                    {{ form_row(form.city, { attr: { class: "shadow-sm border focus:outline-none block w-full sm:text-sm
+                    border-gray-300 rounded-md py-2 px-3" } }) }}
+                </div>
+            </div>
+            <div>
                 <label for="" class="block text-sm font-medium text-gray-700">Prix minimum</label>
                 <div class="mt-1">
                     {{ form_row(form.minPrice, { attr: { class: "shadow-sm border focus:outline-none block w-full
@@ -30,20 +37,41 @@
                 </div>
             </div>
             <div>
-                <label for="" class="block text-sm font-medium text-gray-700">Prix maximum</label>
+                <label for="" class="block text-sm font-medium text-gray-700">Prix minimum</label>
                 <div class="mt-1">
                     {{ form_row(form.maxPrice, { attr: { class: "shadow-sm border focus:outline-none block w-full
                     sm:text-sm border-gray-300 rounded-md py-2 px-3" } }) }}
                 </div>
             </div>
-            <div class="w-full flex items-end">
-                <button type="submit"
-                    class="inline-flex items-center px-8 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-white bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Filtrer
-                </button>
+            <button type="submit"
+                class="mt-6 px-6 border border-gray-300 shadow-sm text-base tracking-wide font-medium rounded-md text-white bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Filtrer
+            </button>
+        </div>
+        <div>
+            <div class="w-full flex items-end space-x-1">
+
+                {% if app.user and app.request.query.all is not empty %}
+                <a href="{{ path('front_save_search', app.request.query.all)  }}"
+                    class="relative inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
+                    <svg class="stroke-current h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                        </path>
+                    </svg>
+                </a>
+                {% endif %}
             </div>
         </div>
-        {{ form_end(form) }}
+    </div>
+    {{ form_end(form) }}
+
+    <!-- msg flash -->
+    <div class="">
+        {% for msg in app.flashes('success') %}
+        <p>{{ msg }}</p>
+        {% endfor %}
     </div>
 
     <div
@@ -52,11 +80,11 @@
         <div class="border border-gray-200 rounded-lg shadow-sm divide-y divide-gray-200">
             <a href="{{ path('front_annonce_show', { 'id': property.id }) }}">
                 {% if property.imageName is not null %}
-                <img src="{{ uploaded_property_path ~ '/' ~ property.imageName }}" alt="Image du bien"
-                    class="h-auto w-full mx-auto rounded" style="max-height: 192px; max-width: 284px;">
+                <img class="rounded-t-lg object-cover h-48 w-full" style="max-height: 192px; max-width: 284px;"
+                    src="{{ uploaded_property_path ~ '/' ~ property.imageName }}" alt="image du bien">
                 {% else %}
-                <img src="https://images.unsplash.com/photo-1593696140826-c58b021acf8b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cmVhbCUyMGVzdGF0ZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
-                    alt="Image du bien" class="rounded-t-lg object-cover h-48 w-full" style="max-height: 192px; max-width: 284px;" />
+                <img class="rounded-t-lg object-cover h-48 w-full" style="max-height: 192px; max-width: 284px;"
+                    src="{{ asset('images/maison-default.jpg') }}" alt="image du bien">
                 {% endif %}
 
             </a>

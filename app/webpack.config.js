@@ -21,6 +21,7 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/js/app.js')
+    .addEntry('map','./assets/js/map.js' )
 
     /** <<< TAILWINDCSS <<< */
     .addStyleEntry('tailwind', './assets/styles/index.css')
@@ -36,7 +37,7 @@ Encore
     /** >>> TAILWINDCSS >>> */
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
-    // .enableStimulusBridge('./assets/controllers.json')
+    .enableStimulusBridge('./assets/js/stimulus/controllers.json')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

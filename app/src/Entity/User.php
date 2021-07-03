@@ -3,12 +3,16 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Serializable;
+use App\Entity\Property;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\File;
+
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="user_account", schema="immo")
@@ -23,7 +27,7 @@ class User implements UserInterface, Serializable
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=180, unique=true, nullable=true)
      */
     private $email;
 
@@ -49,9 +53,52 @@ class User implements UserInterface, Serializable
     private $token;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $facebookId;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $googleId;
+
+    /**
+     * @return mixed
+     */
+    public function getGoogleId(): ?string
+    {
+        return $this->googleId;
+    }
+
+    /**
+     * @param mixed $googleId
+     */
+    public function setGoogleId($googleId): void
+    {
+        $this->googleId = $googleId;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getFacebookId(): ?string
+    {
+        return $this->facebookId;
+    }
+
+    /**
+     * @param mixed $facebookId
+     */
+    public function setFacebookId($facebookId): void
+    {
+        $this->facebookId = $facebookId;
+    }
+
+    /**
      * @ORM\Column(type="boolean", options={"default": false})
      */
-    private $Enabled;
+    private $enabled;
 
     /**
      * @ORM\Column(type="string", length=80)
@@ -76,7 +123,7 @@ class User implements UserInterface, Serializable
     private $updatedAt;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $civility;
 
@@ -89,6 +136,53 @@ class User implements UserInterface, Serializable
      * @ORM\OneToOne(targetEntity=ProfilePicture::class, cascade={"persist", "remove"})
      */
     private $profilePicture;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Property::class, mappedBy="owner", orphanRemoval=true, cascade={"persist", "remove"})
+     */
+    private $properties;
+
+    public function __construct()
+    {
+        $this->properties = new ArrayCollection();
+    }
+
+    /**
+     * @see https://www.php.net/manual/en/serializable.serialize.php
+     *
+     * Note: Don't pass the profilePicture property. This property explain WHY i use this method
+     */
+    public function serialize()
+    {
+        $objectData = [];
+        foreach (get_object_vars($this) as $propertyName => $value) {
+            if($propertyName != 'profilePicture') {
+                $objectData[$propertyName] = $value;
+            }
+        }
+        return \serialize($objectData);
+    }
+
+    /**
+     * @see https://www.php.net/manual/en/serializable.unserialize.php
+     */
+    public function unserialize($serialized)
+    {
+        $unserialized = unserialize($serialized);
+
+        // Set id mannually
+        $this->id = (int) $unserialized['id'];
+        unset($unserialized['id']);
+
+        // Do not set properties (because its a manyToMany property)
+        unset($unserialized['properties']);
+
+        // Set other properties by setters
+        foreach ($unserialized as $key => $value) {
+            $setter = 'set' . ucfirst($key);
+            $this->$setter($value);
+        }
+    }
 
     public function getId(): ?int
     {
@@ -128,6 +222,16 @@ class User implements UserInterface, Serializable
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
+    }
+
+    public function hasRole(string $role)
+    {
+        return in_array($role, $this->roles);
+    }
+
+    public function hasNotRole(string $role)
+    {
+        return !in_array($role, $this->roles);
     }
 
     public function setRoles(array $roles): self
@@ -199,16 +303,29 @@ class User implements UserInterface, Serializable
 
     public function getEnabled(): ?bool
     {
-        $Enabled = $this->Enabled;
-        $Enabled = false;
-        return $this->Enabled;
+        return $this->enabled;
     }
 
-    public function setEnabled(bool $Enabled): self
+    public function setEnabled(bool $enabled): self
     {
-        $this->Enabled = $Enabled;
+        $this->enabled = $enabled;
 
         return $this;
+    }
+
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    public function enable(): void
+    {
+        $this->enabled = true;
+    }
+
+    public function disable(): void
+    {
+        $this->enabled = false;
     }
 
     public function getFirstname(): ?string
@@ -294,46 +411,69 @@ class User implements UserInterface, Serializable
 
         return $this;
     }
-    
+
     /**
-     * @see https://www.php.net/manual/en/serializable.serialize.php
-     * 
-     * Note: Don't pass the profilePicture property. Thhis property explain WHY i use this method
+     * @return Collection|Property[]
      */
-    public function serialize()
+    public function getProperties(): Collection
     {
-        return \serialize([
-            'id' => $this->id,
-            'email' => $this->email,
-            'roles' => $this->roles,
-            'password' => $this->password,
-            'token' => $this->token,
-            'forgotPasswordToken' => $this->forgotPasswordToken,
-            'Enabled' => $this->Enabled,
-            'firstname' => $this->firstname,
-            'lastname' => $this->lastname,
-            'createdAt' => $this->createdAt,
-            'updatedAt' => $this->updatedAt,
-            'civility' => $this->civility,
-            'phone' => $this->phone
-        ]);
+        return $this->properties;
+    }
+
+    public function addProperty(Property $property): self
+    {
+        if (!$this->properties->contains($property)) {
+            $this->properties[] = $property;
+            $property->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProperty(Property $property): self
+    {
+        if ($this->properties->removeElement($property)) {
+            // set the owning side to null (unless already changed)
+            if ($property->getOwner() === $this) {
+                $property->setOwner(null);
+            }
+        }
+
+        return $this;
     }
 
     /**
-     * @see https://www.php.net/manual/en/serializable.unserialize.php
+     * @return Collection|Search[]
      */
-    public function unserialize($serialized)
+    public function getSearches(): Collection
     {
-        $unserialize = unserialize($serialized);
+        return $this->searches;
+    }
 
-        // Set id mannually
-        $this->id = $unserialize['id'];
-        unset($unserialize['id']);
-
-        // Set other properties by setters
-        foreach ($unserialize as $key => $value) {
-            $setter = 'set'.ucfirst($key);
-            $this->$setter($value);
+    public function addSearch(Search $search): self
+    {
+        if (!$this->searches->contains($search)) {
+            $this->searches[] = $search;
+            $search->setSearcher($this);
         }
+
+        return $this;
+    }
+
+    public function removeSearch(Search $search): self
+    {
+        if ($this->searches->removeElement($search)) {
+            // set the owning side to null (unless already changed)
+            if ($search->getSearcher() === $this) {
+                $search->setSearcher(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function encodePassord()
+    {
+        return $this;
     }
 }

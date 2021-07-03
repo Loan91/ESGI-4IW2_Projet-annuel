@@ -27,16 +27,8 @@ class PropertyFixtures extends Fixture implements DependentFixtureInterface
     $bien = new Property();
 
     $bien = $bien
-      ->setType($type = $faker->randomElement(['maison', 'appartement']))
-      ->setCategory($faker->randomElement([
-        'Studio' => 'studio'
-      ] + (function () {
-        $data = [];
-        for ($i = 0; $i < 15; $i++) {
-          $data['f' . $i] = 'f' . $i;
-        }
-        return $data;
-      })()))
+      ->setType($type = $faker->randomElement(Property::TYPES))
+      ->setCategory($faker->randomElement(Property::CATEGORIES))
       ->setArea($faker->numberBetween($min = 3, $max = 240))
       ->setDescription($faker->text($maxNbChars = 100))
       ->setConstructionDate($faker->dateTime())
