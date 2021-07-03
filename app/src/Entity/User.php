@@ -150,28 +150,17 @@ class User implements UserInterface, Serializable
     /**
      * @see https://www.php.net/manual/en/serializable.serialize.php
      *
-     * Note: Don't pass the profilePicture property. Thhis property explain WHY i use this method
+     * Note: Don't pass the profilePicture property. This property explain WHY i use this method
      */
     public function serialize()
     {
-        return \serialize([
-            'id' => $this->id,
-            'email' => $this->email,
-            'roles' => $this->roles,
-            'password' => $this->password,
-            'token' => $this->token,
-            'forgotPasswordToken' => $this->forgotPasswordToken,
-            'Enabled' => $this->Enabled,
-            'firstname' => $this->firstname,
-            'lastname' => $this->lastname,
-            'createdAt' => $this->createdAt,
-            'updatedAt' => $this->updatedAt,
-            'civility' => $this->civility,
-            'phone' => $this->phone,
-            'properties' => $this->properties,
-            'googleId' => $this->googleId,
-            'facebookId' => $this->facebookId
-        ]);
+        $objectData = [];
+        foreach (get_object_vars($this) as $propertyName => $value) {
+            if($propertyName != 'profilePicture') {
+                $objectData[$propertyName] = $value;
+            }
+        }
+        return \serialize($objectData);
     }
 
     /**
@@ -182,14 +171,10 @@ class User implements UserInterface, Serializable
         $unserialized = unserialize($serialized);
 
         // Set id mannually
-        $this->id = $unserialized['id'];
+        $this->id = (int) $unserialized['id'];
         unset($unserialized['id']);
-        if (!is_null($unserialized['properties'])) {
 
-            foreach ($unserialized['properties'] as $property) {
-                $this->addProperty($property);
-            }
-        }
+        // Do not set properties (because its a manyToMany property)
         unset($unserialized['properties']);
 
         // Set other properties by setters

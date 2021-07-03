@@ -22,11 +22,8 @@ class PropertyController extends AbstractController
      */
     public function index(PropertyRepository $propertyRepository, TokenStorageInterface $tokenStorage): Response
     {
-        // Utilisateur courant
-        $user = $tokenStorage->getToken()->getUser();
-
         return $this->render('front/property/index.html.twig', [
-            'properties' => $propertyRepository->getUserProperties($user)
+            'properties' => $this->getUser()->getProperties()
         ]);
     }
 
