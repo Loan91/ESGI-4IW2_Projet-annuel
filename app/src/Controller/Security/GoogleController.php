@@ -89,7 +89,7 @@ class GoogleController extends AbstractController
                 $em->persist($user);
                 $em->flush();
 
-                $this->mailer->sendEmailWelcome($user->getEmail(), $user->getToken(), $user->getFirstname() . ' ' . $user->getLastname());
+
                 $this->addFlash('success', 'Inscription réussi');
                 return $this->redirectToRoute('front_profil_index');
             }

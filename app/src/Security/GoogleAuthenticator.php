@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Entity\ProfilePicture;
 use App\Entity\User;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
@@ -90,6 +91,8 @@ class GoogleAuthenticator extends SocialAuthenticator
 
             if (!$user) {
                 $user = new User();
+                $avatar = new ProfilePicture();
+                $avatar->setImageName($googleUser->getAvatar());
                 $user->setEnabled(1);
                 $user->setEmail($googleUser->getEmail());
                 $user->setRoles(["ROLE_USER"]);
@@ -97,10 +100,12 @@ class GoogleAuthenticator extends SocialAuthenticator
                 $user->setFirstname($googleUser->getFirstName());
                 $user->setLastname($googleUser->getLastName());
                 $user->setCivility("");
-                $user->setProfilePicture($googleUser->getAvatar());
+                $user->setProfilePicture($avatar);
                 $this->em->persist($user);
+                $this->em->persist($avatar);
                 $this->em->flush();
 
+                $this->mailer->sendEmailWelcome($user->getEmail(), $user->getToken(), $user->getFirstname() . ' ' . $user->getLastname());
 
 
         }
