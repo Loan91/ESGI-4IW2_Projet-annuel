@@ -4,7 +4,14 @@
 {% endblock %}
 
 {% block body %}
-<h1 class="text-4xl font-bold my-4 text-center">Gestion des utilisateurs</h1>
+<section class="flex flex-col sm:flex-row items-center justify-center">
+    <h1 class="text-4xl font-bold my-4 text-center">Gestion des utilisateurs</h1>
+    <a href="{{ path('back_user_create') }}"
+        class="ml-3 flex flex-row items-center text-xl font-semibold rounded-full px-4 py-2 mr-2 bg-green-500 hover:bg-green-600 text-white rounded  leading-none">
+        {% include "components/icons/plus-add.svg" with {class: "mr-1 w-5 h-5"} %}
+        Ajouter
+    </a>
+</section>
 
 {% include "components/alert.html.twig" %}
 <section
@@ -27,7 +34,7 @@
 			</tr>
 		</thead>
 		<tbody class="bg-white">
-			{% for user in pagination %}
+			{% for user in paginator %}
 			<tr>
 				<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
 					<div class="flex items-center">
@@ -43,7 +50,8 @@
 				<td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
 					<span class="text-sm leading-5 text-blue-900">{{ user.email }}</dispanv>
 				</td>
-				<td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5 text-center">
+				<td
+					class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5 text-center">
 					{% if app.user.id != user.id %}
 					<form action="{{ path('back_user_status_toggle', {user: user.id}) }}" method="POST">
 						<input type="hidden" name="token" value="{{ csrf_token('toggle-user-status') }}" />
@@ -85,18 +93,20 @@
 								if user.enabled %}Désactiver{% else %}Réactiver{% endif %}
 								le compte</button>
 						</form>
+						<a href="{{ path('back_user_edit', {user: user.id}) }}" class="ml-2	">
+							<button type="button"
+								onclick="this.parentNode.submit()"
+								class="px-2 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-600 hover:text-white focus:outline-none">
+								{% include "components/icons/settings.svg" with {class: "fill-current w-5 h-5"} %}
+							</button>
+						</a>
 						<form action="{{ path('back_user_delete', {user: user.id}) }}" method="POST" class="ml-2">
 							<input type="hidden" name="token" value="{{ csrf_token('delete-user') }}" />
 							<input type="hidden" name="_method" value="DELETE">
 							<button type="button"
 								onclick="confirm('Confirmer la suppression?') ? this.parentNode.submit() : ''"
 								class="px-2 py-2 border-red-500 border text-red-500 rounded transition duration-300 hover:bg-red-600 hover:text-white focus:outline-none">
-								<svg class="current-color w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none"
-									viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-										d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-									</path>
-								</svg>
+								{% include "components/icons/delete.svg" with {class: "w-5 h-5"} %}
 							</button>
 						</form>
 					</section>
@@ -106,19 +116,20 @@
 			{% endfor %}
 		</tbody>
 	</table>
-	<aside class="sm:flex-1 flex flex-col sm:flex-row items-start sm:items-center justify-center sm:justify-between mt-4 work-sans">
+	<aside
+		class="sm:flex-1 flex flex-col sm:flex-row items-start sm:items-center justify-center sm:justify-between mt-4 work-sans">
 		<p class="text-sm leading-5 text-blue-700">
 			Affichage des éléments
-			<span class="font-medium">{{ (pagination.getItemNumberPerPage * pagination.getCurrentPageNumber) -
-				pagination.getItemNumberPerPage + 1 }}</span>
+			<span class="font-medium">{{ (paginator.getItemNumberPerPage * paginator.getCurrentPageNumber) -
+				paginator.getItemNumberPerPage + 1 }}</span>
 			à
-			<span class="font-medium">{{ pagination.getItemNumberPerPage * pagination.getCurrentPageNumber }}</span>
+			<span class="font-medium">{{ paginator.getItemNumberPerPage * paginator.getCurrentPageNumber }}</span>
 			sur un total de
-			<span class="font-medium">{{ pagination.getTotalItemCount }}</span>
+			<span class="font-medium">{{ paginator.getTotalItemCount }}</span>
 			résultats
 		</p>
 		<div>
-			{{ knp_pagination_render(pagination) }}
+			{{ knp_pagination_render(paginator, 'components/pagination/dashboard.html.twig') }}
 		</div>
 	</aside>
 </section>

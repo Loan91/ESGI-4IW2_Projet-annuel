@@ -98,7 +98,7 @@ class User implements UserInterface, Serializable
     /**
      * @ORM\Column(type="boolean", options={"default": false})
      */
-    private $Enabled;
+    private $enabled;
 
     /**
      * @ORM\Column(type="string", length=80)
@@ -224,6 +224,16 @@ class User implements UserInterface, Serializable
         return array_unique($roles);
     }
 
+    public function hasRole(string $role)
+    {
+        return in_array($role, $this->roles);
+    }
+
+    public function hasNotRole(string $role)
+    {
+        return !in_array($role, $this->roles);
+    }
+
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
@@ -293,31 +303,29 @@ class User implements UserInterface, Serializable
 
     public function getEnabled(): ?bool
     {
-        $Enabled = $this->Enabled;
-        $Enabled = false;
-        return $this->Enabled;
+        return $this->enabled;
     }
 
-    public function setEnabled(bool $Enabled): self
+    public function setEnabled(bool $enabled): self
     {
-        $this->Enabled = $Enabled;
+        $this->enabled = $enabled;
 
         return $this;
     }
 
     public function isEnabled(): bool
     {
-        return $this->Enabled;
+        return $this->enabled;
     }
 
     public function enable(): void
     {
-        $this->Enabled = true;
+        $this->enabled = true;
     }
 
     public function disable(): void
     {
-        $this->Enabled = false;
+        $this->enabled = false;
     }
 
     public function getFirstname(): ?string
@@ -461,6 +469,11 @@ class User implements UserInterface, Serializable
             }
         }
 
+        return $this;
+    }
+
+    public function encodePassord()
+    {
         return $this;
     }
 }

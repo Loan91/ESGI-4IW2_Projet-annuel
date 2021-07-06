@@ -9,7 +9,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Property;
+use App\Form\OwnedPropertiesSearchType;
 use App\Form\PropertyType;
+use App\Repository\UserRepository;
+use App\Security\Voter\OwnedPropertyVoter;
+use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -20,10 +25,26 @@ class PropertyController extends AbstractController
     /**
      * @Route("/", name="property_index", methods={"GET"})
      */
-    public function index(PropertyRepository $propertyRepository, TokenStorageInterface $tokenStorage): Response
+    public function index(Request $request, PropertyRepository $propertyRepository): Response
     {
+        $form = $this->createForm(OwnedPropertiesSearchType::class);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $paginator = $propertyRepository->getPropertiesPaginationForUserByCity($this->getUser(), $request, $formData['city'], 4);
+        } else {
+            $paginator = $propertyRepository->getPropertiesPaginationForUser($this->getUser(), $request, 4);
+        }
+
+        foreach ($paginator as $property) {
+            $this->denyAccessUnlessGranted(OwnedPropertyVoter::VIEW, $property);
+        }
+
         return $this->render('front/property/index.html.twig', [
-            'properties' => $this->getUser()->getProperties()
+            'paginator' => $paginator,
+            'searchForm' => $form->createView()
         ]);
     }
 
@@ -35,6 +56,8 @@ class PropertyController extends AbstractController
      */
     public function new(Request $request, SearchRepository $searchRepository): Response
     {
+        $this->denyAccessUnlessGranted(OwnedPropertyVoter::CREATE, Property::class);
+
         $property = new Property();
         $property->setOwner($this->getUser());
         $form = $this->createForm(PropertyType::class, $property);
@@ -60,22 +83,12 @@ class PropertyController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="property_show", methods={"GET"})
-     * @param Property $property
-     * @return Response
-     */
-    public function show(Property $property): Response
-    {
-        return $this->render('front/property/show.html.twig', [
-            'property' => $property,
-        ]);
-    }
-
-    /**
      * @Route("/{id}/edit", name="property_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Property $property): Response
     {
+        $this->denyAccessUnlessGranted(OwnedPropertyVoter::UPDATE, $property);
+
         $form = $this->createForm(PropertyType::class, $property);
         $form->handleRequest($request);
 
@@ -97,6 +110,8 @@ class PropertyController extends AbstractController
      */
     public function delete(Request $request, Property $property): Response
     {
+        $this->denyAccessUnlessGranted(OwnedPropertyVoter::DELETE, $property);
+
         if ($this->isCsrfTokenValid('delete' . $property->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($property);

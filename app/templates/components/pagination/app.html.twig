@@ -1,0 +1,70 @@
+{# tailwindcss Sliding pagination control implementation #}
+{% if pageCount > 1 %}
+<div class="relative z-0 inline-flex shadow-sm">
+    {# First page #}
+    {% if first is defined and current != first %}
+    <div>
+        <a href="{{ path(route, query|merge({(pageParameterName): first})) }}"
+            class="inline-flex items-center justify-center text mr-1 border border-gray-300 rounded-full bg-white text-xs leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-gray-300 focus:shadow-outline-gray active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150" style="width: 40px; height: 40px;"
+            aria-label="First">
+            <span class="font-bold">Début</span>
+        </a>
+    </div>
+    {% endif %}
+
+    {# Previous page #}
+    {% if previous is defined %}
+    <div>
+        <a rel="prev" href="{{ path(route, query|merge({(pageParameterName): previous})) }}"
+            class="inline-flex items-center justify-center mr-1 border border-gray-300 rounded-full bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-gray-300 focus:shadow-outline-gray active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150"
+            aria-label="Previous" style="width: 40px; height: 40px;">
+            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                    clip-rule="evenodd"></path>
+            </svg>
+        </a>
+    </div>
+    {% endif %}
+
+    {# Indexed page #}
+    <div>
+        {% for page in pagesInRange %}
+        {% if page != current %}
+        <a class="inline-flex items-center justify-center border border-gray-300 rounded-full bg-white text-sm leading-5 font-medium text-gray-700 focus:z-10 focus:outline-none focus:border-gray-400 focus:shadow-outline-gray active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:text-gray-400" style="width: 40px; height: 40px;"
+            href="{{ path(route, query|merge({(pageParameterName): page})) }}">{{ page }}</a>
+        {% else %}
+        <a
+            class="inline-flex items-center justify-center rounded-full bg-gray-700 text-sm leading-5 font-medium text-white focus:z-10 focus:outline-none focus:border-gray-300 focus:shadow-outline-gray active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary" style="width: 40px; height: 40px;">{{
+            page }}</a>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    {# Next page #}
+    {% if next is defined %}
+    <div>
+        <a rel="next" href="{{ path(route, query|merge({(pageParameterName): next})) }}"
+            class="inline-flex items-center justify-center ml-1 border border-gray-300 rounded-full bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-gray-300 focus:shadow-outline-gray active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150" style="width: 40px; height: 40px;"
+            aria-label="Next">
+            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                    clip-rule="evenodd"></path>
+            </svg>
+        </a>
+    </div>
+    {% endif %}
+
+    {# Last page #}
+    {% if last is defined and current != last %}
+    <div>
+        <a href="{{ path(route, query|merge({(pageParameterName): last})) }}"
+            class="inline-flex items-center justify-center ml-1 border border-gray-300 rounded-full bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-gray-300 focus:shadow-outline-gray active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150" style="width: 40px; height: 40px;"
+            aria-label="Next">
+            <span class="font-bold">Fin</span>
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endif %}

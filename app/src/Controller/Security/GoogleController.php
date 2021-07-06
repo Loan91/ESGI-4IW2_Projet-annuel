@@ -74,7 +74,7 @@ class GoogleController extends AbstractController
 
         $existingUser = $user->getGoogleId();
         if ($existingUser) {
-            return $this->redirectToRoute('front_users');
+            return $this->redirectToRoute('front_profil_index');
         } else {
 
 
@@ -91,7 +91,7 @@ class GoogleController extends AbstractController
 
                 $this->mailer->sendEmailWelcome($user->getEmail(), $user->getToken(), $user->getFirstname() . ' ' . $user->getLastname());
                 $this->addFlash('success', 'Inscription réussi');
-                return $this->redirectToRoute('front_users');
+                return $this->redirectToRoute('front_profil_index');
             }
 
             return $this->render('security/google/updateprofilegoogle.html.twig', [
