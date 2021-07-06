@@ -97,9 +97,10 @@ class GoogleAuthenticator extends SocialAuthenticator
                 $user->setFirstname($googleUser->getFirstName());
                 $user->setLastname($googleUser->getLastName());
                 $user->setCivility("");
+                $user->setProfilePicture($googleUser->getAvatar());
                 $this->em->persist($user);
                 $this->em->flush();
-                $this->mailer->sendEmailWelcome($user->getEmail(), $user->getToken(), $user->getFirstname() . ' ' . $user->getLastname());
+
 
 
         }

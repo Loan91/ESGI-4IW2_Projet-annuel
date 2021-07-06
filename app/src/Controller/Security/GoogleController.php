@@ -3,6 +3,7 @@
 namespace App\Controller\Security;
 
 use App\Entity\User;
+use App\Service\Mailer;
 use App\Form\UpdateProfileGFType;
 use App\Form\UpdateProfileGoogleType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,6 +18,10 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class GoogleController extends AbstractController
 {
+    /**
+     * @var Mailer
+     */
+    private $mailer;
 
     /**
      * Link to this controller to start the "connect" process
@@ -84,6 +89,7 @@ class GoogleController extends AbstractController
                 $em->persist($user);
                 $em->flush();
 
+                $this->mailer->sendEmailWelcome($user->getEmail(), $user->getToken(), $user->getFirstname() . ' ' . $user->getLastname());
                 $this->addFlash('success', 'Inscription réussi');
                 return $this->redirectToRoute('front_users');
             }
