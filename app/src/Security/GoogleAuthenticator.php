@@ -2,22 +2,23 @@
 
 namespace App\Security;
 
+use App\Entity\ProfilePicture;
 use App\Entity\User;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\UserBundle\Model\UserManagerInterface;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\SocialAuthenticator;
 use KnpU\OAuth2ClientBundle\Client\Provider\GoogleClient;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use League\OAuth2\Client\Provider\GoogleUser;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Symfony\Component\Security\Core\Security;
 
 class GoogleAuthenticator extends SocialAuthenticator
 {
@@ -43,12 +44,20 @@ class GoogleAuthenticator extends SocialAuthenticator
      * @param ClientRegistry $clientRegistry
      * @param EntityManagerInterface $em
      */
-    public function __construct(Mailer $mailer, ClientRegistry $clientRegistry, EntityManagerInterface $em, RouterInterface $router)
-    {
+    public function __construct(
+        Mailer $mailer,
+        ClientRegistry $clientRegistry,
+        EntityManagerInterface $em,
+        RouterInterface $router,
+        $projectDirectory,
+        $userPictureDirectory
+    ) {
         $this->mailer = $mailer;
         $this->clientRegistry = $clientRegistry;
         $this->em = $em;
         $this->router = $router;
+        $this->projectDirectory = $projectDirectory;
+        $this->userPictureDirectory = $userPictureDirectory;
     }
 
     /**
@@ -85,26 +94,40 @@ class GoogleAuthenticator extends SocialAuthenticator
 
         $email = $googleUser->getEmail();
 
-            $user = $this->em->getRepository(User::class)
-                ->findOneBy(['email' => $email]);
+        $user = $this->em->getRepository(User::class)
+            ->findOneBy(['email' => $email]);
 
-            if (!$user) {
-                $user = new User();
-                $user->setEnabled(1);
-                $user->setEmail($googleUser->getEmail());
-                $user->setRoles(["ROLE_USER"]);
-                $user->setPassword("");
-                $user->setFirstname($googleUser->getFirstName());
-                $user->setLastname($googleUser->getLastName());
-                $user->setCivility("");
-                $this->em->persist($user);
-                $this->em->flush();
-                $this->mailer->sendEmailWelcome($user->getEmail(), $user->getToken(), $user->getFirstname() . ' ' . $user->getLastname());
+        if (!$user) {
+            $user = new User();
 
+            // Store distant avatar to local and register it in user
+            $distantAvatarContent = file_get_contents($googleUser->getAvatar());
+            $localFileName = preg_replace('/https?:\/\/lh3.googleusercontent.com\/a-\/(.{1,})/i', '$1', $googleUser->getAvatar()) . '.png';
+            $localAvatarPath = $this->projectDirectory . '/public' . $this->userPictureDirectory . '/' . $localFileName;
 
+            if (file_put_contents($localAvatarPath, $distantAvatarContent) === false) {
+                throw new RuntimeException('Le fichier a mal été copié');
+            }
+
+            /** @var ProfilePicture $avatar The user avatar object */
+            $avatar = new ProfilePicture();
+            $avatar->setImageName($localFileName);
+
+            $user->setEnabled(1);
+            $user->setEmail($googleUser->getEmail());
+            $user->setRoles(["ROLE_USER"]);
+            $user->setPassword("");
+            $user->setFirstname($googleUser->getFirstName());
+            $user->setLastname($googleUser->getLastName());
+            $user->setCivility("");
+            $user->setProfilePicture($avatar);
+            $this->em->persist($user);
+            $this->em->persist($avatar);
+            $this->em->flush();
+
+            $this->mailer->sendEmailWelcome($user->getEmail(), $user->getToken(), $user->getFirstname() . ' ' . $user->getLastname());
         }
-            return $user;
-
+        return $user;
     }
 
     /**
@@ -145,7 +168,4 @@ class GoogleAuthenticator extends SocialAuthenticator
         $targetPath = $this->getTargetPath($request->getSession(), $providerKey);
         return new RedirectResponse($targetPath ?: '/google/inscription');
     }
-
-
-
 }
