@@ -83,7 +83,7 @@ class ProfilUserController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Le mot de passe a été mis à jour avec succès');
-            return $this->redirectToRoute('front_user_index');
+            return $this->redirectToRoute('profile_index');
         }
 
         return $this->render('front/users/editpass.html.twig', [

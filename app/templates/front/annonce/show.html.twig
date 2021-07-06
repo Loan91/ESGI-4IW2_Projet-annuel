@@ -115,7 +115,7 @@
             <div>
                 <h4 class="text-lg font-medium text-gray-900 tracking-wider mb-4">Qui contacter</h4>
                 <div class="flex items-center space-x-4 lg:space-x-3">
-                    {% if app.user.profilePicture is not null %}
+                    {% if property.owner.profilePicture is not null %}
                     <img src="{{ uploaded_user_path ~ '/' ~ app.user.profilePicture.imageName }}" alt="Image de profil"
                         class="w-12 h-12 rounded-full lg:w-16 lg:h-16">
                     {% else %}
@@ -123,7 +123,7 @@
                         class="w-12 h-12 rounded-full lg:w-16 lg:h-16">
                     {% endif %}
                     <div class="text-lg leading-6 space-y-0.5">
-                        <h3>{{ userFullname(app.user) }}</h3>
+                        <h3>{{ userFullname(property.owner) }}</h3>
                         <p class="text-indigo-900">Agent immobilière /</p>
                     </div>
                 </div>
