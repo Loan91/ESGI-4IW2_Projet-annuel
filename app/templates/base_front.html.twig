@@ -49,8 +49,8 @@
                         {% include "components/icons/home.svg" with {'class': 'fill-current w-5 h-5 mr-2'} %}
 
                         <a href="{{ path('front_home') }}"
-                            class="inline-block text-2xl text-white font-medium tracking-wide px-3 py-1 -ml-3">Easy
-                            House</a>
+                            class="inline-block text-2xl text-white font-medium tracking-wide px-3 py-1 -ml-3">{{
+                            appName }}</a>
                     </div>
                 </div>
                 <div
@@ -221,7 +221,8 @@
                             class="text-teal-600 text-xs p-1"></span></a>
                     <a class="my-3 block" href="{{ path('front_annonce_index') }}">Annonces <span
                             class="text-teal-600 text-xs p-1"></span></a>
-                    <a class="my-3 block" href="{{ path('front_about_us') }}">A propos de nous<span class="text-teal-600 text-xs p-1"></span></a>
+                    <a class="my-3 block" href="{{ path('front_about_us') }}">A propos de nous<span
+                            class="text-teal-600 text-xs p-1"></span></a>
                 </div>
                 <div class="p-5 w-48 ">
                     <div class="text-xs uppercase text-gray-400 font-medium">Utilisateur</div>
@@ -248,10 +249,20 @@
 
                 </div>
                 <div class="p-5 w-48 ">
+                    <div class="text-xs uppercase text-gray-400 font-medium">Support</div>
+                    <a class="my-3 block" href="{{ path('front_privacy_policy') }}">Politique de confidentialité<span
+                            class="text-teal-600 text-xs p-1"></span></a>
+                    <a class="my-3 block" href="{{ path('front_cgu') }}">Conditions générales d'utilisation<span
+                            class="text-teal-600 text-xs p-1"></span></a>
+                </div>
+                <div class="p-5 w-48 ">
                     <div class="text-xs uppercase text-gray-400 font-medium">Contactez nous</div>
-                    <a class="my-3 block" href="/#">XXX XXXX, Floor 4 San Francisco, CA<span
-                            class="text-teal-600 text-xs p-1"></span></a><a class="my-3 block"
-                        href="/#">contact@company.com <span class="text-teal-600 text-xs p-1"></span></a>
+                    <a class="my-3 block" href="{{ path('front_contact') }}">Formulaire<span
+                        class="text-teal-600 text-xs p-1"></span></a>
+                    <a class="mt-5 my-3 block">XXX XXXX, Floor 4 San Francisco, CA<span
+                            class="text-teal-600 text-xs p-1"></span></a>
+                    <a class="my-3 block">contact@company.com <span
+                            class="text-teal-600 text-xs p-1"></span></a>
                 </div>
             </div>
         </div>

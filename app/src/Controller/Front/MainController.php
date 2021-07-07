@@ -24,4 +24,28 @@ class MainController extends AbstractController
     {
         return $this->render('front/about-us.html.twig');
     }
+
+    /**
+     * @Route("/privacy-policy", name="privacy_policy", methods={"GET"})
+     */
+    public function privacyPolicy(): Response
+    {
+        return $this->render('front/politique-confidentialite.html.twig');
+    }
+
+    /**
+     * @Route("/cgu", name="cgu", methods={"GET"})
+     */
+    public function cgu(): Response
+    {
+        return $this->render('front/cgu.html.twig');
+    }
+
+    /**
+     * @Route("/contact", name="contact", methods={"GET"})
+     */
+    public function contact(): Response
+    {
+        return new Response("Nothing at the moment");
+    }
 }
