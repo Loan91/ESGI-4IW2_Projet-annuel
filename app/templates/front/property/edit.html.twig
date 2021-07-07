@@ -1,11 +1,13 @@
 {% extends 'base_front.html.twig' %}
 
 {% block body %}
-	<div class="flex justify-between mt-8 mb-4">
-		<h1 class=" pl-4 text-3xl font-bold">Mise à jour de votre bien à {{ form.city.vars.value }}</h1>
-
-		<span class="text-md italic mr-4 py-2 px-2 rounded-xl bg-gray-300">Numéro de dossier : {{ property.id }}</span>
-	</div>
-
-	{{ include('front/property/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+	<section class="container mx-auto">
+		<div class="flex justify-between mt-8 mb-4">
+			<h1 class=" pl-4 text-3xl font-bold">Mise à jour de votre bien à {{ form.city.vars.value }}</h1>
+	
+			<span class="text-md italic mr-4 py-2 px-2 rounded-xl bg-gray-300">Numéro de dossier : {{ property.id }}</span>
+		</div>
+	
+		{{ include('front/property/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+	</section>
 {% endblock %}
