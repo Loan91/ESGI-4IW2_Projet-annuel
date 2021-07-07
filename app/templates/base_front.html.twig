@@ -9,8 +9,12 @@
     {% block stylesheets %}
     {{ encore_entry_link_tags('tailwind') }}
     {% endblock %}
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
 </head>
 
 <body>
@@ -207,6 +211,59 @@
     <div class="">
         {% block body %}{% endblock %}
     </div>
+
+    <footer class="bg-gray-800">
+        <div>
+            <div class="max-w-6xl m-auto text-gray-200 flex flex-wrap justify-center">
+                <div class="p-5 w-48 ">
+                    <div class="text-xs uppercase text-gray-400 font-medium">Principal</div>
+                    <a class="my-3 block" href="{{ path('front_home') }}">Accueil <span
+                            class="text-teal-600 text-xs p-1"></span></a>
+                    <a class="my-3 block" href="{{ path('front_annonce_index') }}">Annonces <span
+                            class="text-teal-600 text-xs p-1"></span></a>
+                    <a class="my-3 block" href="{{ path('front_about_us') }}">A propos de nous<span class="text-teal-600 text-xs p-1"></span></a>
+                </div>
+                <div class="p-5 w-48 ">
+                    <div class="text-xs uppercase text-gray-400 font-medium">Utilisateur</div>
+                    {% if app.user %}
+                    <a class="my-3 block" href="{{ path('front_profil_index') }}">Profil</a>
+                    <a class="my-3 block" href="{{ path('front_property_index') }}">Mes biens</a>
+                    <a class="my-3 block" href="{{ path('front_contact_index') }}">Mes rendez-vous</a>
+                    {% else %}
+                    <a class="my-3 block" href="{{ path('app_login') }}">Se connecter <span
+                            class="text-teal-600 text-xs p-1"></span></a>
+                    <a class="my-3 block" href="{{ path('app_register') }}">Créer un compte<span
+                            class="text-teal-600 text-xs p-1"></span></a>
+                    {% endif %}
+
+                </div>
+                <div class="p-5 w-48 ">
+                    <div class="text-xs uppercase text-gray-400 font-medium">Resources</div>
+                    <a class="my-3 block"
+                        href="{{ path('front_home', {_fragment: 'calculateur_mensualite'}) }}">Calculateur de mensualité
+                        <span class="text-teal-600 text-xs p-1"></span></a>
+                    {% if app.user and is_granted('ROLE_ADMIN') %}
+                    <a class="my-3 block" href="{{ path('back_dashboard') }}">Dashboard</a>
+                    {% endif %}
+
+                </div>
+                <div class="p-5 w-48 ">
+                    <div class="text-xs uppercase text-gray-400 font-medium">Contactez nous</div>
+                    <a class="my-3 block" href="/#">XXX XXXX, Floor 4 San Francisco, CA<span
+                            class="text-teal-600 text-xs p-1"></span></a><a class="my-3 block"
+                        href="/#">contact@company.com <span class="text-teal-600 text-xs p-1"></span></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-2">
+            <div class="flex justify-center pb-5 px-3 m-auto pt-5 border-t border-gray-700 text-gray-200 text-sm flex-col
+               md:flex-row max-w-6xl">
+                <div class="mt-2">© Copyright 2021. All Rights Reserved.</div>
+            </div>
+        </div>
+        </div>
+    </footer>
 
     {% block javascripts %}{{ encore_entry_script_tags('alpine') }}{% endblock %}
 </body>
