@@ -19,6 +19,9 @@ class ContactController extends AbstractController
     public function index(ContactRepository $contactRepository): Response
     {
         $user = $this->getUser();
+
+        dd($contactRepository->getContactsOrdered($user->getId()));
+
         return $this->render('front/contact/index.html.twig', [
             'contacts' => $contactRepository->getContactsOrdered($user->getId()),
         ]);
@@ -107,4 +110,35 @@ class ContactController extends AbstractController
         $this->addFlash('success', 'RDV fermé !');
         return $this->redirectToRoute('front_contact_index');
     }
+
+    /**
+     * @Route("/contact/finish/{id}", name="contact_finish", methods={"GET"})
+     * @param Contact $contact Contact to finish
+     */
+    public function finish(Contact $contact): Response
+    {
+        $contact->setStatus('RDV_TERMINE');
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($contact);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'RDV marqué comme terminé !');
+        return $this->redirectToRoute('front_contact_index');
+    }
+
+    /**
+     * @Route("/contact/new_date/{id}", name="contact_new_date", methods={"POST"})
+     * @param Contact $contact Contact to choose new date
+     */
+    public function newDate(Contact $contact): Response
+    {
+        $contact->setStatus('RDV_CREE');
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($contact);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Nouvelle date de RDV envoyée !');
+        return $this->redirectToRoute('front_contact_index');
+    }
+
 }

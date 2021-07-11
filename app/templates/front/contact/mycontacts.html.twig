@@ -4,12 +4,13 @@
 
 {% block body %}
     <div class="grid grid-cols-1 w-3/5 mx-auto py-4">
-        <div class="w-full rounded-lg shadow-md py-4 mt-4">
-            <div class="font-semibold text-lg text-gray-700 text-left px-4 tracking-wide">Mes demandes de rendez-vous <button>Planning</button></div>
+            <div class="font-semibold text-lg text-gray-700">Mes demandes de rendez-vous
+{#                <button>Planning</button>#}
+            </div>
             {% if contacts is not empty %}
                 <div class="grid grid-cols-1">
                     {% for contact in contacts %}
-                        <div class="w-11/12 mx-auto shadow-md p-0 mt-4 grid grid-cols-12 p-3">
+                        <div class="w-full mx-auto shadow-md p-0 mt-4 grid grid-cols-12 p-3">
                             <div class="text-left pt-4 col-span-2 tracking-wide">
                                 <img
                                         src="https://cache.marieclaire.fr/data/photo/w1000_ci/5o/illico-travaux-conseils-extension-maison-bois.jpg"
@@ -32,8 +33,16 @@
                                     En attente de validation de la date de RDV
                                 {% elseif contact.status == 'RDV_VALIDE' %}
                                     Date de RDV validée. Contactez le {{ contact.property.owner.phone }}
+                                {% elseif contact.status == 'RDV_NOUVELLE_DATE' %}
+                                    Le propiétaire demande une nouvelle date de RDV.<br>
+                                    <form method="post" action="{{ path('front_contact_new_date', {id: contact.id}) }}">
+                                        <input type="datetime-local" name="newDate">
+                                        <input type="submit" value="Valider">
+                                    </form>
                                 {% elseif contact.status == 'RDV_TERMINE' %}
-                                    Terminé
+                                    Terminé le {{ contact.updatedAt | date('d/m/Y à H:i') }}
+                                {% elseif contact.status == 'RDV_FERME' %}
+                                    Annulé le {{ contact.updatedAt | date('d/m/Y à H:i') }}
                                 {% endif %}
                                 </b>
                             </div>
@@ -47,7 +56,6 @@
             {% else %}
                 Aucun rendez-vous.
             {% endif %}
-        </div>
     </div>
 
     <style>
