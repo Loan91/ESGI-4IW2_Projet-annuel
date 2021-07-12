@@ -24,13 +24,40 @@ class ContactRepository extends ServiceEntityRepository
       */
     public function getMyContactsOrdered($user)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.prospect = :user')
+        $contacts = array();
+
+        $createdRDV = $this->createQueryBuilder('c')
+            ->where('c.prospect = :user')
+            ->andWhere("c.status = 'RDV_CREE'")
+            ->orWhere("c.status = 'RDV_NOUVELLE_DATE'")
             ->setParameter('user', $user)
             ->orderBy('c.desiredDate', 'asc')
             ->getQuery()
             ->getResult()
         ;
+
+        $validatedRDV = $this->createQueryBuilder('c')
+            ->where('c.prospect = :user')
+            ->andWhere("c.status = 'RDV_VALIDE'")
+            ->setParameter('user', $user)
+            ->orderBy('c.desiredDate', 'asc')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        $terminatedRDV = $this->createQueryBuilder('c')
+            ->where('c.prospect = :user')
+            ->andWhere("c.status = 'RDV_TERMINE'")
+            ->orWhere("c.status = 'RDV_FERME'")
+            ->setParameter('user', $user)
+            ->orderBy('c.desiredDate', 'asc')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        array_push( $contacts, $createdRDV,$validatedRDV,$terminatedRDV );
+
+        return $contacts;
     }
 
     /**

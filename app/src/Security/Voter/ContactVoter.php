@@ -75,7 +75,7 @@ class ContactVoter extends Voter
     public function propertyProspect(Contact $contact, User $user): bool
     {
         // If user is the property prospect
-        if ($contact->getProperty()->getOwner()->getId() !== $user->getId()) {
+        if ($contact->getProperty()->getOwner()->getId() === $user->getId()) {
             return false;
         }
         return true;

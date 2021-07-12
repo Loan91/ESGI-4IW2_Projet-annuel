@@ -3,13 +3,16 @@
 {% block title %}{{ appName }} - Rendez-vous{% endblock %}
 
 {% block body %}
+
+    <div class="mt-5">
+        {% include "components/alert.html.twig" %}
+    </div>
+
     <div class="grid grid-cols-1 w-3/5 mx-auto py-4">
-            <div class="font-semibold text-lg text-gray-700">Mes demandes de rendez-vous
-{#                <button>Planning</button>#}
-            </div>
-            {% if contacts is not empty %}
+        <div class="font-semibold text-lg text-gray-700">Mes demandes de rendez-vous</div>
+            {% if contacts[0] is not empty or contacts[1] is not empty or contacts[2] is not empty %}
                 <div class="grid grid-cols-1">
-                    {% for contact in contacts %}
+                    {% for contact in contacts[0] %}
                         <div class="w-full mx-auto shadow-md p-0 mt-4 grid grid-cols-12 p-3">
                             <div class="text-left pt-4 col-span-2 tracking-wide">
                                 <img
@@ -30,20 +33,80 @@
                                 Status :
                                 <b>
                                 {% if contact.status == 'RDV_CREE' %}
-                                    En attente de validation de la date de RDV
-                                {% elseif contact.status == 'RDV_VALIDE' %}
-                                    Date de RDV validée. Contactez le {{ contact.property.owner.phone }}
+                                    <span class="text-green-600">En attente de validation de la date de RDV</span>
                                 {% elseif contact.status == 'RDV_NOUVELLE_DATE' %}
-                                    Le propiétaire demande une nouvelle date de RDV.<br>
+                                    <span class="text-yellow-500">Le propiétaire demande une nouvelle date de RDV.</span><br>
                                     <form method="post" action="{{ path('front_contact_new_date', {id: contact.id}) }}">
-                                        <input type="datetime-local" name="newDate">
+                                        <input type="datetime-local" name="newDate" class="border rounded-md p-1">
                                         <input type="submit" value="Valider">
                                     </form>
-                                {% elseif contact.status == 'RDV_TERMINE' %}
-                                    Terminé le {{ contact.updatedAt | date('d/m/Y à H:i') }}
-                                {% elseif contact.status == 'RDV_FERME' %}
-                                    Annulé le {{ contact.updatedAt | date('d/m/Y à H:i') }}
                                 {% endif %}
+                                </b>
+                            </div>
+                            <div class="text-lg text-gray-700 text-center col-span-2 px-4 pt-5 tracking-wide">
+                                Prix TTC<br>
+                                <b>{{ contact.property.price }} €</b>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    {% for contact in contacts[1] %}
+                        <div class="w-full mx-auto shadow-md p-0 mt-4 grid grid-cols-12 p-3">
+                            <div class="text-left pt-4 col-span-2 tracking-wide">
+                                <img
+                                        src="https://cache.marieclaire.fr/data/photo/w1000_ci/5o/illico-travaux-conseils-extension-maison-bois.jpg"
+                                        alt="Placeholder"
+                                        class="object-cover h-16 rounded"
+                                />
+                            </div>
+                            <div class="text-gray-700 text-left col-span-8 px-4 tracking-wide">
+                                <div class="flex">
+                                    <svg class="h-5 w-5 mr-1 fill-current dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" height="512" viewBox="0 0 512 512" width="512"><g id="_01-home" data-name="01-home"><g id="glyph"><path d="m256 4c-108.075 0-196 87.925-196 196 0 52.5 31.807 119.92 94.537 200.378a1065.816 1065.816 0 0 0 93.169 104.294 12 12 0 0 0 16.588 0 1065.816 1065.816 0 0 0 93.169-104.294c62.73-80.458 94.537-147.878 94.537-200.378 0-108.075-87.925-196-196-196zm0 336c-77.2 0-140-62.8-140-140s62.8-140 140-140 140 62.8 140 140-62.8 140-140 140z"/><path d="m352.072 183.121-88-80a12 12 0 0 0 -16.144 0l-88 80a12.006 12.006 0 0 0 -2.23 15.039 12.331 12.331 0 0 0 10.66 5.84h11.642v76a12 12 0 0 0 12 12h28a12 12 0 0 0 12-12v-44a12 12 0 0 1 12-12h24a12 12 0 0 1 12 12v44a12 12 0 0 0 12 12h28a12 12 0 0 0 12-12v-76h11.642a12.331 12.331 0 0 0 10.66-5.84 12.006 12.006 0 0 0 -2.23-15.039z"/></g></g></svg>
+                                    {{ contact.property.address }} {{ contact.property.zipcode }} {{ contact.property.city }}
+                                </div>
+                                Date de RDV désirée : {{ contact.desiredDate | date('d/m/Y à H:i') }}
+                                <br>
+                                Demande ouverte le : {{ contact.createdAt | date('d/m/Y à H:i') }}
+                                <br>
+                                Status :
+                                <b>
+                                    {% if contact.status == 'RDV_VALIDE' %}
+                                        <span class="text-blue-500">Date de RDV validée. Contactez le {{ contact.property.owner.phone }}</span>
+                                    {% endif %}
+                                </b>
+                            </div>
+                            <div class="text-lg text-gray-700 text-center col-span-2 px-4 pt-5 tracking-wide">
+                                Prix TTC<br>
+                                <b>{{ contact.property.price }} €</b>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    {% for contact in contacts[2] %}
+                        <div class="w-full mx-auto shadow-md p-0 mt-4 grid grid-cols-12 p-3">
+                            <div class="text-left pt-4 col-span-2 tracking-wide">
+                                <img
+                                        src="https://cache.marieclaire.fr/data/photo/w1000_ci/5o/illico-travaux-conseils-extension-maison-bois.jpg"
+                                        alt="Placeholder"
+                                        class="object-cover h-16 rounded"
+                                />
+                            </div>
+                            <div class="text-gray-700 text-left col-span-8 px-4 tracking-wide">
+                                <div class="flex">
+                                    <svg class="h-5 w-5 mr-1 fill-current dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" height="512" viewBox="0 0 512 512" width="512"><g id="_01-home" data-name="01-home"><g id="glyph"><path d="m256 4c-108.075 0-196 87.925-196 196 0 52.5 31.807 119.92 94.537 200.378a1065.816 1065.816 0 0 0 93.169 104.294 12 12 0 0 0 16.588 0 1065.816 1065.816 0 0 0 93.169-104.294c62.73-80.458 94.537-147.878 94.537-200.378 0-108.075-87.925-196-196-196zm0 336c-77.2 0-140-62.8-140-140s62.8-140 140-140 140 62.8 140 140-62.8 140-140 140z"/><path d="m352.072 183.121-88-80a12 12 0 0 0 -16.144 0l-88 80a12.006 12.006 0 0 0 -2.23 15.039 12.331 12.331 0 0 0 10.66 5.84h11.642v76a12 12 0 0 0 12 12h28a12 12 0 0 0 12-12v-44a12 12 0 0 1 12-12h24a12 12 0 0 1 12 12v44a12 12 0 0 0 12 12h28a12 12 0 0 0 12-12v-76h11.642a12.331 12.331 0 0 0 10.66-5.84 12.006 12.006 0 0 0 -2.23-15.039z"/></g></g></svg>
+                                    {{ contact.property.address }} {{ contact.property.zipcode }} {{ contact.property.city }}
+                                </div>
+                                Date de RDV désirée : {{ contact.desiredDate | date('d/m/Y à H:i') }}
+                                <br>
+                                Demande ouverte le : {{ contact.createdAt | date('d/m/Y à H:i') }}
+                                <br>
+                                Status :
+                                <b>
+                                    {% if contact.status == 'RDV_TERMINE' %}
+                                        Terminé le {{ contact.updatedAt | date('d/m/Y à H:i') }}
+                                    {% elseif contact.status == 'RDV_FERME' %}
+                                        Annulé le {{ contact.updatedAt | date('d/m/Y à H:i') }}
+                                    {% endif %}
                                 </b>
                             </div>
                             <div class="text-lg text-gray-700 text-center col-span-2 px-4 pt-5 tracking-wide">

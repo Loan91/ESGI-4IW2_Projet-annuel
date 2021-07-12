@@ -3,6 +3,11 @@
 {% block title %}{{ appName }} - Rendez-vous{% endblock %}
 
 {% block body %}
+
+    <div class="mt-5">
+        {% include "components/alert.html.twig" %}
+    </div>
+
     <div class="grid grid-cols-1 w-3/5 md:w-4/5 sm:w-full mx-auto py-4">
         <!-- Bouton d'accès aux rendez-vous de l'utilisateur -->
         <div>
@@ -15,7 +20,7 @@
         </div>
 
         <div class="w-full rounded-lg shadow-md py-4 mt-4">
-            <div class="font-semibold text-lg text-gray-700 text-left px-4 tracking-wide">Rendez-vous concernant vos biens <button>Planning</button></div>
+            <div class="font-semibold text-lg text-gray-700 text-left px-4 tracking-wide">Rendez-vous concernant vos biens</div>
                 <div class="grid grid-cols-1">
                     <div class="text-gray-700 text-left tracking-wide h-1 pl-9 pt-2 pb-4">En attente de validation</div>
                     {% if contacts[0] is not empty %}

@@ -10,6 +10,7 @@ use App\Security\Voter\ContactVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ContactController extends AbstractController
@@ -61,8 +62,9 @@ class ContactController extends AbstractController
         }
 
         return $this->render('front/contact/new.html.twig', [
-            'contact' => $contact,
-            'form' => $form->createView(),
+            'contact'   => $contact,
+            'property'  => $property,
+            'form'      => $form->createView(),
         ]);
     }
 
@@ -73,6 +75,11 @@ class ContactController extends AbstractController
     public function acceptDate(Contact $contact): Response
     {
         $this->denyAccessUnlessGranted(ContactVoter::OWNER_CONTACT, $contact);
+
+        if ($contact->getStatus() !== 'RDV_CREE')
+        {
+            throw $this->createAccessDeniedException('You can\'t do this action !');
+        }
 
         $contact->setStatus('RDV_VALIDE');
         $entityManager = $this->getDoctrine()->getManager();
@@ -91,6 +98,11 @@ class ContactController extends AbstractController
     {
         $this->denyAccessUnlessGranted(ContactVoter::OWNER_CONTACT, $contact);
 
+        if ($contact->getStatus() !== 'RDV_CREE')
+        {
+            throw $this->createAccessDeniedException('You can\'t do this action !');
+        }
+
         $contact->setStatus('RDV_NOUVELLE_DATE');
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($contact);
@@ -107,6 +119,11 @@ class ContactController extends AbstractController
     public function decline(Contact $contact): Response
     {
         $this->denyAccessUnlessGranted(ContactVoter::OWNER_CONTACT, $contact);
+
+        if ($contact->getStatus() !== 'RDV_CREE' && $contact->getStatus() !== 'RDV_NOUVELLE_DATE')
+        {
+            throw $this->createAccessDeniedException('You can\'t do this action !');
+        }
 
         $contact->setStatus('RDV_FERME');
         $entityManager = $this->getDoctrine()->getManager();
@@ -125,6 +142,11 @@ class ContactController extends AbstractController
     {
         $this->denyAccessUnlessGranted(ContactVoter::OWNER_CONTACT, $contact);
 
+        if ($contact->getStatus() !== 'RDV_VALIDE')
+        {
+            throw $this->createAccessDeniedException('You can\'t do this action !');
+        }
+
         $contact->setStatus('RDV_TERMINE');
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($contact);
@@ -141,6 +163,11 @@ class ContactController extends AbstractController
     public function newDate(Contact $contact): Response
     {
         $this->denyAccessUnlessGranted(ContactVoter::PROSPECT_CONTACT, $contact);
+
+        if ($contact->getStatus() !== 'RDV_NOUVELLE_DATE')
+        {
+            throw $this->createAccessDeniedException('You can\'t do this action !');
+        }
 
         $contact->setStatus('RDV_CREE');
         $entityManager = $this->getDoctrine()->getManager();
