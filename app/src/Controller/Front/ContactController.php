@@ -6,6 +6,7 @@ use App\Entity\Contact;
 use App\Entity\Property;
 use App\Form\ContactType;
 use App\Repository\ContactRepository;
+use App\Security\Voter\ContactVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,9 +20,6 @@ class ContactController extends AbstractController
     public function index(ContactRepository $contactRepository): Response
     {
         $user = $this->getUser();
-
-        dd($contactRepository->getContactsOrdered($user->getId()));
-
         return $this->render('front/contact/index.html.twig', [
             'contacts' => $contactRepository->getContactsOrdered($user->getId()),
         ]);
@@ -44,6 +42,8 @@ class ContactController extends AbstractController
      */
     public function new(Request $request, Property $property): Response
     {
+        $this->denyAccessUnlessGranted(ContactVoter::NEW_CONTACT, $property);
+
         $contact = new Contact();
         $contact->setProspect($this->getUser());
         $contact->setProperty($property);
@@ -72,6 +72,8 @@ class ContactController extends AbstractController
      */
     public function acceptDate(Contact $contact): Response
     {
+        $this->denyAccessUnlessGranted(ContactVoter::OWNER_CONTACT, $contact);
+
         $contact->setStatus('RDV_VALIDE');
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($contact);
@@ -87,6 +89,8 @@ class ContactController extends AbstractController
      */
     public function anotherDate(Contact $contact): Response
     {
+        $this->denyAccessUnlessGranted(ContactVoter::OWNER_CONTACT, $contact);
+
         $contact->setStatus('RDV_NOUVELLE_DATE');
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($contact);
@@ -102,6 +106,8 @@ class ContactController extends AbstractController
      */
     public function decline(Contact $contact): Response
     {
+        $this->denyAccessUnlessGranted(ContactVoter::OWNER_CONTACT, $contact);
+
         $contact->setStatus('RDV_FERME');
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($contact);
@@ -117,6 +123,8 @@ class ContactController extends AbstractController
      */
     public function finish(Contact $contact): Response
     {
+        $this->denyAccessUnlessGranted(ContactVoter::OWNER_CONTACT, $contact);
+
         $contact->setStatus('RDV_TERMINE');
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($contact);
@@ -132,6 +140,8 @@ class ContactController extends AbstractController
      */
     public function newDate(Contact $contact): Response
     {
+        $this->denyAccessUnlessGranted(ContactVoter::PROSPECT_CONTACT, $contact);
+
         $contact->setStatus('RDV_CREE');
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($contact);
