@@ -3,7 +3,8 @@
 namespace App\Controller\Front;
 
 use App\Form\ContactEmailType;
-use App\Service\Mailer;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,20 +20,23 @@ class ContactEmailController extends AbstractController
     /**
      * @Route("/contact", name="contact", methods={"GET", "POST"})
      */
-    public function contact(Request $request)
+    public function contact(Request $request, MailerInterface $mailer)
     {
         $form = $this->createForm(ContactEmailType::class);
-
         $form->handleRequest($request);
-
         if($form->isSubmitted() && $form->isValid()) {
-
-            $user = $form->getData();
-
-            $this->mailer->sendEmailContact($user->getEmail(), $user->getToken(), $user->getFirstname() . ' ' . $user->getLastname());
+            $contactFormData = $form->getData();
+            
+            $message = (new Email())
+                ->from($contactFormData['email'])
+                ->to('vousloger@noreply.fr')
+                ->subject('vous avez reçu unn email')
+                ->text($contactFormData['message'],
+                    'text/plain');
+            $mailer->send($message);
 
             $this->addFlash('success', 'Votre message a été envoyé');
-            return $this->redirectToRoute('contact');
+            return $this->redirectToRoute('front_contact');
         }
         return $this->render('front/contact.html.twig', [
             'form' => $form->createView()

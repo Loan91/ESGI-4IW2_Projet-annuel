@@ -37,7 +37,7 @@ services:
     node:
         build: app/docker/node
         ports:
-            - '3000:3000'
+            - '30018:3000'
         volumes:
             - './app:/home/node/app'
         command:

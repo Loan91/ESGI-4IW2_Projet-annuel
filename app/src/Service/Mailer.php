@@ -59,7 +59,7 @@ class Mailer {
     /**
      * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
      */
-    public function sendEmailContact($email, $token, $name, $message)
+    public function sendEmailContact($message)
     {
         $email = (new TemplatedEmail())
             ->from('vousloger@noreply.fr')
