@@ -2,13 +2,11 @@
 
 {{ form_start(form, {attr: {class: "w-full text-center"}} ) }}
 
-<section class="w-2/3 mx-auto">
-	<div class="shadow sm:rounded-md sm:overflow-hidden bg-gray-50 mx-auto">
-		<div class="px-4 py-5 space-y-6 sm:p-6">
-			{{ form_row(form.desiredDate) }}
-		</div>
+<div class="shadow sm:rounded-md sm:overflow-hidden bg-gray-50">
+	<div class="px-4 py-5 space-y-6 sm:p-6">
+		{{ form_row(form.desiredDate) }}
 	</div>
-</section>
+</div>
 
 <button type="submit" class="mt-8 focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg mr-2 mb-4">
 	{{ button_label|default('Valider') }}
