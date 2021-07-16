@@ -88,7 +88,7 @@ class FacebookAuthenticator extends SocialAuthenticator
             if (!$user) {
                 $user = new User();
                 $user->setEnabled(1);
-                $user->setEmail("");
+                $user->setEmail($facebookUser->getEmail());
                 $user->setRoles(["ROLE_USER"]);
                 $user->setPassword("");
                 $user->setFirstname($facebookUser->getFirstName());
@@ -96,6 +96,8 @@ class FacebookAuthenticator extends SocialAuthenticator
                 $user->setCivility("");
                 $this->em->persist($user);
                 $this->em->flush();
+
+                $this->mailer->sendEmailWelcome($user->getEmail(), $user->getToken(), $user->getFirstname() . ' ' . $user->getLastname());
             }
 
         return $user;
@@ -122,10 +124,7 @@ class FacebookAuthenticator extends SocialAuthenticator
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        return new RedirectResponse(
-            '/connect/',
-            Response::HTTP_TEMPORARY_REDIRECT
-        );
+        return new RedirectResponse('/login');
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
