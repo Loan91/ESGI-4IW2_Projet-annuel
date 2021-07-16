@@ -242,7 +242,7 @@
 				} else if (nom == "duree") {
 					// la duree doit etre >= 1 mois
 					if (valeur < 1. / 12.) {
-						this.errorMessage = "la durée doit être >= 1/12 = " + 1. / 12. + " annee (= 1 mois)";
+						this.errorMessage = "la durée doit être >= 1/12 = " + (1. / 12).toFixed(2) + " annee (= 1 mois)";
 						return 1;
 					}
 					if (valeur > 100.) {
