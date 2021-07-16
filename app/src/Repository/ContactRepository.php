@@ -27,9 +27,9 @@ class ContactRepository extends ServiceEntityRepository
         $contacts = array();
 
         $createdRDV = $this->createQueryBuilder('c')
-            ->where('c.prospect = :user')
             ->andWhere("c.status = 'RDV_CREE'")
             ->orWhere("c.status = 'RDV_NOUVELLE_DATE'")
+            ->andWhere('c.prospect = :user')
             ->setParameter('user', $user)
             ->orderBy('c.desiredDate', 'asc')
             ->getQuery()
@@ -37,7 +37,7 @@ class ContactRepository extends ServiceEntityRepository
         ;
 
         $validatedRDV = $this->createQueryBuilder('c')
-            ->where('c.prospect = :user')
+            ->andWhere('c.prospect = :user')
             ->andWhere("c.status = 'RDV_VALIDE'")
             ->setParameter('user', $user)
             ->orderBy('c.desiredDate', 'asc')
@@ -46,9 +46,9 @@ class ContactRepository extends ServiceEntityRepository
         ;
 
         $terminatedRDV = $this->createQueryBuilder('c')
-            ->where('c.prospect = :user')
             ->andWhere("c.status = 'RDV_TERMINE'")
             ->orWhere("c.status = 'RDV_FERME'")
+            ->andWhere('c.prospect = :user')
             ->setParameter('user', $user)
             ->orderBy('c.desiredDate', 'asc')
             ->getQuery()
@@ -70,9 +70,9 @@ class ContactRepository extends ServiceEntityRepository
         $createdRDV = $this->createQueryBuilder('c')
             ->leftJoin('c.property', 'property')
             ->leftJoin('property.owner', 'owner')
-            ->where('owner = :user')
             ->andWhere("c.status = 'RDV_CREE'")
             ->orWhere("c.status = 'RDV_NOUVELLE_DATE'")
+            ->andWhere('owner = :user')
             ->setParameter('user', $user)
             ->orderBy('c.desiredDate', 'asc')
             ->getQuery()
@@ -82,7 +82,7 @@ class ContactRepository extends ServiceEntityRepository
         $validatedRDV = $this->createQueryBuilder('c')
             ->leftJoin('c.property', 'property')
             ->leftJoin('property.owner', 'owner')
-            ->where('owner = :user')
+            ->andWhere('owner = :user')
             ->andWhere("c.status = 'RDV_VALIDE'")
             ->setParameter('user', $user)
             ->orderBy('c.desiredDate', 'asc')
@@ -93,9 +93,9 @@ class ContactRepository extends ServiceEntityRepository
         $terminatedRDV = $this->createQueryBuilder('c')
             ->leftJoin('c.property', 'property')
             ->leftJoin('property.owner', 'owner')
-            ->where('owner = :user')
             ->andWhere("c.status = 'RDV_TERMINE'")
             ->orWhere("c.status = 'RDV_FERME'")
+            ->andWhere('owner = :user')
             ->setParameter('user', $user)
             ->orderBy('c.desiredDate', 'asc')
             ->getQuery()

@@ -7,6 +7,7 @@ use App\Entity\Property;
 use App\Form\ContactType;
 use App\Repository\ContactRepository;
 use App\Security\Voter\ContactVoter;
+use App\Service\Mailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,7 +42,7 @@ class ContactController extends AbstractController
      * @Route("/contact/new/{id}", name="contact_create", methods={"GET","POST"})
      * @param Property $property Property for the contact
      */
-    public function new(Request $request, Property $property): Response
+    public function new(Request $request, Property $property, \Swift_Mailer $mailer): Response
     {
         $this->denyAccessUnlessGranted(ContactVoter::NEW_CONTACT, $property);
 
@@ -56,6 +57,20 @@ class ContactController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($contact);
             $entityManager->flush();
+
+            // On génère l'e-mail
+            $message = (new \Swift_Message('Nouvelle demande de rendez-vous'))
+                ->setFrom("notification@sinequanone.fr")
+                ->setTo($property->getOwner()->getEmail())
+                ->setBody(
+                    "Bonjour,<br><br>Vous avez reçu une nouvelle demande de rendez-vous pour votre ".$contact->getProperty()->getType()." à "
+                    .$contact->getProperty()->getCity()." pour le ". date("d/m/Y \à H:i", $contact->getDesiredDate()->getTimestamp()) .".<br>
+                    Connectez-vous sur votre espace personnel pour y répondre.",
+                    'text/html'
+                );
+
+            // On envoie l'e-mail
+            $mailer->send($message);
 
             $this->addFlash('success', 'Votre demande de RDV a été envoyé !');
             return $this->redirectToRoute('front_contact_mycontacts');
@@ -72,7 +87,7 @@ class ContactController extends AbstractController
      * @Route("/contact/accept/{id}", name="contact_acceptDate", methods={"GET"})
      * @param Contact $contact Contact to accept
      */
-    public function acceptDate(Contact $contact): Response
+    public function acceptDate(Contact $contact, \Swift_Mailer $mailer): Response
     {
         $this->denyAccessUnlessGranted(ContactVoter::OWNER_CONTACT, $contact);
 
@@ -86,6 +101,19 @@ class ContactController extends AbstractController
         $entityManager->persist($contact);
         $entityManager->flush();
 
+         // On génère l'e-mail
+         $message = (new \Swift_Message('Rendez-vous accepté'))
+         ->setFrom("notification@sinequanone.fr")
+         ->setTo($contact->getProspect()->getEmail())
+         ->setBody(
+             "Bonjour,<br><br>Votre demande de rendez-vous concernant ".$contact->getProperty()->getType()." à ".$contact->getProperty()->getCity()." a été acceptée.<br>
+             Connectez-vous sur votre espace personnel pour accéder aux informations.",
+             'text/html'
+         );
+
+        // On envoie l'e-mail
+        $mailer->send($message);
+
         $this->addFlash('success', 'Date de RDV accepté !');
         return $this->redirectToRoute('front_contact_index');
     }
@@ -94,7 +122,7 @@ class ContactController extends AbstractController
      * @Route("/contact/another/{id}", name="contact_anotherDate", methods={"GET"})
      * @param Contact $contact Contact to ask another date
      */
-    public function anotherDate(Contact $contact): Response
+    public function anotherDate(Contact $contact, \Swift_Mailer $mailer): Response
     {
         $this->denyAccessUnlessGranted(ContactVoter::OWNER_CONTACT, $contact);
 
@@ -108,6 +136,19 @@ class ContactController extends AbstractController
         $entityManager->persist($contact);
         $entityManager->flush();
 
+        // On génère l'e-mail
+        $message = (new \Swift_Message('Rendez-vous en attente d\'une nouvelle date'))
+        ->setFrom("notification@sinequanone.fr")
+        ->setTo($contact->getProspect()->getEmail())
+        ->setBody(
+            "Bonjour,<br><br>Votre demande de rendez-vous concernant ".$contact->getProperty()->getType()." à ".$contact->getProperty()->getCity()." est en attente d'une nouvelle proposition de date.<br>
+            Connectez-vous sur votre espace personnel afin de proposer une nouvelle au propriétaire.",
+            'text/html'
+        );
+
+       // On envoie l'e-mail
+       $mailer->send($message);
+
         $this->addFlash('success', 'Demande de nouvelle date de RDV envoyée !');
         return $this->redirectToRoute('front_contact_index');
     }
@@ -116,7 +157,7 @@ class ContactController extends AbstractController
      * @Route("/contact/decline/{id}", name="contact_decline", methods={"GET"})
      * @param Contact $contact Contact to decline
      */
-    public function decline(Contact $contact): Response
+    public function decline(Contact $contact, \Swift_Mailer $mailer): Response
     {
         $this->denyAccessUnlessGranted(ContactVoter::OWNER_CONTACT, $contact);
 
@@ -130,6 +171,19 @@ class ContactController extends AbstractController
         $entityManager->persist($contact);
         $entityManager->flush();
 
+        // On génère l'e-mail
+        $message = (new \Swift_Message('Rendez-vous refusé'))
+        ->setFrom("notification@sinequanone.fr")
+        ->setTo($contact->getProspect()->getEmail())
+        ->setBody(
+            "Bonjour,<br><br>Votre demande de rendez-vous concernant ".$contact->getProperty()->getType()." à ".$contact->getProperty()->getCity()." a été refusée par le propriétaire.<br>
+            Connectez-vous sur votre espace personnel afin de proposer une nouvelle au propriétaire.",
+            'text/html'
+        );
+
+       // On envoie l'e-mail
+       $mailer->send($message);
+
         $this->addFlash('success', 'RDV fermé !');
         return $this->redirectToRoute('front_contact_index');
     }
@@ -138,7 +192,7 @@ class ContactController extends AbstractController
      * @Route("/contact/finish/{id}", name="contact_finish", methods={"GET"})
      * @param Contact $contact Contact to finish
      */
-    public function finish(Contact $contact): Response
+    public function finish(Contact $contact, \Swift_Mailer $mailer): Response
     {
         $this->denyAccessUnlessGranted(ContactVoter::OWNER_CONTACT, $contact);
 
@@ -152,6 +206,19 @@ class ContactController extends AbstractController
         $entityManager->persist($contact);
         $entityManager->flush();
 
+        // On génère l'e-mail
+        $message = (new \Swift_Message('Rendez-vous terminé'))
+        ->setFrom("notification@sinequanone.fr")
+        ->setTo($contact->getProspect()->getEmail())
+        ->setBody(
+            "Bonjour,<br><br>Votre demande de rendez-vous concernant ".$contact->getProperty()->getType()." à ".$contact->getProperty()->getCity()." est marquée comme terminée.<br>
+            Merci d'avoir utilisé Sinequanone !",
+            'text/html'
+        );
+
+       // On envoie l'e-mail
+       $mailer->send($message);
+
         $this->addFlash('success', 'RDV marqué comme terminé !');
         return $this->redirectToRoute('front_contact_index');
     }
@@ -160,7 +227,7 @@ class ContactController extends AbstractController
      * @Route("/contact/new_date/{id}", name="contact_new_date", methods={"POST"})
      * @param Contact $contact Contact to choose new date
      */
-    public function newDate(Contact $contact): Response
+    public function newDate(Contact $contact, \Swift_Mailer $mailer): Response
     {
         $this->denyAccessUnlessGranted(ContactVoter::PROSPECT_CONTACT, $contact);
 
@@ -173,6 +240,20 @@ class ContactController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($contact);
         $entityManager->flush();
+
+        // On génère l'e-mail
+        $message = (new \Swift_Message('Nouvelle date de rendez-vous'))
+        ->setFrom("notification@sinequanone.fr")
+        ->setTo($contact->getProperty()->getOwner()->getEmail())
+        ->setBody(
+            "Bonjour,<br><br>Vous avez reçu une nouvelle proposition de date de rendez-vous pour votre ".$contact->getProperty()->getType()." à "
+                    .$contact->getProperty()->getCity()." pour le ". date("d/m/Y \à H:i", $contact->getDesiredDate()->getTimestamp()) .".<br>
+                    Connectez-vous sur votre espace personnel pour y répondre.",
+            'text/html'
+        );
+
+       // On envoie l'e-mail
+       $mailer->send($message);
 
         $this->addFlash('success', 'Nouvelle date de RDV envoyée !');
         return $this->redirectToRoute('front_contact_index');
