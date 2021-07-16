@@ -7,8 +7,6 @@ use App\Entity\User;
 use App\Validator\Phone;
 use App\Validator\ValidPassword;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -89,24 +87,6 @@ class UpdateProfileGFType extends AbstractType
                     new Phone()
                 ]
             ])
-           /* ->add('password', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'invalid_message' => 'Les deux mot de passe doivent correspondre.',
-                'options' => ['attr' => ['class' => '']],
-                'required' => true,
-                'first_options'  => ['label' => 'Mot de passe', 'attr' => ['class' => 'mb-2']],
-                'second_options' => ['label' => 'Répéter le mot de passe'],
-                'constraints' => [
-                    new Assert\NotBlank([
-                        'message' => "Le mot de passe ne peut pas être vide."
-                    ]),
-                    new Assert\Length([
-                        'max' => 100,
-                        'minMessage' => "Le nom de famille ne peut excéder 100 caractères"
-                    ]),
-                    new ValidPassword(['minSize' => 8, 'maxSize' => 20])
-                ]
-            ])*/
             ;
     }
 
