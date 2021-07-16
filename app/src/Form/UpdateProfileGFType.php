@@ -89,7 +89,7 @@ class UpdateProfileGFType extends AbstractType
                     new Phone()
                 ]
             ])
-            ->add('password', RepeatedType::class, [
+           /* ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les deux mot de passe doivent correspondre.',
                 'options' => ['attr' => ['class' => '']],
@@ -106,7 +106,7 @@ class UpdateProfileGFType extends AbstractType
                     ]),
                     new ValidPassword(['minSize' => 8, 'maxSize' => 20])
                 ]
-            ])
+            ])*/
             ;
     }
 
