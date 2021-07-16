@@ -105,9 +105,9 @@ class GoogleAuthenticator extends SocialAuthenticator
             $localFileName = preg_replace('/https?:\/\/lh3.googleusercontent.com\/a-\/(.{1,})/i', '$1', $googleUser->getAvatar()) . '.png';
             $localAvatarPath = $this->projectDirectory . '/public' . $this->userPictureDirectory . '/' . $localFileName;
 
-            if (file_put_contents($localAvatarPath, $distantAvatarContent) === false) {
-                throw new RuntimeException('Le fichier a mal été copié');
-            }
+            //if (file_put_contents($localAvatarPath, $distantAvatarContent) === false) {
+                //throw new RuntimeException('Le fichier a mal été copié');
+            //}
 
             /** @var ProfilePicture $avatar The user avatar object */
             $avatar = new ProfilePicture();
@@ -117,8 +117,8 @@ class GoogleAuthenticator extends SocialAuthenticator
             $user->setEmail($googleUser->getEmail());
             $user->setRoles(["ROLE_USER"]);
             $user->setPassword("");
-            $user->setFirstname($googleUser->getFirstName());
-            $user->setLastname($googleUser->getLastName());
+            $user->setFirstname($googleUser->getLastName());
+            $user->setLastname($googleUser->getFirstName());
             $user->setCivility("");
             $user->setProfilePicture($avatar);
             $this->em->persist($user);
