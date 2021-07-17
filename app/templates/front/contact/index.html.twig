@@ -3,7 +3,12 @@
 {% block title %}{{ appName }} - Rendez-vous{% endblock %}
 
 {% block body %}
-    <div class="grid grid-cols-1 w-3/5 mx-auto py-4">
+
+    <div class="mt-5">
+        {% include "components/alert.html.twig" %}
+    </div>
+
+    <div class="grid grid-cols-1 w-3/5 md:w-4/5 sm:w-full mx-auto py-4">
         <!-- Bouton d'accès aux rendez-vous de l'utilisateur -->
         <div>
             <a href="{{ path('front_contact_mycontacts') }}">
@@ -15,7 +20,7 @@
         </div>
 
         <div class="w-full rounded-lg shadow-md py-4 mt-4">
-            <div class="font-semibold text-lg text-gray-700 text-left px-4 tracking-wide">Rendez-vous concernant vos biens <button>Planning</button></div>
+            <div class="font-semibold text-lg text-gray-700 text-left px-4 tracking-wide">Rendez-vous concernant vos biens</div>
                 <div class="grid grid-cols-1">
                     <div class="text-gray-700 text-left tracking-wide h-1 pl-9 pt-2 pb-4">En attente de validation</div>
                     {% if contacts[0] is not empty %}
@@ -33,24 +38,26 @@
                                         <svg class="h-5 w-5 mr-1 fill-current dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" height="512" viewBox="0 0 512 512" width="512"><g id="_01-home" data-name="01-home"><g id="glyph"><path d="m256 4c-108.075 0-196 87.925-196 196 0 52.5 31.807 119.92 94.537 200.378a1065.816 1065.816 0 0 0 93.169 104.294 12 12 0 0 0 16.588 0 1065.816 1065.816 0 0 0 93.169-104.294c62.73-80.458 94.537-147.878 94.537-200.378 0-108.075-87.925-196-196-196zm0 336c-77.2 0-140-62.8-140-140s62.8-140 140-140 140 62.8 140 140-62.8 140-140 140z"/><path d="m352.072 183.121-88-80a12 12 0 0 0 -16.144 0l-88 80a12.006 12.006 0 0 0 -2.23 15.039 12.331 12.331 0 0 0 10.66 5.84h11.642v76a12 12 0 0 0 12 12h28a12 12 0 0 0 12-12v-44a12 12 0 0 1 12-12h24a12 12 0 0 1 12 12v44a12 12 0 0 0 12 12h28a12 12 0 0 0 12-12v-76h11.642a12.331 12.331 0 0 0 10.66-5.84 12.006 12.006 0 0 0 -2.23-15.039z"/></g></g></svg>
                                         {{ contact.property.address }} {{ contact.property.zipcode }} {{ contact.property.city }}
                                     </div>
-                                    Date de RDV désirée : {{ contact.desiredDate | date('d/m/Y à H:i') }}
-                                    <br>
-                                    Demande ouverte le : {{ contact.createdAt | date('d/m/Y à H:i') }}
+                                    Date désirée : {{ contact.desiredDate | date('d/m/Y à H:i') }}
+{#                                    <br>#}
+{#                                    Demande ouverte le : {{ contact.createdAt | date('d/m/Y à H:i') }}#}
                                     <br>
                                     Status :
                                     <b>
                                         {% if contact.status == 'RDV_CREE' %}
-                                            En attente de validation de la date de RDV
-                                        {% elseif contact.status == 'RDV_VALIDE' %}
-                                            Date de RDV validée. Contactez le {{ contact.property.owner.phone }}
-                                        {% elseif contact.status == 'RDV_TERMINE' %}
-                                            Terminé
+                                            En attente de votre validation <br>
+                                            <a href="{{ path('front_contact_acceptDate', {id: contact.id}) }}" class="bg-green-600 rounded text-white p-1">Accepter cette date</a>
+                                            <a href="{{ path('front_contact_anotherDate', {id: contact.id}) }}" class="bg-yellow-500 rounded text-white p-1">Autre date</a>
+                                            <a href="{{ path('front_contact_decline', {id: contact.id}) }}" class="bg-red-600 rounded text-white p-1">Fermer</a>
+                                        {% elseif contact.status == 'RDV_NOUVELLE_DATE' %}
+                                            En attente d'une nouvelle date<br>
+                                            <a href="{{ path('front_contact_decline', {id: contact.id}) }}" class="bg-red-600 rounded text-white p-1">Fermer le RDV</a>
                                         {% endif %}
                                     </b>
                                 </div>
                                 <div class="text-lg text-gray-700 text-center col-span-2 px-4 pt-5 tracking-wide">
-                                    Prix TTC<br>
-                                    <b>{{ contact.property.price }} €</b>
+                                    Prospect<br>
+                                    <b>{{ contact.prospect.firstname }} {{ contact.prospect.lastname }}</b>
                                 </div>
                             </div>
                         {% endfor %}
@@ -76,24 +83,17 @@
                                         <svg class="h-5 w-5 mr-1 fill-current dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" height="512" viewBox="0 0 512 512" width="512"><g id="_01-home" data-name="01-home"><g id="glyph"><path d="m256 4c-108.075 0-196 87.925-196 196 0 52.5 31.807 119.92 94.537 200.378a1065.816 1065.816 0 0 0 93.169 104.294 12 12 0 0 0 16.588 0 1065.816 1065.816 0 0 0 93.169-104.294c62.73-80.458 94.537-147.878 94.537-200.378 0-108.075-87.925-196-196-196zm0 336c-77.2 0-140-62.8-140-140s62.8-140 140-140 140 62.8 140 140-62.8 140-140 140z"/><path d="m352.072 183.121-88-80a12 12 0 0 0 -16.144 0l-88 80a12.006 12.006 0 0 0 -2.23 15.039 12.331 12.331 0 0 0 10.66 5.84h11.642v76a12 12 0 0 0 12 12h28a12 12 0 0 0 12-12v-44a12 12 0 0 1 12-12h24a12 12 0 0 1 12 12v44a12 12 0 0 0 12 12h28a12 12 0 0 0 12-12v-76h11.642a12.331 12.331 0 0 0 10.66-5.84 12.006 12.006 0 0 0 -2.23-15.039z"/></g></g></svg>
                                         {{ contact.property.address }} {{ contact.property.zipcode }} {{ contact.property.city }}
                                     </div>
-                                    Date de RDV désirée : {{ contact.desiredDate | date('d/m/Y à H:i') }}
-                                    <br>
                                     Demande ouverte le : {{ contact.createdAt | date('d/m/Y à H:i') }}
                                     <br>
                                     Status :
                                     <b>
-                                        {% if contact.status == 'RDV_CREE' %}
-                                            En attente de validation de la date de RDV
-                                        {% elseif contact.status == 'RDV_VALIDE' %}
-                                            Date de RDV validée. Contactez le {{ contact.property.owner.phone }}
-                                        {% elseif contact.status == 'RDV_TERMINE' %}
-                                            Terminé
-                                        {% endif %}
+                                        Date de RDV validée pour le {{ contact.desiredDate | date('d/m/Y à H:i') }}<br>
+                                        <a href="{{ path('front_contact_finish', {id: contact.id}) }}" class="bg-green-600 rounded text-white p-1">Marquer en tant que terminé</a>
                                     </b>
                                 </div>
                                 <div class="text-lg text-gray-700 text-center col-span-2 px-4 pt-5 tracking-wide">
-                                    Prix TTC<br>
-                                    <b>{{ contact.property.price }} €</b>
+                                    Prospect<br>
+                                    <b>{{ contact.prospect.firstname }} {{ contact.prospect.lastname }}</b>
                                 </div>
                             </div>
                         {% endfor %}
@@ -101,6 +101,43 @@
                         <div class="pt-2 pl-12">Aucun rendez-vous planifié.</div>
                     {% endif %}
                 </div>
+
+                <div class="text-gray-700 text-left tracking-wide h-1 pl-9 pt-2 pb-4">Terminés et annulés</div>
+                <div class="grid md:grid-cols-2 sm:grid-cols-1 gap-4 w-full p-4">
+                    {% if contacts[2] is not empty %}
+                        {% for contact in contacts[2] %}
+                            <div>
+                                <div class="shadow-md p-0 mt-4 grid grid-cols-12 p-3">
+                                    <div class="text-left pt-4 col-span-2">
+                                        <img
+                                                src="https://cache.marieclaire.fr/data/photo/w1000_ci/5o/illico-travaux-conseils-extension-maison-bois.jpg"
+                                                alt="Placeholder"
+                                                class="object-cover h-16 rounded"
+                                        />
+                                    </div>
+                                    <div class="text-gray-700 text-left col-span-8 px-4">
+                                        <div class="flex">
+                                            <svg class="h-5 w-5 mr-1 fill-current dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" height="512" viewBox="0 0 512 512" width="512"><g id="_01-home" data-name="01-home"><g id="glyph"><path d="m256 4c-108.075 0-196 87.925-196 196 0 52.5 31.807 119.92 94.537 200.378a1065.816 1065.816 0 0 0 93.169 104.294 12 12 0 0 0 16.588 0 1065.816 1065.816 0 0 0 93.169-104.294c62.73-80.458 94.537-147.878 94.537-200.378 0-108.075-87.925-196-196-196zm0 336c-77.2 0-140-62.8-140-140s62.8-140 140-140 140 62.8 140 140-62.8 140-140 140z"/><path d="m352.072 183.121-88-80a12 12 0 0 0 -16.144 0l-88 80a12.006 12.006 0 0 0 -2.23 15.039 12.331 12.331 0 0 0 10.66 5.84h11.642v76a12 12 0 0 0 12 12h28a12 12 0 0 0 12-12v-44a12 12 0 0 1 12-12h24a12 12 0 0 1 12 12v44a12 12 0 0 0 12 12h28a12 12 0 0 0 12-12v-76h11.642a12.331 12.331 0 0 0 10.66-5.84 12.006 12.006 0 0 0 -2.23-15.039z"/></g></g></svg>
+                                            {{ contact.property.address }} {{ contact.property.zipcode }} {{ contact.property.city }}
+                                        </div>
+                                        <br>
+                                        Status :
+                                        <b>
+                                            {% if contact.status == 'RDV_TERMINE' %}
+                                                Terminé le {{ contact.updatedAt | date('d/m/Y à H:i') }}
+                                            {% else %}
+                                                Annulé le {{ contact.updatedAt | date('d/m/Y à H:i') }}
+                                            {% endif %}
+                                        </b>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="pt-2 pl-12">Aucun rendez-vous terminé ou annulé.</div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 
