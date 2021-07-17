@@ -9,11 +9,14 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+use function Symfony\Component\DependencyInjection\Loader\Configurator\ref;
+
 class ContactVoter extends Voter
 {
     const NEW_CONTACT      = 'create_new_contact';
     const OWNER_CONTACT    = 'owner_modify_contact';
     const PROSPECT_CONTACT = 'prospect_modify_contact';
+    const IS_LOGGED        = 'is_logged';
 
     protected function supports(string $attribute, $subject): bool
     {
@@ -23,7 +26,8 @@ class ContactVoter extends Voter
             (in_array($attribute, [self::NEW_CONTACT])
                 && $subject instanceof \App\Entity\Property)
             || (in_array($attribute, [self::OWNER_CONTACT, self::PROSPECT_CONTACT])
-                && $subject instanceof \App\Entity\Contact);
+                && $subject instanceof \App\Entity\Contact)
+            || (in_array($attribute, [self::IS_LOGGED]));
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
@@ -48,7 +52,10 @@ class ContactVoter extends Voter
             case self::OWNER_CONTACT:
                 return $this->propertyOwner($subject, $user);
             case self::PROSPECT_CONTACT:
-                return $this->propertyProspect($subject, $user);
+                return $this->propertyProspect($subject, $user);    
+            case self::IS_LOGGED:
+                return true;
+
         }
 
         return false;

@@ -23,7 +23,7 @@ class Favorite
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="favorites")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $prospect;
+    private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity=Property::class, inversedBy="favorites")
@@ -43,19 +43,20 @@ class Favorite
      */
     private $updatedAt;
 
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getProspect(): ?User
+    public function getUser(): ?User
     {
-        return $this->prospect;
+        return $this->user;
     }
 
-    public function setProspect(?User $prospect): self
+    public function setUser(?User $user): self
     {
-        $this->prospect = $prospect;
+        $this->user = $user;
 
         return $this;
     }

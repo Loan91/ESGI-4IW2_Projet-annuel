@@ -142,9 +142,15 @@ class User implements UserInterface, Serializable
      */
     private $properties;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Favorite::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $favorites;
+
     public function __construct()
     {
         $this->properties = new ArrayCollection();
+        $this->favorites = new ArrayCollection();
     }
 
     /**
@@ -174,8 +180,9 @@ class User implements UserInterface, Serializable
         $this->id = (int) $unserialized['id'];
         unset($unserialized['id']);
 
-        // Do not set properties (because its a manyToMany property)
+        // Do not set properties and favorites (because its a manyToMany property)
         unset($unserialized['properties']);
+        unset($unserialized['favorites']);
 
         // Set other properties by setters
         foreach ($unserialized as $key => $value) {
@@ -474,6 +481,36 @@ class User implements UserInterface, Serializable
 
     public function encodePassord()
     {
+        return $this;
+    }
+
+    /**
+     * @return Collection|Favorite[]
+     */
+    public function getFavorites(): Collection
+    {
+        return $this->favorites;
+    }
+
+    public function addFavorite(Favorite $favorite): self
+    {
+        if (!$this->favorites->contains($favorite)) {
+            $this->favorites[] = $favorite;
+            $favorite->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavorite(Favorite $favorite): self
+    {
+        if ($this->favorites->removeElement($favorite)) {
+            // set the owning side to null (unless already changed)
+            if ($favorite->getUser() === $this) {
+                $favorite->setUser(null);
+            }
+        }
+
         return $this;
     }
 }

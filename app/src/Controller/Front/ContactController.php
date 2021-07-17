@@ -21,7 +21,10 @@ class ContactController extends AbstractController
      */
     public function index(ContactRepository $contactRepository): Response
     {
+        $this->denyAccessUnlessGranted(ContactVoter::IS_LOGGED);
+     
         $user = $this->getUser();
+        
         return $this->render('front/contact/index.html.twig', [
             'contacts' => $contactRepository->getContactsOrdered($user->getId()),
         ]);
@@ -32,6 +35,8 @@ class ContactController extends AbstractController
      */
     public function getMyContacts(ContactRepository $contactRepository): Response
     {
+        $this->denyAccessUnlessGranted(ContactVoter::IS_LOGGED);
+        
         $user = $this->getUser();
         return $this->render('front/contact/mycontacts.html.twig', [
             'contacts' => $contactRepository->getMyContactsOrdered($user->getId()),
