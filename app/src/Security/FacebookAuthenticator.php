@@ -130,7 +130,10 @@ class FacebookAuthenticator extends SocialAuthenticator
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        return new RedirectResponse('/login');
+        return new RedirectResponse(
+            '/connect/',
+            Response::HTTP_TEMPORARY_REDIRECT
+        );
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
