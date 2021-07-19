@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Favorite;
+use App\Entity\Property;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -17,6 +19,29 @@ class FavoriteRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Favorite::class);
+    }
+
+    public function getFavorites(User $user)
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('f.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function isFavorite(Property $property, User $user)
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.user = :user')
+            ->andWhere('f.property = :property')
+            ->setParameter('user', $user)
+            ->setParameter('property', $property)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
     // /**

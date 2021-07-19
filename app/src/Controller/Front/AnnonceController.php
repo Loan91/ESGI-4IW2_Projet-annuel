@@ -5,6 +5,7 @@ namespace App\Controller\Front;
 use App\Data\SearchData;
 use App\Entity\Property;
 use App\Form\SearchType;
+use App\Repository\FavoriteRepository;
 use App\Repository\PropertyRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,10 +51,12 @@ class AnnonceController extends AbstractController
      * @param Property $property
      * @return mixed
      */
-    public function show(Property $property)
+    public function show(Property $property, FavoriteRepository $repository)
     {
+        $isFav = $repository->isFavorite($property, $this->getUser());
         return $this->render('front/annonce/show.html.twig', [
-            'property' => $property
+            'property' => $property,
+            'isFav' => $isFav,
         ]);
     }
 }
