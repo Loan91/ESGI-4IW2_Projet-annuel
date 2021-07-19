@@ -2,6 +2,7 @@
 
 namespace App\Controller\Front;
 
+use App\Service\Mailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -9,6 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
+
     /**
      * @Route("/", name="home", methods={"GET"})
      */
@@ -41,11 +43,6 @@ class MainController extends AbstractController
         return $this->render('front/cgu.html.twig');
     }
 
-    /**
-     * @Route("/contact", name="contact", methods={"GET"})
-     */
-    public function contact(): Response
-    {
-        return new Response("Nothing at the moment");
-    }
+
+
 }

@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\UserBundle\Model\UserManagerInterface;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\SocialAuthenticator;
@@ -17,6 +18,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Symfony\Component\Security\Core\Security;
 
 class FacebookAuthenticator extends SocialAuthenticator
 {
@@ -32,6 +34,10 @@ class FacebookAuthenticator extends SocialAuthenticator
     private $em;
     private $urlGenerator;
 
+    /**
+     * @var Mailer
+     */
+    private $mailer;
 
     /**
      * FacebookAuthenticator constructor.
@@ -88,7 +94,7 @@ class FacebookAuthenticator extends SocialAuthenticator
             if (!$user) {
                 $user = new User();
                 $user->setEnabled(1);
-                $user->setEmail("");
+                $user->setEmail($facebookUser->getEmail());
                 $user->setRoles(["ROLE_USER"]);
                 $user->setPassword("");
                 $user->setFirstname($facebookUser->getFirstName());
@@ -96,6 +102,8 @@ class FacebookAuthenticator extends SocialAuthenticator
                 $user->setCivility("");
                 $this->em->persist($user);
                 $this->em->flush();
+
+                $this->mailer->sendEmailWelcome($user->getEmail(), $user->getToken(), $user->getFirstname() . ' ' . $user->getLastname());
             }
 
         return $user;
@@ -122,10 +130,7 @@ class FacebookAuthenticator extends SocialAuthenticator
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        return new RedirectResponse(
-            '/connect/',
-            Response::HTTP_TEMPORARY_REDIRECT
-        );
+        return new RedirectResponse('/login');
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)

@@ -60,7 +60,7 @@ class FacebookController extends AbstractController
     {
         $user = $this->getUser();
 
-        $existingUser = $user->getEmail();
+        $existingUser = $user->getFacebookId();
 
         if ($existingUser) {
             return $this->redirectToRoute('front_profil_index');
@@ -72,8 +72,8 @@ class FacebookController extends AbstractController
             if ($userForm->isSubmitted() && $userForm->isValid()) {
                 $em = $this->getDoctrine()->getManager();
                 $user->setFacebookId(md5(random_bytes(10)));
-                $password = $userForm->get('password')->getData();
-                $user->setPassword($passwordEncoder->encodePassword($user, $password));
+                //$password = $userForm->get('password')->getData();
+                //$user->setPassword($passwordEncoder->encodePassword($user, $password));
                 $em->persist($user);
                 $em->flush();
 

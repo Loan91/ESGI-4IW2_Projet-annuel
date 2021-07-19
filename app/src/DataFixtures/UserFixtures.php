@@ -16,6 +16,7 @@ class UserFixtures extends Fixture
 
     /** @var string Reference to get a user generated between fakers */
     public const USER_REFERENCE = 'user';
+    public const PROSPECT_REFERENCE = 'prospect';
 
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -35,7 +36,10 @@ class UserFixtures extends Fixture
         // Other fixtures can get this object using the UserFixtures::ADMIN_USER_REFERENCE constant
         $this->addReference(self::USER_REFERENCE, $admin);
 
-        $manager->persist($this->createExampleMember($faker));
+        $prospect = $this->createExampleMember($faker);
+        $manager->persist($prospect);
+        
+        $this->addReference(self::PROSPECT_REFERENCE, $prospect);
         
         for ($i=0; $i < 36; $i++) { 
             $manager->persist($this->createMember($faker));
@@ -69,12 +73,12 @@ class UserFixtures extends Fixture
     {
         $faker = \Faker\Factory::create('fr_FR');
 
-        $user = new User();
-        return $user
+        $prospect = new User();
+        return $prospect
             ->setCivility($faker->boolean ? 'Monsieur' : 'Madame')
             ->setEmail('user@mail.com')
             ->setPhone('0602030405')
-            ->setPassword($this->passwordEncoder->encodePassword($user, 'Passw0r@'))
+            ->setPassword($this->passwordEncoder->encodePassword($prospect, 'Passw0r@'))
             ->setFirstname($faker->firstName)
             ->setLastname($faker->lastName)
             ->setRoles(['ROLE_USER']) // Set role user to each members
