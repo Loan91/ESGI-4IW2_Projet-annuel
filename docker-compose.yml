@@ -29,6 +29,8 @@ services:
             - POSTGRES_DB=db
             - POSTGRES_USER=user
             - POSTGRES_PASSWORD=pwd
+        ports:
+            - '5430:5432'
     adminer:
         image: 'adminer:4.7'
         ports:

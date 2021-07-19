@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\UserBundle\Model\UserManagerInterface;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\SocialAuthenticator;
@@ -33,6 +34,10 @@ class FacebookAuthenticator extends SocialAuthenticator
     private $em;
     private $urlGenerator;
 
+    /**
+     * @var Mailer
+     */
+    private $mailer;
 
     /**
      * FacebookAuthenticator constructor.

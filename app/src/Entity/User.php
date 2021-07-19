@@ -146,11 +146,17 @@ class User implements UserInterface, Serializable
      * @ORM\OneToMany(targetEntity=Favorite::class, mappedBy="user", orphanRemoval=true)
      */
     private $favorites;
+    
+    /*
+     *  @ORM\OneToMany(targetEntity=Search::class, mappedBy="searcher")
+     */
+    private $searches;
 
     public function __construct()
     {
         $this->properties = new ArrayCollection();
         $this->favorites = new ArrayCollection();
+        $this->searches = new ArrayCollection();
     }
 
     /**
@@ -180,8 +186,13 @@ class User implements UserInterface, Serializable
         $this->id = (int) $unserialized['id'];
         unset($unserialized['id']);
 
-        // Do not set properties and favorites (because its a manyToMany property)
+            foreach ($unserialized['properties'] as $property) {
+                $this->addProperty($property);
+            }
+
+        // Do not set properties (because its a manyToMany property)
         unset($unserialized['properties']);
+        unset($unserialized['searches']);
         unset($unserialized['favorites']);
 
         // Set other properties by setters

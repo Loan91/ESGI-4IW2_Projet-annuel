@@ -7,11 +7,15 @@ use App\Repository\SearchRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Property;
 use App\Form\OwnedPropertiesSearchType;
 use App\Form\PropertyType;
 use App\Repository\UserRepository;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use App\Security\Voter\OwnedPropertyVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -48,13 +52,32 @@ class PropertyController extends AbstractController
         ]);
     }
 
+
     /**
-     * @Route("/new", name="property_new", methods={"GET","POST"})
+     * @Route("/recherches-sauvegardees", name="property_saved_search", methods={"GET"})
      * @param Request $request
      * @param SearchRepository $searchRepository
      * @return Response
      */
-    public function new(Request $request, SearchRepository $searchRepository): Response
+    public function saved_search(Request $request, SearchRepository $searchRepository): Response
+    {
+        $saved_searches = $searchRepository->findSavedSearchByUser();
+
+        return $this->render('front/property/saved-search.html.twig', [
+            'saved_searches' => $saved_searches,
+        ]);
+    }
+
+
+    /**
+     * @Route("/new", name="property_new", methods={"GET","POST"})
+     * @param Request $request
+     * @param SearchRepository $searchRepository
+     * @param MailerInterface $mailer
+     * @return Response
+     * @throws TransportExceptionInterface
+     */
+    public function new(Request $request, SearchRepository $searchRepository, MailerInterface $mailer): Response
     {
         $this->denyAccessUnlessGranted(OwnedPropertyVoter::CREATE, Property::class);
 
@@ -68,10 +91,24 @@ class PropertyController extends AbstractController
             $entityManager->persist($property);
             $entityManager->flush();
 
-            // TODO : lancer le recherche lorsqu'un nouveau bien est créé.
-            $searchRepository->findInterestedUsers($property);
+            $users = $searchRepository->findInterestedUsers($property);
 
-            // TODO : Faire une Queue pour envoyer les mails de façon asynchrone aux utilisateurs.
+            $email = (new TemplatedEmail())
+                ->from('noreply@sinequanone.com')
+                ->subject('Nouveau bien disponible')
+                ->htmlTemplate('emails/available-property.html.twig')
+            ;
+
+            foreach ($users as $user)
+            {
+                $email->to($user['email']);
+                $email->context([
+                    'firstname' => $user['firstname'],
+                    'lastname' => $user['lastname'],
+                ]);
+                $mailer->send($email);
+            }
+
             $this->addFlash('success', 'Votre nouveau bien à ' . $property->getCity() . ' s\'est ajouté correctement');
             return $this->redirectToRoute('front_property_index');
         }
