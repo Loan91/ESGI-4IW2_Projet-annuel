@@ -5,6 +5,7 @@ namespace App\Controller\Front;
 use App\Entity\Favorite;
 use App\Entity\Property;
 use App\Repository\FavoriteRepository;
+use App\Security\Voter\FavoriteVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,10 +18,9 @@ class FavoriteController extends AbstractController
      */
     public function index(FavoriteRepository $repository): Response
     {
-        // $this->denyAccessUnlessGranted(FavoriteVoter::IS_LOGGED);
-        $user = $this->getUser();
+        $this->denyAccessUnlessGranted(FavoriteVoter::IS_LOGGED);
 
-        // dd($repository->getFavorites($user));
+        $user = $this->getUser();
 
         return $this->render('front/favorite/index.html.twig', [
             'favorites' => $repository->getFavorites($user)
@@ -31,9 +31,9 @@ class FavoriteController extends AbstractController
      * @Route("/favorite/new/{id}", name="favorite_create", methods={"GET"})
      * @param Property $property Property for the favorite
      */
-    public function new(Request $request, Property $property): Response
+    public function new(Request $request, Property $property, FavoriteRepository $repository): Response
     {
-        // $this->denyAccessUnlessGranted(FavoriteVoter::NEW_FAVORITE, $property);
+        $this->denyAccessUnlessGranted(FavoriteVoter::CREATE_FAVORITE, $property);
 
         $favorite = new Favorite();
         $favorite->setProperty($property);
@@ -52,7 +52,7 @@ class FavoriteController extends AbstractController
      */
     public function delete(Request $request, Favorite $favorite): Response
     {
-        // $this->denyAccessUnlessGranted(FavoriteVoter::NEW_FAVORITE, $property);
+        $this->denyAccessUnlessGranted(FavoriteVoter::DELETE_FAVORITE, $favorite);
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($favorite);
