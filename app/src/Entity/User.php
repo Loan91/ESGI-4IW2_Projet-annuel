@@ -27,7 +27,7 @@ class User implements UserInterface, Serializable
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=180, unique=true, nullable=true)
      */
     private $email;
 
@@ -53,9 +53,52 @@ class User implements UserInterface, Serializable
     private $token;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $facebookId;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $googleId;
+
+    /**
+     * @return mixed
+     */
+    public function getGoogleId(): ?string
+    {
+        return $this->googleId;
+    }
+
+    /**
+     * @param mixed $googleId
+     */
+    public function setGoogleId($googleId): void
+    {
+        $this->googleId = $googleId;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getFacebookId(): ?string
+    {
+        return $this->facebookId;
+    }
+
+    /**
+     * @param mixed $facebookId
+     */
+    public function setFacebookId($facebookId): void
+    {
+        $this->facebookId = $facebookId;
+    }
+
+    /**
      * @ORM\Column(type="boolean", options={"default": false})
      */
-    private $Enabled;
+    private $enabled;
 
     /**
      * @ORM\Column(type="string", length=80)
@@ -80,7 +123,7 @@ class User implements UserInterface, Serializable
     private $updatedAt;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $civility;
 
@@ -112,27 +155,18 @@ class User implements UserInterface, Serializable
 
     /**
      * @see https://www.php.net/manual/en/serializable.serialize.php
-     * 
-     * Note: Don't pass the profilePicture property. Thhis property explain WHY i use this method
+     *
+     * Note: Don't pass the profilePicture property. This property explain WHY i use this method
      */
     public function serialize()
     {
-        return \serialize([
-            'id' => $this->id,
-            'email' => $this->email,
-            'roles' => $this->roles,
-            'password' => $this->password,
-            'token' => $this->token,
-            'forgotPasswordToken' => $this->forgotPasswordToken,
-            'Enabled' => $this->Enabled,
-            'firstname' => $this->firstname,
-            'lastname' => $this->lastname,
-            'createdAt' => $this->createdAt,
-            'updatedAt' => $this->updatedAt,
-            'civility' => $this->civility,
-            'phone' => $this->phone,
-            'properties' => $this->properties
-        ]);
+        $objectData = [];
+        foreach (get_object_vars($this) as $propertyName => $value) {
+            if($propertyName != 'profilePicture') {
+                $objectData[$propertyName] = $value;
+            }
+        }
+        return \serialize($objectData);
     }
 
     /**
@@ -143,16 +177,16 @@ class User implements UserInterface, Serializable
         $unserialized = unserialize($serialized);
 
         // Set id mannually
-        $this->id = $unserialized['id'];
+        $this->id = (int) $unserialized['id'];
         unset($unserialized['id']);
-        if (!is_null($unserialized['properties'])) {
 
             foreach ($unserialized['properties'] as $property) {
                 $this->addProperty($property);
             }
-        }
 
+        // Do not set properties (because its a manyToMany property)
         unset($unserialized['properties']);
+        unset($unserialized['searches']);
 
         // Set other properties by setters
         foreach ($unserialized as $key => $value) {
@@ -199,6 +233,16 @@ class User implements UserInterface, Serializable
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
+    }
+
+    public function hasRole(string $role)
+    {
+        return in_array($role, $this->roles);
+    }
+
+    public function hasNotRole(string $role)
+    {
+        return !in_array($role, $this->roles);
     }
 
     public function setRoles(array $roles): self
@@ -270,31 +314,29 @@ class User implements UserInterface, Serializable
 
     public function getEnabled(): ?bool
     {
-        $Enabled = $this->Enabled;
-        $Enabled = false;
-        return $this->Enabled;
+        return $this->enabled;
     }
 
-    public function setEnabled(bool $Enabled): self
+    public function setEnabled(bool $enabled): self
     {
-        $this->Enabled = $Enabled;
+        $this->enabled = $enabled;
 
         return $this;
     }
 
     public function isEnabled(): bool
     {
-        return $this->Enabled;
+        return $this->enabled;
     }
 
     public function enable(): void
     {
-        $this->Enabled = true;
+        $this->enabled = true;
     }
 
     public function disable(): void
     {
-        $this->Enabled = false;
+        $this->enabled = false;
     }
 
     public function getFirstname(): ?string
@@ -438,6 +480,11 @@ class User implements UserInterface, Serializable
             }
         }
 
+        return $this;
+    }
+
+    public function encodePassord()
+    {
         return $this;
     }
 }

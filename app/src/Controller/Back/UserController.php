@@ -3,15 +3,16 @@
 namespace App\Controller\Back;
 
 use App\Entity\User;
+use App\Form\Back\ManageUserType;
 use App\Repository\UserRepository;
+use App\Security\Voter\ManageUserVoter;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\Pagination\Paginator;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 
 /**
@@ -24,31 +25,92 @@ class UserController extends AbstractController
     /**
      * @Route("", name="index", methods={"GET"})
      */
-    public function index(EntityManagerInterface $em, Request $request, PaginatorInterface $paginator): Response
+    public function index(Request $request, UserRepository $userRepository): Response
     {
-        $query = $em->createQuery("SELECT u FROM App\Entity\User u ORDER BY u.id");
-        $pagination = $paginator->paginate(
-            $query, /* query NOT result */
-            $request->query->getInt('page', 1), /*page number*/
-            6 /*limit per page*/
-        );
+        $paginator = $userRepository->getUsersPaginated($request, 6);
 
-        // dd($pagination);
+        foreach ($paginator as $user) {
+            $this->denyAccessUnlessGranted(ManageUserVoter::VIEW, $user);            
+        }
 
         return $this->render('back/user/index.html.twig', [
-            'pagination' => $pagination
+            'paginator' => $paginator
         ]);
     }
 
     /**
+     * @Route("/{user}/delete", name="delete", methods={"DELETE"})
+     */
+    public function delete(User $user, EntityManagerInterface $em, Request $request)
+    {
+        $this->denyAccessUnlessGranted(ManageUserVoter::DELETE, $user);
+
+        // Check the csrf token
+        $submittedToken = $request->request->get('token');
+        if (!$this->isCsrfTokenValid('delete-user', $submittedToken)) {
+            throw new InvalidCsrfTokenException("Le token d'action est invalide");
+        }
+
+        // Remove the user
+        $em->remove($user);
+        $em->flush();
+
+        // Redirect with success message
+        $this->addFlash('success', "L'utilisateur " . $user->getEmail() . " a bien été supprimé");
+        return $this->redirect($previousPage = $request->headers->get('referer'));
+    }
+
+    /**
+     * @Route("/create", name="create", methods={"GET", "POST"})
+     */
+    public function create(Request $request, EntityManagerInterface $em)
+    {
+        $this->denyAccessUnlessGranted(ManageUserVoter::CREATE, User::class);
+
+        $userForm = $this->createForm(ManageUserType::class);
+
+        $userForm->handleRequest($request);
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
+            $user = $userForm->getData();
+            $em->persist($user);
+            $em->flush();
+            $this->addFlash('success', 'L\'utilisateur a bien été créé');
+            return $this->redirectToRoute('back_user_index');
+        }
+
+        return $this->render('back/user/create.html.twig', [
+            'userForm' => $userForm->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/edit/{user}", name="edit", methods={"GET", "PATCH"})
+     */
+    public function edit(Request $request, User $user, EntityManagerInterface $em)
+    {
+        $this->denyAccessUnlessGranted(ManageUserVoter::UPDATE, $user);
+
+        $userForm = $this->createForm(ManageUserType::class, $user, ['method' => 'PATCH']);
+
+        $userForm->handleRequest($request);
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
+            $user = $userForm->getData();
+            $em->flush();
+            $this->addFlash('success', 'L\'utilisateur ' . $user->getEmail() . ' a bien été mis à jour');
+            return $this->redirectToRoute('back_user_index');
+        }
+
+        return $this->render('back/user/edit.html.twig', [
+            'userForm' => $userForm->createView()
+        ]);
+    }
+
+        /**
      * @Route("/{user}/status/toggle", name="status_toggle", methods={"PATCH"})
      */
     public function toggleStatus(User $user, EntityManagerInterface $em, Request $request)
     {
-        // Check if the user has the rights
-        if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
-            throw new AccessDeniedHttpException("Vous n'avez pas les droits pour supprimer un utilisateur");
-        }
+        $this->denyAccessUnlessGranted(ManageUserVoter::TOGGLE_STATUS, $user);
 
         // Check the csrf token
         $submittedToken = $request->request->get('token');
@@ -65,32 +127,8 @@ class UserController extends AbstractController
         $em->flush();
 
         // Redirect with success message
-        $this->addFlash('success', "L'utilisateur " . $user->getEmail() . " a bien été ". ($user->isEnabled() ? 'activé' : 'désactivé'));
+        $this->addFlash('success', "L'utilisateur " . $user->getEmail() . " a bien été " . ($user->isEnabled() ? 'activé' : 'désactivé'));
         return $this->redirect($previousPage = $request->headers->get('referer'));
     }
 
-    /**
-     * @Route("/{user}/delete", name="delete", methods={"DELETE"})
-     */
-    public function deleteUser(User $user, EntityManagerInterface $em, Request $request)
-    {
-        // Check if the user has the rights
-        if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
-            throw new AccessDeniedHttpException("Vous n'avez pas les droits pour supprimer un utilisateur");
-        }
-
-        // Check the csrf token
-        $submittedToken = $request->request->get('token');
-        if (!$this->isCsrfTokenValid('delete-user', $submittedToken)) {
-            throw new InvalidCsrfTokenException("Le token d'action est invalide");
-        }
-
-        // Remove the user
-        $em->remove($user);
-        $em->flush();
-
-        // Redirect with success message
-        $this->addFlash('success', "L'utilisateur " . $user->getEmail() . " a bien été supprimé");
-        return $this->redirect($previousPage = $request->headers->get('referer'));
-    }
 }

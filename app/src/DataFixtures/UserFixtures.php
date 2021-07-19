@@ -35,6 +35,8 @@ class UserFixtures extends Fixture
         // Other fixtures can get this object using the UserFixtures::ADMIN_USER_REFERENCE constant
         $this->addReference(self::USER_REFERENCE, $admin);
 
+        $manager->persist($this->createExampleMember($faker));
+        
         for ($i=0; $i < 36; $i++) { 
             $manager->persist($this->createMember($faker));
         }
@@ -61,7 +63,27 @@ class UserFixtures extends Fixture
     }
     
     /**
-     * Returns a fresh member user genearated
+     * Returns a fresh example member user
+     */
+    public function createExampleMember(FakerGenerator $faker): User
+    {
+        $faker = \Faker\Factory::create('fr_FR');
+
+        $user = new User();
+        return $user
+            ->setCivility($faker->boolean ? 'Monsieur' : 'Madame')
+            ->setEmail('user@mail.com')
+            ->setPhone('0602030405')
+            ->setPassword($this->passwordEncoder->encodePassword($user, 'Passw0r@'))
+            ->setFirstname($faker->firstName)
+            ->setLastname($faker->lastName)
+            ->setRoles(['ROLE_USER']) // Set role user to each members
+            ->setEnabled(true) // Enable each members
+            ->setCreatedAt($faker->dateTimeBetween('-6 months', '+6 months')); 
+    }
+
+    /**
+     * Returns a fresh member user generated
      */
     public function createMember(FakerGenerator $faker): User
     {
@@ -71,7 +93,7 @@ class UserFixtures extends Fixture
         return $user
             ->setCivility($faker->boolean ? 'Monsieur' : 'Madame')
             ->setEmail($faker->email)
-            ->setPhone(mb_strcut($faker->phoneNumber, 0, 10))
+            ->setPhone('0602030405')
             ->setPassword($this->passwordEncoder->encodePassword($user, 'memberpassword'))
             ->setFirstname($faker->firstName)
             ->setLastname($faker->lastName)

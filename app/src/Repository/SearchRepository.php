@@ -20,16 +20,15 @@ class SearchRepository extends ServiceEntityRepository
         parent::__construct($registry, Search::class);
     }
 
-  /**
-   * @param Property $property
-   * @return int|mixed|string
-   */
+    /**
+     * @param Property $property
+     * @return int|mixed|string
+     */
     public function findInterestedUsers(Property $property)
     {
         $query =  $this->createQueryBuilder('p')
             ->select(['IDENTITY(p.searcher), u.email, u.firstname, u.lastname'])
             ->join('p.searcher', 'u', 'with', 'u.id = p.searcher')
-            ->where('p.type = :type')->setParameter('type', $property->getType())
         ;
 
         if(!empty($property->getType()) || $property->getType() !== 'all') {
@@ -46,13 +45,22 @@ class SearchRepository extends ServiceEntityRepository
 
         if(!empty($property->getPrice())) {
           $query = $query->andWhere('p.minPrice <= :price')->setParameter('price', $property->getPrice());
-        }
-
-        if(!empty($property->getPrice())) {
           $query = $query->andWhere('p.maxPrice >= :price')->setParameter('price', $property->getPrice());
         }
 
         return $query->getQuery()->getResult();
     }
 
+
+    /**
+     * @return int|mixed|string
+     */
+    public function findSavedSearchByUser()
+    {
+        $query =  $this->createQueryBuilder('s')
+            ->select('SELECT * from search')
+        ;
+
+        return $query->getQuery()->getResult();
+    }
 }

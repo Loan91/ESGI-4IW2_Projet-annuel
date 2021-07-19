@@ -2,15 +2,15 @@
 
 {{ form_start(form, {attr: {class: "inline"}} ) }}
 
-<div>
+<div x-data="{ type: '{{ form.type.vars.value ?? " maison" }}', hasExternalStorage: {{ form.externalStorage.vars.checked
+	? 'true' : 'false' }} }">
 	<section class="sm:grid sm:grid-cols-2 gap-8">
 		<div class="shadow sm:rounded-md sm:overflow-hidden bg-gray-50 ">
 			<div class="px-4 py-5 space-y-6 sm:p-6">
-				<h3 class="text-xl font-medium leading-6 text-gray-900 mb-6">Informations principales</h3>
-
+				<h3 class="text-3xl font-semibold leading-6 text-gray-900 mb-6">Informations principales</h3>
 				<div>
 					<div class="grid grid-cols-2 gap-6">
-						<div>{{ form_row(form.type) }}</div>
+						<div>{{ form_row(form.type, {attr: {'x-model': 'type'}}) }}</div>
 						<div>{{ form_row(form.category) }}</div>
 						<div>{{ form_row(form.rentOrSale) }}</div>
 						<div>{{ form_row(form.rooms) }}</div>
@@ -21,7 +21,7 @@
 		</div>
 		<div class="shadow sm:rounded-md sm:overflow-hidden bg-gray-50 ">
 			<div class="px-4 py-5 space-y-6 sm:p-6">
-				<h3 class="text-xl font-medium leading-6 text-gray-900 mb-6">Localication et date</h3>
+				<h3 class="text-3xl font-semibold leading-6 text-gray-900 mb-6">Localication et date</h3>
 
 				<div>
 					<div class="grid grid-cols-2 gap-6">
@@ -35,7 +35,7 @@
 		</div>
 		<div class="shadow sm:rounded-md sm:overflow-hidden bg-gray-50">
 			<div class="px-4 py-5 space-y-6 sm:p-6">
-				<h3 class="text-xl font-medium leading-6 text-gray-900 mb-6">Espace</h3>
+				<h3 class="text-3xl font-semibold leading-6 text-gray-900 mb-6">Espace</h3>
 
 				<div>
 					<div class="grid grid-cols-3 gap-6">
@@ -43,12 +43,12 @@
 						<div>{{ form_row(form.bedrooms) }}</div>
 						<div>{{ form_row(form.toilets) }}</div>
 						<div>{{ form_row(form.bathrooms) }}</div>
-						<div>{{ form_row(form.floor) }}</div>
+						<div x-show="type == 'appartement'">{{ form_row(form.floor) }}</div>
 						<div>{{ form_row(form.floors) }}</div>
 					</div>
 				</div>
 
-				<h3 class="text-xl font-medium leading-6 text-gray-900 mb-6">Contenu</h3>
+				<h3 class="text-3xl font-semibold leading-6 text-gray-900 mb-6">Contenu</h3>
 				<div>
 					<div class="grid grid-cols-2 gap-6">
 						<div>{{ form_row(form.isFurnished) }}</div>
@@ -60,15 +60,16 @@
 						<div>{{ form_row(form.elevator) }}</div>
 						<div>{{ form_row(form.guarding) }}</div>
 						<div>{{ form_row(form.containDiningRoom) }}</div>
-						<div>{{ form_row(form.externalStorage) }}</div>
-						<div class="col-span-2">{{ form_row(form.areaExternalStorage) }}</div>
+						<div>{{ form_row(form.externalStorage, {attr: {'x-model': 'hasExternalStorage'}}) }}</div>
+						<div x-show="hasExternalStorage" class="col-span-2">{{ form_row(form.areaExternalStorage) }}
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="shadow sm:rounded-md sm:overflow-hidden bg-gray-50">
 			<div class="px-4 py-5 space-y-6 sm:p-6">
-				<h3 class="text-xl font-medium leading-6 text-gray-900 mb-6">Consommation</h3>
+				<h3 class="text-3xl font-semibold leading-6 text-gray-900 mb-6">Consommation</h3>
 
 				<div>
 					<div class="grid grid-cols-2 gap-6">
@@ -77,7 +78,7 @@
 					</div>
 				</div>
 
-				<h3 class="text-xl font-medium leading-6 text-gray-900 mb-6">Prix</h3>
+				<h3 class="text-3xl font-semibold leading-6 text-gray-900 mb-6">Prix</h3>
 
 				<div>
 					<div class="grid grid-cols-2 gap-6">
@@ -89,7 +90,7 @@
 					</div>
 				</div>
 
-				<h3 class="text-xl font-medium leading-6 text-gray-900 mb-6">Publication</h3>
+				<h3 class="text-3xl font-semibold leading-6 text-gray-900 mb-6">Publication</h3>
 
 				<div>
 					<div class="grid grid-cols-1 gap-6">
@@ -99,53 +100,34 @@
 				</div>
 
 				<div>
-					<button type="submit" class=" focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg mr-2 ">
+					<button type="submit"
+						class=" focus:outline-none font-semibold text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg mr-2 ">
 						{{ button_label|default('Ajouter ce bien') }}
 					</button>
-					
-					<a href="{{ path('front_property_index') }}" class="focus:outline-none text-gray-600 text-sm py-2.5 px-5 rounded-md border border-gray-600 hover:bg-gray-50 mr-2">Accéder à la liste des biens</a>
+
+					<a href="{{ path('front_property_index') }}"
+						class="focus:outline-none font-semibold text-gray-600 text-sm py-2.5 px-5 rounded-md border border-gray-600 hover:bg-gray-50 mr-2">Accéder
+						à la liste des biens</a>
+
+
+					{% if app.request.attributes.get('_route') == 'front_property_edit' %}
+					<button type="button"
+						class="focus:outline-none font-semibold text-white text-sm py-2.5 px-5 rounded-md bg-red-500 hover:bg-red-600 hover:shadow-lg"
+						onclick="if(confirm('Êtes vous sûr de vouloir supprimer votre bien? (cette action est définitive)')) { forms.delete_property.submit() }">Suppression
+						du bien</button>
+					{% endif %}
 				</div>
 			</div>
 		</div>
 	</section>
 </div>
-
-
-	
 {{ form_end(form) }}
 
-<script>
-	let type = document.getElementById("property_type");
-	let numeroEtage = document.getElementById("property_floor");
-	let externalStorage = document.getElementById("property_externalStorage");
-	let areaExternalStorage = document.getElementById("property_areaExternalStorage");
-
-	console.log()
-
-	function changeForAppartement() {
-		// Afficher le numéro d'étage seulement si appartement
-		switch (type.value) {
-			case "appartement":
-				numeroEtage.parentNode.parentNode.hidden = false;
-				break;
-			case "maison":
-			default:
-				numeroEtage.parentNode.parentNode.hidden = true;
-				break;
-		}
-	}
-
-	function changeForExternalStorage() {
-		// Afficher le champ si external storage est coché
-		if(externalStorage.checked) {
-			areaExternalStorage.parentNode.parentNode.hidden = false;
-		} else {
-			areaExternalStorage.parentNode.parentNode.hidden = true;
-		}
-	}
-
-	changeForAppartement();
-	changeForExternalStorage();
-	type.addEventListener('change', changeForAppartement);
-	externalStorage.addEventListener('change', changeForExternalStorage);
-</script>
+{# Le formulaire de suppression est situé à l'extétieur pour ne pas entrer en conflit avec celui pour la modification #}
+{% if app.request.attributes.get('_route') == 'front_property_edit' %}
+<form name="delete_property" method="post" class="hidden"
+	action="{{ path('front_property_delete', {'id': property.id}) }}">
+	<input type="hidden" name="_method" value="DELETE">
+	<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ property.id) }}">
+</form>
+{% endif %}

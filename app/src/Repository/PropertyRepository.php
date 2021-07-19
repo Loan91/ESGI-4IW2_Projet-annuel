@@ -6,7 +6,11 @@ use App\Data\SearchData;
 use App\Entity\Property;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Bundle\PaginatorBundle\Pagination\SlidingPagination;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @method Property|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,51 +21,45 @@ use Doctrine\Persistence\ManagerRegistry;
 class PropertyRepository extends ServiceEntityRepository
 {
 
-    public function __construct(ManagerRegistry $registry)
-        {
-            parent::__construct($registry, Property::class);
-        }
-
-
-        /**
-         * Récupère les propriétés en lien avec la recherche soumise.
-         * @param SearchData $searchData
-         * @return Property[]
-         */
-        public function findSearch(SearchData $searchData): array
-        {
-            $query = $this->createQueryBuilder('p');
-
-            if (!empty($searchData->type) && $searchData->type !== 'all') {
-                $query = $query->where('p.type = :type')->setParameter('type', $searchData->type);
-            }
-
-            if (!empty($searchData->city)) {
-              $query = $query->andWhere('p.city LIKE :city')->setParameter('city', '%'. $searchData->city . '%');
-            }
-
-            if (!empty($searchData->categories)) {
-                $query = $query->andWhere('p.category = :categories')->setParameter('categories', $searchData->categories);
-            }
-
-            if (!empty($searchData->minPrice)) {
-                $query = $query->andWhere('p.price >= :minPrice')->setParameter('minPrice', $searchData->minPrice);
-            }
-
-            if (!empty($searchData->maxPrice)) {
-                $query = $query->andWhere('p.price <= :maxPrice')->setParameter('maxPrice', $searchData->maxPrice);
-            }
-
-            return $query->getQuery()->getResult();
-        }
-
-    public function getUserProperties(User $user)
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {
-        return $this->createQueryBuilder('p')
-            ->where('p.owner = :user')
-            ->setParameter('user', $user)
-            ->orderBy('p.id')
-            ->getQuery()->getResult();
+        parent::__construct($registry, Property::class);
+        $this->paginator = $paginator;
+    }
+
+
+    /**
+     * Récupère les propriétés en lien avec la recherche soumise.
+     * 
+     * @param SearchData $searchData
+     * 
+     * @return Property[]
+     */
+    public function findSearch(SearchData $searchData): array
+    {
+        $query = $this->createQueryBuilder('p');
+
+        if (!empty($searchData->type) && $searchData->type !== 'all') {
+            $query = $query->where('p.type = :type')->setParameter('type', $searchData->type);
+        }
+
+        if (!empty($searchData->city)) {
+            $query = $query->andWhere('p.city LIKE :city')->setParameter('city', '%' . $searchData->city . '%');
+        }
+
+        if (!empty($searchData->categories)) {
+            $query = $query->andWhere('p.category = :categories')->setParameter('categories', $searchData->categories);
+        }
+
+        if (!empty($searchData->minPrice)) {
+            $query = $query->andWhere('p.price >= :minPrice')->setParameter('minPrice', $searchData->minPrice);
+        }
+
+        if (!empty($searchData->maxPrice)) {
+            $query = $query->andWhere('p.price <= :maxPrice')->setParameter('maxPrice', $searchData->maxPrice);
+        }
+
+        return $query->getQuery()->getResult();
     }
 
     /**
@@ -94,6 +92,11 @@ class PropertyRepository extends ServiceEntityRepository
         return $stmt->fetchOne();
     }
 
+    /**
+     * Gets the count of houses
+     * 
+     * @return int
+     */
     public function getMaisonCount(): int
     {
         return $this->_em->createQueryBuilder()
@@ -104,6 +107,11 @@ class PropertyRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    /**
+     * Gets the count of appartments
+     * 
+     * @return int
+     */
     public function getAppartementCount(): int
     {
         return $this->_em->createQueryBuilder()
@@ -112,5 +120,63 @@ class PropertyRepository extends ServiceEntityRepository
             ->where("p.type = 'appartement'")
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    /**
+     * Gets a paginator for all the properties owned by a user (usefull for the My properties page)
+     * 
+     * @param User $user The user that owe the properties
+     * @param Request $request The current http request
+     * @param int $limitPerPage The limit of element per page
+     * @param string $pageName The name of the get argument which set the current page
+     * 
+     * @return SlidingPagination
+     */
+    public function getPropertiesPaginationForUser(User $user, Request $request, int $limitPerPage = 6, string $pageName = 'page'): SlidingPagination
+    {
+        $builder = $this->_em->createQueryBuilder()
+            ->select('p')
+            ->from('App\Entity\Property', 'p')
+            ->innerJoin('App\Entity\User', 'u', Join::WITH, 'p.owner = :userId');
+        $builder->setParameter(':userId', $user->getId());
+
+        return $this->paginator->paginate(
+            $builder,
+            $request->query->getInt($pageName, 1), /*page number*/
+            $limitPerPage
+        );
+    }
+
+    /**
+     * Gets a paginator for all the properties owned by a user for a specific city (usefull for the My properties page)
+     * 
+     * @param User $user The user that owe the properties
+     * @param Request $request The current http request
+     * @param string $city The city criteria
+     * @param int $limitPerPage The limit of element per page
+     * @param string $pageName The name of the get argument which set the current page
+     * 
+     * @return SlidingPagination
+     */
+    public function getPropertiesPaginationForUserByCity(
+        User $user,
+        Request $request,
+        string $city,
+        int $limitPerPage = 6,
+        string $pageName = 'page'
+    ): SlidingPagination {
+        $builder = $this->_em->createQueryBuilder()
+            ->select('p')
+            ->from('App\Entity\Property', 'p')
+            ->innerJoin('App\Entity\User', 'u', Join::WITH, 'p.owner = :userId')
+            ->andWhere('LOWER(p.city) LIKE :city');
+        $builder->setParameter(':userId', $user->getId());
+        $builder->setParameter(':city', "%" . strtolower($city) . "%");
+
+        return $this->paginator->paginate(
+            $builder,
+            $request->query->getInt($pageName, 1), /*page number*/
+            $limitPerPage
+        );
     }
 }

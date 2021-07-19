@@ -1,97 +1,167 @@
 {% extends 'base_front.html.twig' %}
 
 {% block body %}
-<div class="mx-4">
-	<h1 class="text-5xl font-bold mt-8 mb-4 text-center">Liste de vos biens</h1>
+<main class="mx-4 mb-4 container mx-auto">
+	<header class="mt-4 mb-6">
+		<section class="flex flex-col sm:flex-row items-center justify-center space-x-3">
+			<h1 class="text-5xl font-bold text-center">Liste de vos biens</h1>
+			<a href="{{ path('front_property_new') }}"
+				class="ml-3 flex flex-row items-center text-xl font-semibold rounded-full px-4 py-2 mr-2 bg-green-500 hover:bg-green-600 text-white rounded leading-none">
+				{% include "components/icons/plus-add.svg" with {class: "mr-1 w-5 h-5"} %}
+				Ajouter
+			</a>
+			<a href="{{ path('front_property_saved_search') }}" class="flex flex-row items-center text-xl font-medium rounded-full px-6 py-2 mr-2 text-green-600 border border-green-600 leading-none">Mes recherches sauvegardées</a>
+		</section>
+
+		<section class="mt-2">
+			{% form_theme searchForm 'themes/tailwindcss.html.twig' %}
+			{{ form_start(searchForm, {attr: {
+			class: "w-full flex flex-col sm:flex-row items-center justify-center"}
+			}) }}
+			{{ form_widget(searchForm.city, {attr: {
+			class: "w-full sm:w-1/2 lg:w-1/3 shadow-sm border focus:outline-none sm:text-sm border-gray-300 rounded-md
+			py-3 px-3",
+			placeholder: "Recherche par ville"
+			}}) }}
+			<button type="submit"
+				class="ml-3 rounded-md border border-transparent px-4 py-4 bg-gray-900 text-base font-medium text-white shadow hover:bg-gray-700 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-200 ease-in-out">
+				{% include "components/icons/loupe.svg" with {class: "w-4 h-4 fill-current"} %}
+			</button>
+			{{ form_end(searchForm) }}
+		</section>
+	</header>
 
 	{% include "components/alert.html.twig" %}
 
-	<!-- Add a property -->
-	<form action="{{ path('front_property_new') }}" class="mt-8 mb-4 text-center">
-		<button type="submit" class="px-24 focus:outline-none text-white text-xl py-3.5 px-6 rounded-md bg-green-500 hover:bg-green-600 hover:shadow-lg mb-4">Ajouter un bien</button>
-	</form>
-
-	{% if properties is empty %}
-		<div class="mt-4">Vous n'avez pas encore renseignés de biens</div>
+	{% if paginator is empty %}
+	<section class="flex flex-col lg:flex-row mx-auto items-center justify-around bg-gray-100 rounded
+	dark:bg-gray-800 px-8 py-6 mb-6 w-1/2 text-center">
+		<div>
+			<div>Aucun bien n'a été trouvé.</div>
+			{% if searchForm.city.vars.value is not empty %}
+			<div>Relancez une autre recherche.</div>
+			{% endif %}
+		</div>
+		{% if searchForm.city.vars.value is not empty %}
+		<div>
+			<span class="p-2 text-gray-700 text-xs">OU</span>
+		</div>
+		{% endif %}
+		<div>Peut-être souhaiteriez vous
+			<a href="{{ path('front_property_new') }}"
+				class="flex items-center text-xl font-semibold mt-1 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded">
+				{% include "components/icons/plus-add.svg" with {class: "mr-2 w-6 h-6 inline"} %}
+				Ajouter un bien
+			</a>
+		</div>
+	</section>
 	{% endif %}
-	
-	{% for property in properties %}
-	<div class="flex flex-col lg:flex-row lg:w-4/5 mx-auto items-center justify-between bg-gray-100 rounded
+
+	<section class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+		{% for property in paginator %}
+		<div class="flex flex-col lg:flex-row mx-auto items-center justify-between bg-gray-100 rounded
 	dark:bg-gray-800 px-8 py-6 mb-6">
-		<!-- card -->
-		<div class="flex flex-row">
-			<img class="h-12 w-12 rounded-full object-cover" src="https://cache.marieclaire.fr/data/photo/w1000_ci/5o/illico-travaux-conseils-extension-maison-bois.jpg" alt="infamous">
+			<!-- card -->
+			<div class="flex flex-row">
+				{% if property.imageName is not null %}
+				<img class="h-12 w-12 rounded-full object-cover"
+					src="{{ uploaded_property_path ~ '/' ~ property.imageName }}" alt="image du bien">
+				{% else %}
+				<img class="h-12 w-12 rounded-full object-cover" src="{{ asset('images/maison-default.jpg') }}"
+					alt="image du bien">
+				{% endif %}
 
-			<div class="flex flex-col ml-6">
-				<span class="text-lg font-bold"><span class="capitalize">{{ property.type }}</span> à <span class="capitalize">{{ property.city }}</span></span>
-				<div class="mt-4 flex">
-					<div class="flex">
-						<svg class="h-5 w-5 fill-current
-						dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" width="460.298px" height="460.297px" viewBox="0 0 460.298 460.297" style="enable-background:new 0 0 460.298 460.297;" xml:space="preserve">
-							<g>
+				<div class="flex flex-col ml-6">
+					<span class="text-lg font-bold"><span class="capitalize">{{ property.type }}</span> à <span
+							class="capitalize">{{ property.city }}</span></span>
+					<div class="text-md text-gray-700">En {{ property.rentOrSale == 'sale' ? 'vente' :
+						'location' }} pour {{ property.price }} €</div>
+					<div class="mt-4 flex">
+						<div class="flex">
+							<svg class="h-5 w-5 fill-current
+						dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+								id="Capa_1" x="0px" y="0px" width="460.298px" height="460.297px"
+								viewBox="0 0 460.298 460.297" style="enable-background:new 0 0 460.298 460.297;"
+								xml:space="preserve">
 								<g>
-									<path d="M230.149,120.939L65.986,256.274c0,0.191-0.048,0.472-0.144,0.855c-0.094,0.38-0.144,0.656-0.144,0.852v137.041    c0,4.948,1.809,9.236,5.426,12.847c3.616,3.613,7.898,5.431,12.847,5.431h109.63V303.664h73.097v109.64h109.629    c4.948,0,9.236-1.814,12.847-5.435c3.617-3.607,5.432-7.898,5.432-12.847V257.981c0-0.76-0.104-1.334-0.288-1.707L230.149,120.939    z"/>
-									<path d="M457.122,225.438L394.6,173.476V56.989c0-2.663-0.856-4.853-2.574-6.567c-1.704-1.712-3.894-2.568-6.563-2.568h-54.816    c-2.666,0-4.855,0.856-6.57,2.568c-1.711,1.714-2.566,3.905-2.566,6.567v55.673l-69.662-58.245    c-6.084-4.949-13.318-7.423-21.694-7.423c-8.375,0-15.608,2.474-21.698,7.423L3.172,225.438c-1.903,1.52-2.946,3.566-3.14,6.136    c-0.193,2.568,0.472,4.811,1.997,6.713l17.701,21.128c1.525,1.712,3.521,2.759,5.996,3.142c2.285,0.192,4.57-0.476,6.855-1.998    L230.149,95.817l197.57,164.741c1.526,1.328,3.521,1.991,5.996,1.991h0.858c2.471-0.376,4.463-1.43,5.996-3.138l17.703-21.125    c1.522-1.906,2.189-4.145,1.991-6.716C460.068,229.007,459.021,226.961,457.122,225.438z"/>
+									<g>
+										<path
+											d="M230.149,120.939L65.986,256.274c0,0.191-0.048,0.472-0.144,0.855c-0.094,0.38-0.144,0.656-0.144,0.852v137.041    c0,4.948,1.809,9.236,5.426,12.847c3.616,3.613,7.898,5.431,12.847,5.431h109.63V303.664h73.097v109.64h109.629    c4.948,0,9.236-1.814,12.847-5.435c3.617-3.607,5.432-7.898,5.432-12.847V257.981c0-0.76-0.104-1.334-0.288-1.707L230.149,120.939    z" />
+										<path
+											d="M457.122,225.438L394.6,173.476V56.989c0-2.663-0.856-4.853-2.574-6.567c-1.704-1.712-3.894-2.568-6.563-2.568h-54.816    c-2.666,0-4.855,0.856-6.57,2.568c-1.711,1.714-2.566,3.905-2.566,6.567v55.673l-69.662-58.245    c-6.084-4.949-13.318-7.423-21.694-7.423c-8.375,0-15.608,2.474-21.698,7.423L3.172,225.438c-1.903,1.52-2.946,3.566-3.14,6.136    c-0.193,2.568,0.472,4.811,1.997,6.713l17.701,21.128c1.525,1.712,3.521,2.759,5.996,3.142c2.285,0.192,4.57-0.476,6.855-1.998    L230.149,95.817l197.57,164.741c1.526,1.328,3.521,1.991,5.996,1.991h0.858c2.471-0.376,4.463-1.43,5.996-3.138l17.703-21.125    c1.522-1.906,2.189-4.145,1.991-6.716C460.068,229.007,459.021,226.961,457.122,225.438z" />
+									</g>
 								</g>
-							</g>
-						</svg>
-						<span class="ml-2 text-sm text-gray-600
+							</svg>
+							<span class="ml-2 text-sm text-gray-600
 							dark:text-gray-300 capitalize">
-							{{ property.category }}
-						</span>
-					</div>
+								{{ property.category }}
+							</span>
+						</div>
 
-					<div class="flex ml-6">
-						<svg class="h-5 w-5 fill-current
+						<div class="flex ml-6">
+							<svg class="h-5 w-5 fill-current
 							dark:text-gray-300" viewBox="0 0 24 24">
-							<path d="M19
+								<path d="M19
 								19H5V8h14m-3-7v2H8V1H6v2H5c-1.11
 								0-2 .89-2 2v14a2 2 0 002 2h14a2 2
 								0 002-2V5a2 2 0 00-2-2h-1V1m-1
 								11h-5v5h5v-5z"></path>
-						</svg>
-						<span class="ml-2 text-sm text-gray-600
+							</svg>
+							<span class="ml-2 text-sm text-gray-600
 							dark:text-gray-300 ">
-							Datant du {{ property.constructionDate ? property.constructionDate|date('Y-m-d') : '' }}
-						</span>
-					</div>
+								Datant du {{ property.constructionDate ? property.constructionDate|date('Y-m-d') : '' }}
+							</span>
+						</div>
 
-					<div class="flex ml-6">
-						<svg class="h-5 w-5 fill-current
-						dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" height="512" viewBox="0 0 512 512" width="512"><g id="_01-home" data-name="01-home"><g id="glyph"><path d="m256 4c-108.075 0-196 87.925-196 196 0 52.5 31.807 119.92 94.537 200.378a1065.816 1065.816 0 0 0 93.169 104.294 12 12 0 0 0 16.588 0 1065.816 1065.816 0 0 0 93.169-104.294c62.73-80.458 94.537-147.878 94.537-200.378 0-108.075-87.925-196-196-196zm0 336c-77.2 0-140-62.8-140-140s62.8-140 140-140 140 62.8 140 140-62.8 140-140 140z"/><path d="m352.072 183.121-88-80a12 12 0 0 0 -16.144 0l-88 80a12.006 12.006 0 0 0 -2.23 15.039 12.331 12.331 0 0 0 10.66 5.84h11.642v76a12 12 0 0 0 12 12h28a12 12 0 0 0 12-12v-44a12 12 0 0 1 12-12h24a12 12 0 0 1 12 12v44a12 12 0 0 0 12 12h28a12 12 0 0 0 12-12v-76h11.642a12.331 12.331 0 0 0 10.66-5.84 12.006 12.006 0 0 0 -2.23-15.039z"/></g></g></svg>
-						
-						<span class="ml-2 text-sm text-gray-600
+						<div class="flex ml-6">
+							<svg class="h-5 w-5 fill-current
+						dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" height="512" viewBox="0 0 512 512" width="512">
+								<g id="_01-home" data-name="01-home">
+									<g id="glyph">
+										<path
+											d="m256 4c-108.075 0-196 87.925-196 196 0 52.5 31.807 119.92 94.537 200.378a1065.816 1065.816 0 0 0 93.169 104.294 12 12 0 0 0 16.588 0 1065.816 1065.816 0 0 0 93.169-104.294c62.73-80.458 94.537-147.878 94.537-200.378 0-108.075-87.925-196-196-196zm0 336c-77.2 0-140-62.8-140-140s62.8-140 140-140 140 62.8 140 140-62.8 140-140 140z" />
+										<path
+											d="m352.072 183.121-88-80a12 12 0 0 0 -16.144 0l-88 80a12.006 12.006 0 0 0 -2.23 15.039 12.331 12.331 0 0 0 10.66 5.84h11.642v76a12 12 0 0 0 12 12h28a12 12 0 0 0 12-12v-44a12 12 0 0 1 12-12h24a12 12 0 0 1 12 12v44a12 12 0 0 0 12 12h28a12 12 0 0 0 12-12v-76h11.642a12.331 12.331 0 0 0 10.66-5.84 12.006 12.006 0 0 0 -2.23-15.039z" />
+									</g>
+								</g>
+							</svg>
+
+							<span class="ml-2 text-sm text-gray-600
 							dark:text-gray-300 capitalize">
-							{{ property.address ~ ' ' ~ property.zipCode ~ ' ' ~ property.city }}
-						</span>
+								{{ property.address ~ ' ' ~ property.zipCode ~ ' ' ~ property.city }}
+							</span>
+						</div>
 					</div>
-				</div>
 
-				<div class="mt-4 flex">
-					
-					<a href="{{ path('front_annonce_show', {'id': property.id}) }}" class="flex items-center
+					<div class="mt-4 flex">
+
+						<a href="{{ path('front_annonce_show', {'id': property.id}) }}" class="flex items-center
 						focus:outline-none border rounded-full
 						py-2 px-6 leading-none border-gray-500
 						dark:border-gray-600 select-none
 						hover:bg-blue-400 hover:text-white
 						dark-hover:text-gray-200">
-						<svg class="h-5 w-5 fill-current mr-2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" width="511.626px" height="511.626px" viewBox="0 0 511.626 511.626" style="enable-background:new 0 0 511.626 511.626;" xml:space="preserve">
-							<g>
-								<path d="M505.918,236.117c-26.651-43.587-62.485-78.609-107.497-105.065c-45.015-26.457-92.549-39.687-142.608-39.687   c-50.059,0-97.595,13.225-142.61,39.687C68.187,157.508,32.355,192.53,5.708,236.117C1.903,242.778,0,249.345,0,255.818   c0,6.473,1.903,13.04,5.708,19.699c26.647,43.589,62.479,78.614,107.495,105.064c45.015,26.46,92.551,39.68,142.61,39.68   c50.06,0,97.594-13.176,142.608-39.536c45.012-26.361,80.852-61.432,107.497-105.208c3.806-6.659,5.708-13.223,5.708-19.699   C511.626,249.345,509.724,242.778,505.918,236.117z M194.568,158.03c17.034-17.034,37.447-25.554,61.242-25.554   c3.805,0,7.043,1.336,9.709,3.999c2.662,2.664,4,5.901,4,9.707c0,3.809-1.338,7.044-3.994,9.704   c-2.662,2.667-5.902,3.999-9.708,3.999c-16.368,0-30.362,5.808-41.971,17.416c-11.613,11.615-17.416,25.603-17.416,41.971   c0,3.811-1.336,7.044-3.999,9.71c-2.667,2.668-5.901,3.999-9.707,3.999c-3.809,0-7.044-1.334-9.71-3.999   c-2.667-2.666-3.999-5.903-3.999-9.71C169.015,195.482,177.535,175.065,194.568,158.03z M379.867,349.04   c-38.164,23.12-79.514,34.687-124.054,34.687c-44.539,0-85.889-11.56-124.051-34.687s-69.901-54.2-95.215-93.222   c28.931-44.921,65.19-78.518,108.777-100.783c-11.61,19.792-17.417,41.207-17.417,64.236c0,35.216,12.517,65.329,37.544,90.362   s55.151,37.544,90.362,37.544c35.214,0,65.329-12.518,90.362-37.544s37.545-55.146,37.545-90.362   c0-23.029-5.808-44.447-17.419-64.236c43.585,22.265,79.846,55.865,108.776,100.783C449.767,294.84,418.031,325.913,379.867,349.04   z"/>
-							</g>
+							<svg class="h-5 w-5 fill-current mr-2" xmlns="http://www.w3.org/2000/svg"
+								xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px"
+								width="511.626px" height="511.626px" viewBox="0 0 511.626 511.626"
+								style="enable-background:new 0 0 511.626 511.626;" xml:space="preserve">
+								<g>
+									<path
+										d="M505.918,236.117c-26.651-43.587-62.485-78.609-107.497-105.065c-45.015-26.457-92.549-39.687-142.608-39.687   c-50.059,0-97.595,13.225-142.61,39.687C68.187,157.508,32.355,192.53,5.708,236.117C1.903,242.778,0,249.345,0,255.818   c0,6.473,1.903,13.04,5.708,19.699c26.647,43.589,62.479,78.614,107.495,105.064c45.015,26.46,92.551,39.68,142.61,39.68   c50.06,0,97.594-13.176,142.608-39.536c45.012-26.361,80.852-61.432,107.497-105.208c3.806-6.659,5.708-13.223,5.708-19.699   C511.626,249.345,509.724,242.778,505.918,236.117z M194.568,158.03c17.034-17.034,37.447-25.554,61.242-25.554   c3.805,0,7.043,1.336,9.709,3.999c2.662,2.664,4,5.901,4,9.707c0,3.809-1.338,7.044-3.994,9.704   c-2.662,2.667-5.902,3.999-9.708,3.999c-16.368,0-30.362,5.808-41.971,17.416c-11.613,11.615-17.416,25.603-17.416,41.971   c0,3.811-1.336,7.044-3.999,9.71c-2.667,2.668-5.901,3.999-9.707,3.999c-3.809,0-7.044-1.334-9.71-3.999   c-2.667-2.666-3.999-5.903-3.999-9.71C169.015,195.482,177.535,175.065,194.568,158.03z M379.867,349.04   c-38.164,23.12-79.514,34.687-124.054,34.687c-44.539,0-85.889-11.56-124.051-34.687s-69.901-54.2-95.215-93.222   c28.931-44.921,65.19-78.518,108.777-100.783c-11.61,19.792-17.417,41.207-17.417,64.236c0,35.216,12.517,65.329,37.544,90.362   s55.151,37.544,90.362,37.544c35.214,0,65.329-12.518,90.362-37.544s37.545-55.146,37.545-90.362   c0-23.029-5.808-44.447-17.419-64.236c43.585,22.265,79.846,55.865,108.776,100.783C449.767,294.84,418.031,325.913,379.867,349.04   z" />
+								</g>
 							</svg>
-						
-						<span>Voir l'annonce</span>
+
+							<span>Voir l'annonce</span>
 						</a>
-					<a href="{{ path('front_property_edit', {'id': property.id}) }}" class="flex items-center ml-4
+						<a href="{{ path('front_property_edit', {'id': property.id}) }}" class="flex items-center ml-4
 						focus:outline-none border rounded-full
 						py-2 px-6 leading-none border-blue-500
 						dark:border-blue-600 select-none
 						hover:bg-blue-400 hover:text-white
 						dark-hover:text-gray-200">
-						<svg class="h-5 w-5 fill-current mr-2
+							<svg class="h-5 w-5 fill-current mr-2
 							text-blue-600" viewBox="0 0 576 512">
-							<path d="M402.3 344.9l32-32c5-5
+								<path d="M402.3 344.9l32-32c5-5
 								13.7-1.5 13.7 5.7V464c0 26.5-21.5
 								48-48 48H48c-26.5
 								0-48-21.5-48-48V112c0-26.5
@@ -109,32 +179,44 @@
 								174zm64.8-79.7l-43.2-43.2c-4.1-4.1-10.8-4.1-14.8
 								0L436 82l58.1 58.1
 								30.9-30.9c4-4.2 4-10.8-.1-14.9z"></path>
-						</svg>
-						<span>Mettre à jour</span>
-					</a>
+							</svg>
+							<span>Mettre à jour</span>
+						</a>
 
+					</div>
 				</div>
 			</div>
-		</div>
-
-		<div class="flex flex-col my-auto mt-5 mx-auto lg:mr-20">
-			<span class="font-semibold text-green-500
+			{#
+			<div class="flex flex-col my-auto mt-5 mx-auto">
+				<span class="font-semibold text-green-500
 				dark:text-green-300 text-3xl text-center mb-2">
-				{{ property.rentOrSale == 'sale' ? 'A vendre' : 'A louer' }}
-			</span>
-			<span class="font-semibold text-green-500
+					{{ property.rentOrSale == 'sale' ? 'A vendre' : 'A louer' }}
+				</span>
+				<span class="font-semibold text-green-500
 				dark:text-green-300 text-2xl text-center">
-				{{ property.price }} €
-			</span>
-			<span class="text-sm text-gray-700 dark:text-gray-400
+					{{ property.price }} €
+				</span>
+				<span class="text-sm text-gray-700 dark:text-gray-400
 				mt-2 text-center">
-				<span class="text-lg">{{ property.area }} m²</span>
-				<svg class="h-5 w-5 m-auto fill-current
-				dark:text-gray-300 inline" xmlns="http://www.w3.org/2000/svg" id="Capa_1" enable-background="new 0 0 511.973 511.973" height="512" viewBox="0 0 511.973 511.973" width="512"><path d="m255.989 0-221.693 127.993v255.985l221.693 127.994 221.688-127.994v-255.985zm176.683 136.651-176.683 101.965-176.688-101.965 176.688-102.01zm-368.376 25.977 176.693 101.969v204.074l-176.693-102.013zm206.693 306.043v-204.074l176.688-101.968v204.03z"/></svg>
-			</span>
+					<span class="text-lg">{{ property.area }} m²</span>
+					<svg class="h-5 w-5 m-auto fill-current
+				dark:text-gray-300 inline" xmlns="http://www.w3.org/2000/svg" id="Capa_1"
+						enable-background="new 0 0 511.973 511.973" height="512" viewBox="0 0 511.973 511.973"
+						width="512">
+						<path
+							d="m255.989 0-221.693 127.993v255.985l221.693 127.994 221.688-127.994v-255.985zm176.683 136.651-176.683 101.965-176.688-101.965 176.688-102.01zm-368.376 25.977 176.693 101.969v204.074l-176.693-102.013zm206.693 306.043v-204.074l176.688-101.968v204.03z" />
+					</svg>
+				</span>
 
+			</div> #}
 		</div>
-	</div>
-	{% endfor %}
-</div>
+		{% endfor %}
+	</section>
+
+	<aside class="sm:flex-1 flex items-center justify-center mt-4 work-sans">
+		<div>
+			{{ knp_pagination_render(paginator) }}
+		</div>
+	</aside>
+</main>
 {% endblock %}

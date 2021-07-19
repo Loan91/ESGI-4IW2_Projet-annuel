@@ -9,7 +9,7 @@
         {% include "components/alert.html.twig" %}
         
         <div class="flex justify-center mx-auto">
-            <div class="mt-5 md:mt-0 md:col-span-2">
+            <div class="mt-5 md:mt-0 md:col-span-2 font-semibold">
                 <h1 class="text-4xl text-center text-gray-900 mb-16">Modification du mot de passe de {{ userFullname(app.user) }}</h1>
 
                 <div class="w-2/3 mx-auto">
@@ -20,11 +20,11 @@
 
                         {{ form_row(form.password) }}
                         
-                        <button type="submit" class="mt-8 focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg mr-2 mb-4">
+                        <button type="submit" class="mt-8 font-semibold focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg mr-2 mb-4">
                             Modidier le mot de passe
                         </button>
                     
-                        <a href="{{ path('front_users') }}" class="focus:outline-none text-gray-600 text-sm py-2.5 px-5 rounded-md border border-gray-600 hover:bg-gray-50 mr-2">Retour sur le profil</a>
+                        <a href="{{ path('front_profil_index') }}" class="focus:outline-none text-gray-600 text-sm py-2.5 px-5 rounded-md border border-gray-600 hover:bg-gray-50 mr-2">Retour sur le profil</a>
                     {{ form_end(form) }}
                 </div>
             </div>

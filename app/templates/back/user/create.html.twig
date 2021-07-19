@@ -1,0 +1,16 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Gestion utilisateur
+{% endblock %}
+
+{% block body %}
+{% include "components/alert.html.twig" %}
+<main class="flex flex-row items-center justify-center">
+    <section
+	class="mt-16 w-4/5 space-y-8 px-10 pb-4 bg-white rounded-xl shadow-lg z-10">
+    <h1 class="text-4xl font-bold my-4 text-center text-gray-800">Ajouter un utilisateur</h1>
+
+    {% include "back/user/_form.html.twig" %}
+</section>
+</main>
+{% endblock %}

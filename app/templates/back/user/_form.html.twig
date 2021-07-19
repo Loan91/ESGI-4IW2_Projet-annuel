@@ -1,0 +1,42 @@
+<main class="font-semibold">
+    {% form_theme userForm 'themes/tailwindcss.html.twig' %}
+    {{ form_start(userForm) }}
+
+    <section class="flex flex-col space-y-3">
+        {{ form_row(userForm.civility) }}
+
+        <article class="grid grid-cols-2 gap-4">
+            {{ form_row(userForm.firstname) }}
+            {{ form_row(userForm.lastname) }}
+        </article>
+
+
+        <article class="grid grid-cols-2 gap-4">
+            {{ form_row(userForm.password) }}
+        </article>
+
+
+        <article class="grid grid-cols-2 gap-4">
+            {{ form_row(userForm.email) }}
+            {{ form_row(userForm.phone) }}
+        </article>
+
+        <article class="grid grid-cols-4 gap-4">
+            {{ form_row(userForm.enabled) }}
+            {{ form_row(userForm.roles) }}
+            <div class="col-span-2">
+                {{ form_row(userForm.profilePicture.imageFile) }}
+            </div>
+        </article>
+    </section>
+
+    <section class="flex justify-center mt-4">
+        <button type="submit"
+            class=" focus:outline-none font-semibold text-white text-sm py-2.5 px-5 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg mr-2 ">
+            {{ button_label|default('Créer cet utilisateur') }}
+        </button>
+        <a href="{{ path('back_user_index') }}"
+            class="focus:outline-none font-semibold text-gray-600 text-sm py-2.5 px-5 rounded-md border border-gray-600 hover:bg-gray-50 mr-2">Retour</a>
+    </section>
+    {{ form_end(userForm) }}
+</main>
