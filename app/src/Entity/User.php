@@ -142,9 +142,15 @@ class User implements UserInterface, Serializable
      */
     private $properties;
 
+    /**
+     *  @ORM\OneToMany(targetEntity=Search::class, mappedBy="searcher")
+     */
+    private $searches;
+
     public function __construct()
     {
         $this->properties = new ArrayCollection();
+        $this->searches = new ArrayCollection();
     }
 
     /**
@@ -174,8 +180,13 @@ class User implements UserInterface, Serializable
         $this->id = (int) $unserialized['id'];
         unset($unserialized['id']);
 
+            foreach ($unserialized['properties'] as $property) {
+                $this->addProperty($property);
+            }
+
         // Do not set properties (because its a manyToMany property)
         unset($unserialized['properties']);
+        unset($unserialized['searches']);
 
         // Set other properties by setters
         foreach ($unserialized as $key => $value) {

@@ -24,15 +24,20 @@ class SearchTest extends KernelTestCase
     public function testFindInterestedUsers(): void
     {
         $property = new Property();
-        $property->setType('all');
-        // $property->setCategory('f1');
-        $property->setCity('Lombard');
-        $property->setPrice(570000);
+        $property->setType('maison');
+        // $property->setCategory('');
+        $property->setCity('Blanchard');
+        $property->setPrice(730000);
 
         $users = $this->entityManager
             ->getRepository(Search::class)
-            ->findInterestedUsers($property);
+            ->findInterestedUsers($property)
+        ;
 
         var_dump($users);
+
+
+
+        # var_dump($users[1]['email']);
     }
 }

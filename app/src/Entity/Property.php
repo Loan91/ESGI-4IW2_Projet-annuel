@@ -31,7 +31,7 @@ class Property
     private $type;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $category;
 
@@ -267,6 +267,7 @@ class Property
     ];
 
     const CATEGORIES = [
+        'Indéfinie' => null,
         'Studio' => 'studio',
         'F1' => 'f1',
         'F2' => 'f2',
