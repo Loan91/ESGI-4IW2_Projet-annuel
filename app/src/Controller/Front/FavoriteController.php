@@ -58,7 +58,7 @@ class FavoriteController extends AbstractController
         $entityManager->remove($favorite);
         $entityManager->flush();
 
-        $this->addFlash('success', 'Annonce ajoutée à vos favoris !');
+        $this->addFlash('success', 'Annonce supprimée de vos favoris !');
         return $this->redirect($request->server->get('HTTP_REFERER'));
     }
 }

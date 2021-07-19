@@ -4,6 +4,13 @@
 
 {% block body %}
 <main class="max-w-7xl mx-auto px-4 sm:px-8 py-8">
+    <!-- msg flash -->
+    <div class="">
+        {% for msg in app.flashes('success') %}
+        <p>{{ msg }}</p>
+        {% endfor %}
+    </div>
+
     <h2 class="text-3xl font-medium text-gray-800 tracking-wide mb-8">
         {{ property.type | capitalize }} à {{ property.city | capitalize }}
     </h2>

@@ -36,11 +36,15 @@
                     <span class="block text-lg font-medium text-gray-500">{{ favorite.property.area }}m<sup>2</sup></span>
                 </p>
                 <p class="text-center mt-3">
-                    <a href="{{ path('front_favorite_delete', { 'id': favorite.property.id }) }}" class="bg-red-500 px-3 pt-1 pb-2 text-white rounded-lg shadow-xl">Supprimer</a>
+                    <a href="{{ path('front_favorite_delete', { 'id': favorite.id }) }}" class="bg-red-500 px-3 pt-1 pb-2 text-white rounded-lg shadow-xl">Supprimer</a>
                 </p>
             </div>
         </div>
         {% endfor %}
+
+        {% if favorites is empty %}
+            Aucun favoris.
+        {% endif %}
     </div>
 </main>
 {% endblock %}

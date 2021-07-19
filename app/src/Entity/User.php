@@ -186,9 +186,9 @@ class User implements UserInterface, Serializable
         $this->id = (int) $unserialized['id'];
         unset($unserialized['id']);
 
-            foreach ($unserialized['properties'] as $property) {
-                $this->addProperty($property);
-            }
+        foreach ($unserialized['properties'] as $property) {
+            $this->addProperty($property);
+        }
 
         // Do not set properties (because its a manyToMany property)
         unset($unserialized['properties']);
